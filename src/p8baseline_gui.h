@@ -18,7 +18,15 @@ public:
     ~P8BaseLine_GUI();
     
 private slots:
-    void on_pushButton_load_released();
+    void on_pb_c_released();
+
+    void on_pb_e_released();
+
+    void on_pb_s_released();
+
+    void on_pb_p_released();
+
+    void on_pb_l_released();
 
 private:
     Ui::P8BaseLine_GUI *ui;
