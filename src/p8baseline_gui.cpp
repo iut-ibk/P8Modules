@@ -22,8 +22,7 @@ void P8BaseLine_GUI::on_pb_c_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Catchment Boundarys",QDir::currentPath(),"*.shp");
     this->p8baseline->createShape(fname,"Catchment Boundarys","isEdge");
-    cout << "Wuuuu" << endl;
-    this->p8baseline->initSCB(ui->sb_gs->value(), ui->sb_gs->value());
+    this->p8baseline->createCityBlocksFromShape(ui->sb_gs->value(), ui->sb_gs->value());
     ui->le_c->setText(fname);
 }
 

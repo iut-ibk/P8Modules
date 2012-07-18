@@ -17,7 +17,8 @@ public:
     void createShape(QString filename, QString name, QString typ );
     void createRaster(QString filename, QString name);
     void init();
-    void initSCB(double w, double h);
+//    void initSCB(double w, double h);
+    void createCityBlocksFromShape(double width, double height);
     QMap<QString,QString> mmap;
 };
 

@@ -18,7 +18,7 @@ P8BaseLine::P8BaseLine()
 void P8BaseLine::run() {
 
     Group::run();
-
+    /*
     DM::Module *app=this->getSimulation()->getModuleWithUUID("Append");
     foreach (QString uuid, mmap.values())
     {
@@ -30,14 +30,14 @@ void P8BaseLine::run() {
             app->setParameterValue();
             app->run();
         }
-    }
+    }*/
 }
 
 void P8BaseLine::init() {
     this->addTuplePort("out", DM::OUTTUPLESYSTEM);
     if (mmap.size()==0)
     {
-        cout << "Createing Mixer"<<endl;
+        cout << "Creating Mixer"<<endl;
         DM::Module *mix;
         mix=this->getSimulation()->addModule("AppendViewFromSystem");
         mix->setGroup(this);
@@ -45,7 +45,15 @@ void P8BaseLine::init() {
         mmap.insert("Mixer",QString::fromStdString(mix->getUuid()));
         cout << "created: " << mix << "("<< mix->getUuid()<< ")"<<endl;
 
-        cout << "Createing Append"<<endl;
+        cout << "Creating CityBlocks"<<endl;
+        DM::Module *cb;
+        cb=this->getSimulation()->addModule("CityBlock");
+        cb->setGroup(this);
+        cb->init();
+        mmap.insert("CityBlock",QString::fromStdString(cb->getUuid()));
+        cout << "created: " << cb << "("<< cb->getUuid()<< ")"<<endl;
+
+        cout << "Creating Append"<<endl;
         DM::Module *app;
         app=this->getSimulation()->addModule("AppendAttributes");
         app->setGroup(this);
@@ -54,12 +62,42 @@ void P8BaseLine::init() {
         cout << "created: " << app << "("<< app->getUuid()<< ")"<<endl;
 
         cout << "Createing Links"<<endl;
-        this->getSimulation()->addLink( mix->getOutPort("Combined"),app->getInPort("Data"));
+        this->getSimulation()->addLink( mix->getOutPort("Combined"),cb->getInPort("City"));
+        this->getSimulation()->addLink( cb->getOutPort("City"),app->getInPort("Data"));
         this->getSimulation()->addLink( app->getOutPort("Data"),this->getOutPortTuple("out")->getInPort());
         cout << "created"<<endl;
+
+
+        /*
+        cout << "Creating City Blocks"<<endl;
+        DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
+        QString inports = QString::fromStdString(mix->getParameterAsString("Inports"));
+        inports+=QString("*|*CityBlocks");
+        mix->setParameterValue("Inports",inports.toStdString());
+        mix->init();
+        DM::Module *cb;
+        cb=this->getSimulation()->addModule("CityBlock");
+        cb->setGroup(this);
+        cb->setParameterValue("Width",QString("%1").arg(width).toStdString());
+        cb->setParameterValue("Height",QString("%1").arg(height).toStdString());
+        cb->init();
+        this->getSimulation()->addLink( cb->getOutPort("City"),mix->getInPort("CityBlocks"));
+        mmap.insert("CityBlock",QString::fromStdString(cb->getUuid()));
+*/
     }
 }
 
+void P8BaseLine::createCityBlocksFromShape(double width, double height)
+{
+    DM::Module *cb;
+    cb=this->getSimulation()->getModuleWithUUID(mmap.value("CityBlock").toStdString());
+    cb->setParameterValue("Width",QString("%1").arg(width).toStdString());
+    cb->setParameterValue("Height",QString("%1").arg(height).toStdString());
+    cb->init();
+}
+
+
+/*
 void P8BaseLine::initSCB(double width, double height)
 {
     cout << "Createing City Blocks"<<endl;
@@ -85,12 +123,11 @@ void P8BaseLine::initSCB(double width, double height)
 
     if (catchmentBoundarys!=NULL)
     {
-        /*
-        xmin=QString::fromStdString(catchmentBoundarys->getParameterAsString("MinX")).toDouble();
-        xmax=height=QString::fromStdString(catchmentBoundarys->getParameterAsString("MaxX")).toDouble();
-        ymin=QString::fromStdString(catchmentBoundarys->getParameterAsString("MinY")).toDouble();
-        ymax=height=QString::fromStdString(catchmentBoundarys->getParameterAsString("MaxY")).toDouble();
-        */
+          //    xmin=QString::fromStdString(catchmentBoundarys->getParameterAsString("MinX")).toDouble();
+    //    xmax=height=QString::fromStdString(catchmentBoundarys->getParameterAsString("MaxX")).toDouble();
+    //    ymin=QString::fromStdString(catchmentBoundarys->getParameterAsString("MinY")).toDouble();
+    //    ymax=height=QString::fromStdString(catchmentBoundarys->getParameterAsString("MaxY")).toDouble();
+
     }
     width=fabs(xmax-xmin);
     height=fabs(ymax-ymin);
@@ -103,6 +140,8 @@ void P8BaseLine::initSCB(double width, double height)
     this->getSimulation()->addLink( sb->getOutPort("City"),cb->getInPort("City"));
     mmap.insert("SuperBlock",QString::fromStdString(sb->getUuid()));
 }
+*/
+
 
 bool P8BaseLine::createInputDialog() {
     QWidget * w = new P8BaseLine_GUI(this);
@@ -121,7 +160,7 @@ void P8BaseLine::createShape(QString filename, QString name, QString typ )
         m->setGroup(this);
         m->setParameterValue("FileName", filename.toStdString());
         DM::Logger(DM::Debug) << filename;
-        m->setParameterValue("Identifier", name.toStdString()); //"Landuse"
+        m->setParameterValue("Identifier", "SUPERBLOCK");    //);name.toStdString()); //"Landuse"
         m->setParameterValue(typ.toStdString(), "1"); //"isEdge"
         m->init();
         DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
@@ -156,4 +195,3 @@ void P8BaseLine::createRaster(QString filename, QString name)
         this->getSimulation()->addLink(m->getOutPort("Data"), mix->getInPort(name.toStdString()));
     }
 }
-

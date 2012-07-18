@@ -3,15 +3,33 @@
 
 #include "dmcompilersettings.h"
 #include <dmgroup.h>
+#include <dmmodule.h>
+
+class DM_HELPER_DLL_EXPORT P8ScenarioGroup : public  DM::Module {
+    DM_DECLARE_NODE(P8ScenarioGroup)
+
+    private:
+        DM::System * sys_in;
+    std::string NameOfExistingView;
+    std::string newAttribute;
+    std::string newAttribute_old;
+    std::string NameOfRasterData;
+    std::vector<DM::View> data;
+
+    DM::View readView;
+
+    std::map<std::string, DM::RasterData*> attribueMaps;
 
 
-class DM_HELPER_DLL_EXPORT P8ScenarioGroup :public DM::Group
-{
-    DM_DECLARE_GROUP(P8ScenarioGroup)
+    bool median;
+    double multiplier;
+
 public:
     P8ScenarioGroup();
     void run();
-
+    void init();
+    bool createInputDialog();
+    DM::System * getSystemIn(){return this->sys_in;}
 };
 
-#endif // P8SCENARIOGROUP_H
+#endif // P8ScenarioGroup_H
