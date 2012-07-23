@@ -1,4 +1,4 @@
-#include "p8scenarioGroup.h"
+#include "p8scenariogroup.h"
 #include <rasterdatahelper.h>
 #include <tbvectordata.h>
 #include <rasterdatahelper.h>
