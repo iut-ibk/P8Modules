@@ -2,8 +2,9 @@
 #include <rasterdatahelper.h>
 #include <tbvectordata.h>
 #include <rasterdatahelper.h>
+#include <dm.h>
 
-DM_DECLARE_NODE_NAME( P8ScenarioGroup ,Modules )
+DM_DECLARE_NODE_NAME( P8ScenarioGroup ,CRCP8 )
 
 
 P8ScenarioGroup::P8ScenarioGroup() {
@@ -26,10 +27,16 @@ P8ScenarioGroup::P8ScenarioGroup() {
     this->addData("Data", data);
 }
 
+
 void P8ScenarioGroup::run() {
 
     DM::System * sys = this->getData("Data");
     DM::View * v_existing= sys->getViewDefinition(NameOfExistingView);
+
+
+    // foreach raster
+//{
+// newAttributeName=
     DM::RasterData * r = this->getRasterData("Data", DM::View(NameOfRasterData, DM::READ, DM::RASTERDATA));
     foreach (std::string s, sys->getUUIDsOfComponentsInView(*v_existing)) {
         DM::Face * f = sys->getFace(s);
@@ -41,6 +48,7 @@ void P8ScenarioGroup::run() {
             dattr = RasterDataHelper::sumOverArea(r,nl,0) * multiplier;
         }
         f->changeAttribute(newAttribute, dattr);
+        // }
     }
 }
 
@@ -53,10 +61,19 @@ bool P8ScenarioGroup::createInputDialog() {
 void P8ScenarioGroup::init()
 {
 
-    sys_in = this->getData("Data");
+    DM::System *  sys_in = this->getData("Data");
+
+    std::vector<std::string> name_views = sys_in->getNamesOfViews();
+    std::vector<DM::View> NameOfRasterData;
+    foreach (std::string idView, name_views) {
+        DM::View * v = sys_in->getViewDefinition(idView);
+
+    }
+
     if (sys_in == 0)
         return;
     std::vector<std::string> views = sys_in->getNamesOfViews();
+
 
     foreach (std::string s, views)
         DM::Logger(DM::Debug) << s;
@@ -75,6 +92,7 @@ void P8ScenarioGroup::init()
 
     data.push_back(readView);
     this->addData("Data", data);
+
 
     newAttribute_old = newAttribute;
 
