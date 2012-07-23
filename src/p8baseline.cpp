@@ -55,7 +55,7 @@ void P8BaseLine::init() {
 
         cout << "Creating Append"<<endl;
         DM::Module *app;
-        app=this->getSimulation()->addModule("AppendAttributes");
+        app=this->getSimulation()->addModule("AppendRasterAsAttribute");
         app->setGroup(this);
         app->init();
         mmap.insert("Append",QString::fromStdString(app->getUuid()));
@@ -89,11 +89,13 @@ void P8BaseLine::init() {
 
 void P8BaseLine::createCityBlocksFromShape(double width, double height)
 {
+    /*
     DM::Module *cb;
     cb=this->getSimulation()->getModuleWithUUID(mmap.value("CityBlock").toStdString());
     cb->setParameterValue("Width",QString("%1").arg(width).toStdString());
     cb->setParameterValue("Height",QString("%1").arg(height).toStdString());
     cb->init();
+    */
 }
 
 

@@ -10,7 +10,7 @@ P8BaseLine_GUI::P8BaseLine_GUI(P8BaseLine * p8, QWidget *parent) :
     ui->setupUi(this);
     this->p8baseline = p8;
 
-
+    ui->le_c->setText(QString::fromStdString(p8->getParameterAsString("FileName")));
 }
 
 P8BaseLine_GUI::~P8BaseLine_GUI()
@@ -21,8 +21,9 @@ P8BaseLine_GUI::~P8BaseLine_GUI()
 void P8BaseLine_GUI::on_pb_c_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Catchment Boundarys",QDir::currentPath(),"*.shp");
-    this->p8baseline->createShape(fname,"Catchment Boundarys","isEdge");
-    this->p8baseline->createCityBlocksFromShape(ui->sb_gs->value(), ui->sb_gs->value());
+
+    this->p8baseline->createShape(fname,"Catchment Boundarys","isFace");
+   // this->p8baseline->createCityBlocksFromShape(ui->sb_gs->value(), ui->sb_gs->value());
     ui->le_c->setText(fname);
 }
 
