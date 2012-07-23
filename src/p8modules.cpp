@@ -27,6 +27,7 @@
 #include "dmmoduleregistry.h"
 #include "p8scenariogroup.h"
 #include "p8baseline.h"
+#include "appendrasterasattribute.h"
 
 using namespace std;
 using namespace DM;
@@ -35,6 +36,7 @@ using namespace DM;
 extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry) {
     registry->addNodeFactory(new NodeFactory<P8ScenarioGroup>());
     registry->addNodeFactory(new NodeFactory<P8BaseLine>());
+    registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
 
 
 }
