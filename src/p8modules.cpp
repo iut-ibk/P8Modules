@@ -34,7 +34,7 @@ using namespace DM;
 
 
 extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry) {
-    registry->addNodeFactory(new NodeFactory<P8ScenarioGroup>());
+//    registry->addNodeFactory(new NodeFactory<P8ScenarioGroup>());
     registry->addNodeFactory(new NodeFactory<P8BaseLine>());
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
 

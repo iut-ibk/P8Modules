@@ -12,7 +12,16 @@ DM_DECLARE_GROUP_NAME(P8BaseLine, CRCP8)
 P8BaseLine::P8BaseLine()
 {
     this->Steps = 1;
-
+    fileNameC = "";
+    fileNameE = "";
+    fileNameS = "";
+    fileNameP = "";
+    fileNameL = "";
+    this->addParameter("FileNameC", DM::STRING, &this->fileNameC);
+    this->addParameter("FileNameE", DM::STRING, &this->fileNameE);
+    this->addParameter("FileNameS", DM::STRING, &this->fileNameS);
+    this->addParameter("FileNameP", DM::STRING, &this->fileNameP);
+    this->addParameter("FileNameL", DM::STRING, &this->fileNameL);
 }
 
 void P8BaseLine::run() {
@@ -51,6 +60,7 @@ void P8BaseLine::init() {
         cb->setGroup(this);
         cb->init();
         mmap.insert("CityBlock",QString::fromStdString(cb->getUuid()));
+        createCityBlocksFromShape(100,100);
         cout << "created: " << cb << "("<< cb->getUuid()<< ")"<<endl;
 
         cout << "Creating Append"<<endl;
@@ -62,9 +72,10 @@ void P8BaseLine::init() {
         cout << "created: " << app << "("<< app->getUuid()<< ")"<<endl;
 
         cout << "Createing Links"<<endl;
-        this->getSimulation()->addLink( mix->getOutPort("Combined"),cb->getInPort("City"));
-        this->getSimulation()->addLink( cb->getOutPort("City"),app->getInPort("Data"));
-        this->getSimulation()->addLink( app->getOutPort("Data"),this->getOutPortTuple("out")->getInPort());
+        DM::ModuleLink * l1=this->getSimulation()->addLink( mix->getOutPort("Combined"),cb->getInPort("City"));
+        DM::ModuleLink * l2=this->getSimulation()->addLink( cb->getOutPort("City"),app->getInPort("Data"));
+        DM::ModuleLink * l3=this->getSimulation()->addLink( app->getOutPort("Data"),this->getOutPortTuple("out")->getInPort());
+        //DM::ModuleLink * l1=this->getSimulation()->addLink( mix->getOutPort("Combined"),this->getOutPortTuple("out")->getInPort());
         cout << "created"<<endl;
 
 
@@ -89,13 +100,11 @@ void P8BaseLine::init() {
 
 void P8BaseLine::createCityBlocksFromShape(double width, double height)
 {
-    /*
     DM::Module *cb;
     cb=this->getSimulation()->getModuleWithUUID(mmap.value("CityBlock").toStdString());
     cb->setParameterValue("Width",QString("%1").arg(width).toStdString());
     cb->setParameterValue("Height",QString("%1").arg(height).toStdString());
     cb->init();
-    */
 }
 
 
@@ -165,11 +174,10 @@ void P8BaseLine::createShape(QString filename, QString name, QString typ )
         m->setParameterValue("Identifier", "SUPERBLOCK");    //);name.toStdString()); //"Landuse"
         m->setParameterValue(typ.toStdString(), "1"); //"isEdge"
         m->init();
-        DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
-        std::string inports = mix->getParameterAsString("Inports");
-        std::stringstream ss(inports);
-        ss << "*|*" << name.toStdString();
-        mix->setParameterValue("Inports",ss.str());
+        DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());    
+        QString inports = QString::fromStdString(mix->getParameterAsString("Inports"));
+        inports += "*|*" + name;
+        mix->setParameterValue("Inports",inports.toStdString());
         mix->init();
         this->getSimulation()->addLink(m->getOutPort("Vec"), mix->getInPort(name.toStdString()));
     }
@@ -189,11 +197,10 @@ void P8BaseLine::createRaster(QString filename, QString name)
         m->init();
 
         DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
-        std::string inports = mix->getParameterAsString("Inports");
-        std::stringstream ss(inports);
-        ss << "*|*" << name.toStdString();
-        mix->setParameterValue("Inports",ss.str());
+        QString inports = QString::fromStdString(mix->getParameterAsString("Inports"));
+        inports += "*|*" + name;
+        mix->setParameterValue("Inports",inports.toStdString());
         mix->init();
-        this->getSimulation()->addLink(m->getOutPort("Data"), mix->getInPort(name.toStdString()));
+        DM::ModuleLink * l = this->getSimulation()->addLink(m->getOutPort("Data"), mix->getInPort(name.toStdString()));
     }
 }

@@ -20,6 +20,12 @@ public:
 //    void initSCB(double w, double h);
     void createCityBlocksFromShape(double width, double height);
     QMap<QString,QString> mmap;
+
+    std::string fileNameC;
+    std::string fileNameE;
+    std::string fileNameS;
+    std::string fileNameP;
+    std::string fileNameL;
 };
 
 #endif // P8BASELINE_H
