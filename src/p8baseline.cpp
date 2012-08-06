@@ -17,11 +17,14 @@ P8BaseLine::P8BaseLine()
     fileNameS = "";
     fileNameP = "";
     fileNameL = "";
+    rasterSize=200;
     this->addParameter("FileNameC", DM::STRING, &this->fileNameC);
     this->addParameter("FileNameE", DM::STRING, &this->fileNameE);
     this->addParameter("FileNameS", DM::STRING, &this->fileNameS);
     this->addParameter("FileNameP", DM::STRING, &this->fileNameP);
     this->addParameter("FileNameL", DM::STRING, &this->fileNameL);
+    this->addParameter("RasterSize", DM::DOUBLE, &this->rasterSize);
+
 }
 
 void P8BaseLine::run() {
@@ -71,10 +74,20 @@ void P8BaseLine::init() {
         mmap.insert("Append",QString::fromStdString(app->getUuid()));
         cout << "created: " << app << "("<< app->getUuid()<< ")"<<endl;
 
+        cout << "Creating CalculateCentroid"<<endl;
+        DM::Module *cc;
+        cc=this->getSimulation()->addModule("CalculateCentroid");
+        cc->setGroup(this);
+        cc->setParameterValue("NameOfExistingView","SUPERBLOCK");
+        cc->init();
+        mmap.insert("CalculateCentroid",QString::fromStdString(cc->getUuid()));
+        cout << "created: " << cc << "("<< cc->getUuid()<< ")"<<endl;
+
         cout << "Createing Links"<<endl;
         DM::ModuleLink * l1=this->getSimulation()->addLink( mix->getOutPort("Combined"),cb->getInPort("City"));
         DM::ModuleLink * l2=this->getSimulation()->addLink( cb->getOutPort("City"),app->getInPort("Data"));
-        DM::ModuleLink * l3=this->getSimulation()->addLink( app->getOutPort("Data"),this->getOutPortTuple("out")->getInPort());
+        DM::ModuleLink * l3=this->getSimulation()->addLink( app->getOutPort("Data"),cc->getInPort("Data"));
+        DM::ModuleLink * l4=this->getSimulation()->addLink( cc->getOutPort("Data"),this->getOutPortTuple("out")->getInPort());
         //DM::ModuleLink * l1=this->getSimulation()->addLink( mix->getOutPort("Combined"),this->getOutPortTuple("out")->getInPort());
         cout << "created"<<endl;
 

@@ -28,6 +28,10 @@ private slots:
 
     void on_pb_l_released();
 
+    void on_sb_gs_editingFinished();
+
+    void on_buttonBox_accepted();
+
 private:
     Ui::P8BaseLine_GUI *ui;
     P8BaseLine * p8baseline;

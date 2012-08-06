@@ -26,6 +26,7 @@ public:
     std::string fileNameS;
     std::string fileNameP;
     std::string fileNameL;
+    double rasterSize;
 };
 
 #endif // P8BASELINE_H
