@@ -11,6 +11,7 @@ DM_DECLARE_GROUP_NAME(P8BaseLine, CRCP8)
 
 P8BaseLine::P8BaseLine()
 {
+
     this->Steps = 1;
     fileNameC = "";
     fileNameE = "";
