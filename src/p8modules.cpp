@@ -27,17 +27,19 @@
 #include "dmmoduleregistry.h"
 #include "p8scenariogroup.h"
 #include "p8baseline.h"
+#include "p8rain.h"
+#include "p8scenario.h"
 #include "appendrasterasattribute.h"
 
 using namespace std;
 using namespace DM;
 
 
-extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry) {
-//    registry->addNodeFactory(new NodeFactory<P8ScenarioGroup>());
+extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
+{
     registry->addNodeFactory(new NodeFactory<P8BaseLine>());
+    registry->addNodeFactory(new NodeFactory<P8Rain>());
+    registry->addNodeFactory(new NodeFactory<P8Scenario>());
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
-
-
 }
 
