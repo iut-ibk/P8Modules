@@ -21,10 +21,20 @@ public:
     void createCityBlocksFromShape(double width, double height);
     QMap<QString,QString> mmap;
 
+    /*
+      catchment     = c
+      soil          = s
+      topo          = t*
+      plamMap       = p
+      popdensity    = d*
+      landuse       = l
+      */
+
     std::string fileNameC;
-    std::string fileNameE;
     std::string fileNameS;
+    std::string fileNameT;
     std::string fileNameP;
+    std::string fileNameD;
     std::string fileNameL;
     double rasterSize;
 };

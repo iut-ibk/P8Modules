@@ -44,72 +44,52 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Elevatkion (Raster Map)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
              <string>Soil (Raster Map)</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>Population (Raster Map)</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="5" column="0">
            <widget class="QLabel" name="label_5">
             <property name="text">
              <string>Landuse (Raster Map)</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="le_e"/>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="le_s"/>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="le_p"/>
-          </item>
           <item row="4" column="1">
+           <widget class="QLineEdit" name="le_d"/>
+          </item>
+          <item row="5" column="1">
            <widget class="QLineEdit" name="le_l"/>
           </item>
           <item row="1" column="2">
-           <widget class="QPushButton" name="pb_e">
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
            <widget class="QPushButton" name="pb_s">
             <property name="text">
              <string>...</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="2">
-           <widget class="QPushButton" name="pb_p">
+          <item row="4" column="2">
+           <widget class="QPushButton" name="pb_d">
             <property name="text">
              <string>...</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="2">
+          <item row="5" column="2">
            <widget class="QPushButton" name="pb_l">
             <property name="text">
              <string>...</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="6" column="1">
            <widget class="QDoubleSpinBox" name="sb_gs">
             <property name="decimals">
              <number>0</number>
@@ -122,12 +102,49 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="6" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>Grid Size</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Plan Map</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="le_p"/>
+          </item>
+          <item row="3" column="2">
+           <widget class="QPushButton" name="pb_p">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pb_t">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Elevatkion (Raster Map)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="le_t"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_s"/>
           </item>
          </layout>
         </item>

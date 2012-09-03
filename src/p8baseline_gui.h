@@ -18,14 +18,19 @@ public:
     ~P8BaseLine_GUI();
     
 private slots:
+    /*
+      catchment     = c
+      soil          = s
+      topo          = t*
+      plamMap       = p
+      popdensity    = d*
+      landuse       = l
+      */
     void on_pb_c_released();
-
-    void on_pb_e_released();
-
     void on_pb_s_released();
-
+    void on_pb_t_released();
     void on_pb_p_released();
-
+    void on_pb_d_released();
     void on_pb_l_released();
 
     void on_sb_gs_editingFinished();

@@ -10,10 +10,13 @@ P8BaseLine_GUI::P8BaseLine_GUI(P8BaseLine * p8, QWidget *parent) :
     ui->setupUi(this);
     this->p8baseline = p8;
 
+
+
     ui->le_c->setText(QString::fromStdString(p8->getParameterAsString("FileNameC")));
-    ui->le_e->setText(QString::fromStdString(p8->getParameterAsString("FileNameE")));
     ui->le_s->setText(QString::fromStdString(p8->getParameterAsString("FileNameS")));
+    ui->le_t->setText(QString::fromStdString(p8->getParameterAsString("FileNameT")));
     ui->le_p->setText(QString::fromStdString(p8->getParameterAsString("FileNameP")));
+    ui->le_d->setText(QString::fromStdString(p8->getParameterAsString("FileNameD")));
     ui->le_l->setText(QString::fromStdString(p8->getParameterAsString("FileNameL")));
     ui->sb_gs->setValue(QString::fromStdString(p8->getParameterAsString("RasterSize")).toDouble());
 }
@@ -31,14 +34,6 @@ void P8BaseLine_GUI::on_pb_c_released()
     ui->le_c->setText(fname);
 }
 
-void P8BaseLine_GUI::on_pb_e_released()
-{
-    QString fname = QFileDialog::getOpenFileName(this,"Elevation Map",QDir::currentPath(),"*.*");
-    this->p8baseline->createRaster(fname,"Elevation");
-    p8baseline->setParameterValue("FileNameE",fname.toStdString());
-    ui->le_e->setText(fname);
-}
-
 void P8BaseLine_GUI::on_pb_s_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Soil Map",QDir::currentPath(),"*.*");
@@ -47,12 +42,28 @@ void P8BaseLine_GUI::on_pb_s_released()
     ui->le_s->setText(fname);
 }
 
+void P8BaseLine_GUI::on_pb_t_released()
+{
+    QString fname = QFileDialog::getOpenFileName(this,"Topology",QDir::currentPath(),"*.*");
+    this->p8baseline->createRaster(fname,"Topology");
+    p8baseline->setParameterValue("FileNameT",fname.toStdString());
+    ui->le_t->setText(fname);
+}
+
 void P8BaseLine_GUI::on_pb_p_released()
 {
-    QString fname = QFileDialog::getOpenFileName(this,"Population Map",QDir::currentPath(),"*.*");
-    this->p8baseline->createRaster(fname,"Population");
+    QString fname = QFileDialog::getOpenFileName(this,"Plan Map",QDir::currentPath(),"*.*");
+    this->p8baseline->createRaster(fname,"Plan Map");
     p8baseline->setParameterValue("FileNameP",fname.toStdString());
     ui->le_p->setText(fname);
+}
+
+void P8BaseLine_GUI::on_pb_d_released()
+{
+    QString fname = QFileDialog::getOpenFileName(this,"Population Map",QDir::currentPath(),"*.*");
+    this->p8baseline->createRaster(fname,"Population Density");
+    p8baseline->setParameterValue("FileNameD",fname.toStdString());
+    ui->le_d->setText(fname);
 }
 
 void P8BaseLine_GUI::on_pb_l_released()
