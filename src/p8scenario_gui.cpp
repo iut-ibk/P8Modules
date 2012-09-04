@@ -19,7 +19,6 @@ P8Scenario_GUI::~P8Scenario_GUI()
 
 void P8Scenario_GUI::on_buttonBox_accepted()
 {
-    this->p8scenario->createCityBlocksFromShape(ui->sb_gs->value(), ui->sb_gs->value());
 }
 
 void P8Scenario_GUI::on_pb_ui_delimblocks_released()
