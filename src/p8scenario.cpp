@@ -21,7 +21,7 @@ void P8Scenario::run()
 
 void P8Scenario::init() {
     this->addTuplePort("out", DM::OUTTUPLESYSTEM);
-    this->addTuplePort("in", DM::OUTTUPLESYSTEM);
+    this->addTuplePort("in", DM::INTUPLESYSTEM);
     if (mmap.size()==0)
     {
 
@@ -124,6 +124,7 @@ void P8Scenario::init() {
         precTechOpp->init();
         mmap.insert("precTechOpp",QString::fromStdString(precTechOpp->getUuid()));
 
+        DM::ModuleLink *l_START_blocDelin=this->getSimulation()->addLink( this->getInPortTuple("in")->getOutPort(),blocDelin->getInPort("City"));
         DM::ModuleLink *l_blocDelin_basinDelin=this->getSimulation()->addLink( blocDelin->getOutPort("City"),basinDelin->getInPort("City"));
         DM::ModuleLink *l_basinDelin_planbbUrban=this->getSimulation()->addLink( basinDelin->getOutPort("City"),planbbUrban->getInPort("City"));
         DM::ModuleLink *l_planbbUrban_urbanplanResidential=this->getSimulation()->addLink( planbbUrban->getOutPort("City"),urbanplanResidential->getInPort("City"));
@@ -139,6 +140,7 @@ void P8Scenario::init() {
         DM::ModuleLink *l_placementTech_lotTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),lotTechOpp->getInPort("City"));
         DM::ModuleLink *l_lotTechOpp_mixer2=this->getSimulation()->addLink( lotTechOpp->getOutPort("City"),mixer2->getInPort("City"));
         DM::ModuleLink *l_mixer2_evalTechStrategy=this->getSimulation()->addLink( mixer2->getOutPort("City"),evalTechStrategy->getInPort("City"));
+        DM::ModuleLink *l_evalTechStrategy_END=this->getSimulation()->addLink( evalTechStrategy->getOutPort("City"),this->getOutPortTuple("out")->getInPort());
         DM::ModuleLink *l_placementTech_streetTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),streetTechOpp->getInPort("City"));
         DM::ModuleLink *l_streetTechOpp_mixer2=this->getSimulation()->addLink( streetTechOpp->getOutPort("City"),mixer2->getInPort("City"));
         DM::ModuleLink *l_placementTech_neighTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),neighTechOpp->getInPort("City"));
@@ -147,7 +149,6 @@ void P8Scenario::init() {
         DM::ModuleLink *l_precTechOpp_mixer2=this->getSimulation()->addLink( precTechOpp->getOutPort("City"),mixer2->getInPort("City"));
         // end created by netread
 
-
     }
 }
 
@@ -155,7 +156,7 @@ void P8Scenario::open_ui_delimblocks()
 {
     DM::Module *bd;
     bd=this->getSimulation()->getModuleWithUUID(mmap.value("blocDelin").toStdString());
-   // bd->
+//   bd->createInputDialog(); ????????????????
 }
 
 bool P8Scenario::createInputDialog() {
