@@ -77,7 +77,7 @@ void P8Scenario::init() {
         mmap.insert("mixer1",QString::fromStdString(mixer1->getUuid()));
 
         DM::Module *planSummaryUrban;
-        planSummaryUrban=this->getSimulation()->addModule("urbanplansummary");
+        planSummaryUrban=this->getSimulation()->addModule("urbplansummary");
         planSummaryUrban->setGroup(this);
         planSummaryUrban->init();
         mmap.insert("planSummaryUrban",QString::fromStdString(planSummaryUrban->getUuid()));
@@ -119,7 +119,7 @@ void P8Scenario::init() {
         mmap.insert("neighTechOpp",QString::fromStdString(neighTechOpp->getUuid()));
 
         DM::Module *precTechOpp;
-        precTechOpp=this->getSimulation()->addModule("techopp_prec");
+        precTechOpp=this->getSimulation()->addModule("techopp_precinct");
         precTechOpp->setGroup(this);
         precTechOpp->init();
         mmap.insert("precTechOpp",QString::fromStdString(precTechOpp->getUuid()));
@@ -152,11 +152,23 @@ void P8Scenario::init() {
     }
 }
 
-void P8Scenario::open_ui_delimblocks()
+void P8Scenario::open_ui_delinblocks()
 {
     DM::Module *bd;
     bd=this->getSimulation()->getModuleWithUUID(mmap.value("blocDelin").toStdString());
-//   bd->createInputDialog(); ????????????????
+    bd->createInputDialog();
+}
+void P8Scenario::open_ui_urbplanbb()
+{
+    DM::Module *bd;
+    bd=this->getSimulation()->getModuleWithUUID(mmap.value("planbbUrban").toStdString());
+    bd->createInputDialog();
+}
+void P8Scenario::open_ui_techplacement()
+{
+    DM::Module *bd;
+    bd=this->getSimulation()->getModuleWithUUID(mmap.value("placementTech").toStdString());
+    bd->createInputDialog();
 }
 
 bool P8Scenario::createInputDialog() {

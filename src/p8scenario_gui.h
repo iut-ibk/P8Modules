@@ -19,7 +19,12 @@ public:
     
 private slots:
     void on_buttonBox_accepted();
-    void on_pb_ui_delimblocks_released();
+
+    void on_pb_ui_delinblocks_released();
+
+    void on_pb_ui_urbplanbb_released();
+
+    void on_pb_ui_techplacement_released();
 
 private:
     Ui::P8Scenario_GUI *ui;

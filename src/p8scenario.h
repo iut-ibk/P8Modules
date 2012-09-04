@@ -16,7 +16,9 @@ public:
     void run();
     virtual bool createInputDialog();
     void init();
-    void open_ui_delimblocks();
+    void open_ui_delinblocks();
+    void open_ui_urbplanbb();
+    void open_ui_techplacement();
     QMap<QString,QString> mmap;
 };
 

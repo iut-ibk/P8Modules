@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>364</width>
-    <height>159</height>
+    <height>146</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,30 +15,23 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPushButton" name="pb_ui_delimblocks">
+    <widget class="QPushButton" name="pb_ui_delinblocks">
      <property name="text">
-      <string>PushButton</string>
+      <string>Delin Blocks</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="pb_ui_urbplanbb">
      <property name="text">
-      <string>PushButton</string>
+      <string>Urban Plan BB</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="pb_ui_techplacement">
      <property name="text">
-      <string>PushButton</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="pushButton_4">
-     <property name="text">
-      <string>PushButton</string>
+      <string>Techplacement</string>
      </property>
     </widget>
    </item>

@@ -21,7 +21,17 @@ void P8Scenario_GUI::on_buttonBox_accepted()
 {
 }
 
-void P8Scenario_GUI::on_pb_ui_delimblocks_released()
+void P8Scenario_GUI::on_pb_ui_delinblocks_released()
 {
-    this->p8scenario->open_ui_delimblocks();
+    this->p8scenario->open_ui_delinblocks();
+}
+
+void P8Scenario_GUI::on_pb_ui_urbplanbb_released()
+{
+    this->p8scenario->open_ui_urbplanbb();
+}
+
+void P8Scenario_GUI::on_pb_ui_techplacement_released()
+{
+    this->p8scenario->open_ui_techplacement();
 }
