@@ -20,6 +20,23 @@ public:
 //    void initSCB(double w, double h);
     void createCityBlocksFromShape(double width, double height);
     QMap<QString,QString> mmap;
+
+    /*
+      catchment     = c
+      soil          = s
+      topo          = t*
+      plamMap       = p
+      popdensity    = d*
+      landuse       = l
+      */
+
+    std::string fileNameC;
+    std::string fileNameS;
+    std::string fileNameT;
+    std::string fileNameP;
+    std::string fileNameD;
+    std::string fileNameL;
+    double rasterSize;
 };
 
 #endif // P8BASELINE_H

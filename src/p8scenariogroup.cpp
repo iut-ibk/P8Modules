@@ -62,6 +62,7 @@ void P8ScenarioGroup::init()
 {
 
     DM::System *  sys_in = this->getData("Data");
+    //if ()
 
     std::vector<std::string> name_views = sys_in->getNamesOfViews();
     std::vector<DM::View> NameOfRasterData;
