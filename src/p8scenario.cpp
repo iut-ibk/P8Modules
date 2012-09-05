@@ -74,6 +74,12 @@ void P8Scenario::init() {
         mixer1=this->getSimulation()->addModule("AppendViewFromSystem");
         mixer1->setGroup(this);
         mixer1->init();
+
+        QString inports = QString::fromStdString(mixer1->getParameterAsString("Inports"));
+        inports += "*|*ubp_residential*|*ubp_nonres*|*ubp_facilities*|*ubp_spaces";
+        mixer1->setParameterValue("Inports",inports.toStdString());
+        mixer1->init();
+
         mmap.insert("mixer1",QString::fromStdString(mixer1->getUuid()));
 
         DM::Module *planSummaryUrban;
@@ -98,6 +104,12 @@ void P8Scenario::init() {
         mixer2=this->getSimulation()->addModule("AppendViewFromSystem");
         mixer2->setGroup(this);
         mixer2->init();
+
+        QString inports2 = QString::fromStdString(mixer2->getParameterAsString("Inports"));
+        inports2 += "*|*techopp_lot*|*techopp_street*|*techopp_neigh*|*techopp_precinct";
+        mixer2->setParameterValue("Inports",inports2.toStdString());
+        mixer2->init();
+
         mmap.insert("mixer2",QString::fromStdString(mixer2->getUuid()));
 
         DM::Module *evalTechStrategy;
@@ -131,22 +143,22 @@ void P8Scenario::init() {
         DM::ModuleLink *l_planbbUrban_urbanplanNonResidential=this->getSimulation()->addLink( planbbUrban->getOutPort("City"),urbanplanNonResidential->getInPort("City"));
         DM::ModuleLink *l_planbbUrban_urbanplanFacilities=this->getSimulation()->addLink( planbbUrban->getOutPort("City"),urbanplanFacilities->getInPort("City"));
         DM::ModuleLink *l_planbbUrban_urbanplanSpaces=this->getSimulation()->addLink( planbbUrban->getOutPort("City"),urbanplanSpaces->getInPort("City"));
-        DM::ModuleLink *l_urbanplanResidential_mixer1=this->getSimulation()->addLink( urbanplanResidential->getOutPort("City"),mixer1->getInPort("City"));
-        DM::ModuleLink *l_mixer1_planSummaryUrban=this->getSimulation()->addLink( mixer1->getOutPort("City"),planSummaryUrban->getInPort("City"));
+        DM::ModuleLink *l_urbanplanResidential_mixer1=this->getSimulation()->addLink( urbanplanResidential->getOutPort("City"),mixer1->getInPort("ubp_residential"));
+        DM::ModuleLink *l_mixer1_planSummaryUrban=this->getSimulation()->addLink( mixer1->getOutPort("Combined"),planSummaryUrban->getInPort("City"));
         DM::ModuleLink *l_planSummaryUrban_placementTech=this->getSimulation()->addLink( planSummaryUrban->getOutPort("City"),placementTech->getInPort("City"));
-        DM::ModuleLink *l_urbanplanNonResidential_mixer1=this->getSimulation()->addLink( urbanplanNonResidential->getOutPort("City"),mixer1->getInPort("City"));
-        DM::ModuleLink *l_urbanplanFacilities_mixer1=this->getSimulation()->addLink( urbanplanFacilities->getOutPort("City"),mixer1->getInPort("City"));
-        DM::ModuleLink *l_urbanplanSpaces_mixer1=this->getSimulation()->addLink( urbanplanSpaces->getOutPort("City"),mixer1->getInPort("City"));
+        DM::ModuleLink *l_urbanplanNonResidential_mixer1=this->getSimulation()->addLink( urbanplanNonResidential->getOutPort("City"),mixer1->getInPort("ubp_nonres"));
+        DM::ModuleLink *l_urbanplanFacilities_mixer1=this->getSimulation()->addLink( urbanplanFacilities->getOutPort("City"),mixer1->getInPort("ubp_facilities"));
+        DM::ModuleLink *l_urbanplanSpaces_mixer1=this->getSimulation()->addLink( urbanplanSpaces->getOutPort("City"),mixer1->getInPort("ubp_spaces"));
         DM::ModuleLink *l_placementTech_lotTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),lotTechOpp->getInPort("City"));
-        DM::ModuleLink *l_lotTechOpp_mixer2=this->getSimulation()->addLink( lotTechOpp->getOutPort("City"),mixer2->getInPort("City"));
-        DM::ModuleLink *l_mixer2_evalTechStrategy=this->getSimulation()->addLink( mixer2->getOutPort("City"),evalTechStrategy->getInPort("City"));
+        DM::ModuleLink *l_lotTechOpp_mixer2=this->getSimulation()->addLink( lotTechOpp->getOutPort("City"),mixer2->getInPort("techopp_lot"));
+        DM::ModuleLink *l_mixer2_evalTechStrategy=this->getSimulation()->addLink( mixer2->getOutPort("Combined"),evalTechStrategy->getInPort("City"));
         DM::ModuleLink *l_evalTechStrategy_END=this->getSimulation()->addLink( evalTechStrategy->getOutPort("City"),this->getOutPortTuple("out")->getInPort());
         DM::ModuleLink *l_placementTech_streetTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),streetTechOpp->getInPort("City"));
-        DM::ModuleLink *l_streetTechOpp_mixer2=this->getSimulation()->addLink( streetTechOpp->getOutPort("City"),mixer2->getInPort("City"));
+        DM::ModuleLink *l_streetTechOpp_mixer2=this->getSimulation()->addLink( streetTechOpp->getOutPort("City"),mixer2->getInPort("techopp_street"));
         DM::ModuleLink *l_placementTech_neighTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),neighTechOpp->getInPort("City"));
-        DM::ModuleLink *l_neighTechOpp_mixer2=this->getSimulation()->addLink( neighTechOpp->getOutPort("City"),mixer2->getInPort("City"));
+        DM::ModuleLink *l_neighTechOpp_mixer2=this->getSimulation()->addLink( neighTechOpp->getOutPort("City"),mixer2->getInPort("techopp_neigh"));
         DM::ModuleLink *l_placementTech_precTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),precTechOpp->getInPort("City"));
-        DM::ModuleLink *l_precTechOpp_mixer2=this->getSimulation()->addLink( precTechOpp->getOutPort("City"),mixer2->getInPort("City"));
+        DM::ModuleLink *l_precTechOpp_mixer2=this->getSimulation()->addLink( precTechOpp->getOutPort("City"),mixer2->getInPort("techopp_precinct"));
         // end created by netread
 
     }
