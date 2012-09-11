@@ -17,18 +17,8 @@ public:
     void createShape(QString filename, QString name, QString typ );
     void createRaster(QString filename, QString name);
     void init();
-//    void initSCB(double w, double h);
-    void createCityBlocksFromShape(double width, double height);
-    QMap<QString,QString> mmap;
 
-    /*
-      catchment     = c
-      soil          = s
-      topo          = t*
-      plamMap       = p
-      popdensity    = d*
-      landuse       = l
-      */
+    QMap<QString,QString> mmap;
 
     std::string fileNameC;
     std::string fileNameS;

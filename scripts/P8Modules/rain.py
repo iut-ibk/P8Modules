@@ -1,12 +1,14 @@
-from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import *
+from PyQt4.QtGui import * 
 from pydynamind import *
-from Ui_Rain_Dialog import Ui_P8Rain_GUI
+from rain_gui import *
 import netCDF4
 from matplotlib import *
 import matplotlib.pyplot as plt
 import tempfile
 import datetime
 import numpy as np
+import os
 
 class Rain(Module):
 	def __init__(self):
@@ -17,7 +19,7 @@ class Rain(Module):
 #            self.Rain = 0
  
             datastream = []
-            self.blocks = View("SUPERBLOCK", FACE, READ)
+            self.blocks = View("Block", FACE, READ)
             self.blocks.addAttribute("Rain")
 
             datastream.append(self.blocks)

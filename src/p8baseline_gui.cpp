@@ -82,5 +82,5 @@ void P8BaseLine_GUI::on_sb_gs_editingFinished()
 
 void P8BaseLine_GUI::on_buttonBox_accepted()
 {
-    this->p8baseline->createCityBlocksFromShape(ui->sb_gs->value(), ui->sb_gs->value());
+//    this->p8baseline->createCityBlocksFromShape(ui->sb_gs->value(), ui->sb_gs->value());
 }
