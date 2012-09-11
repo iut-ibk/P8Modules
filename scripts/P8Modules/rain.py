@@ -23,15 +23,15 @@ class Rain(Module):
             self.blocks.addAttribute("Rain")
 
             datastream.append(self.blocks)
-            self.addData("Catchment", datastream)
+            self.addData("City", datastream)
 
 
 
         def run(self):
-            dataflow = self.getData("Catchment")
+            dataflow = self.getData("City")
             catchments = dataflow.getUUIDsOfComponentsInView(self.blocks) 
 
-            data = netCDF4.Dataset('/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
+            data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 
 	    
             #time = data.variables['time']
@@ -54,6 +54,7 @@ class Rain(Module):
 	    for i in range(0,data.variables['time'].size,1):
 		times.append(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y-%m-%d %H:%M:%S'))
 	    #read all blocks and add a rain attribute
+	    i = 0
 	    for catch in catchments:                
                 block = dataflow.getComponent(catch)  
                 rainattr = Attribute("Rain")
@@ -61,8 +62,9 @@ class Rain(Module):
 		datas = self.getRainData(151.25,-34.05,data)[:]
 		rainattr.addTimeSeries(times,datas)
                 block.addAttribute(rainattr)
-	    
-	
+		i = i + 1
+	    	print "Adding Rain to Blocks: " + str(i) + " of " + str(len(catchments))
+		
 	      
 	def createInputDialog(self):
             form = RainGui(self, QApplication.activeWindow())
