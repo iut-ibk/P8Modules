@@ -63,6 +63,8 @@ bool P8BaseLine::createInputDialog()
 
 void P8BaseLine::createShape(QString filename, QString name, QString typ )
 {
+    if(this->getSimulation()->getModuleByName(name.toStdString())!=0)
+        return;
     DM::Module *m = this->getSimulation()->addModule("ImportShapeFile");
     if (m!=NULL)
     {
@@ -73,6 +75,7 @@ void P8BaseLine::createShape(QString filename, QString name, QString typ )
         DM::Logger(DM::Debug) << filename;
         m->setParameterValue("Identifier", "SUPERBLOCK");    //);name.toStdString()); //"Landuse"
         m->setParameterValue(typ.toStdString(), "1"); //"isEdge"
+        m->setName(name.toStdString()); //"Landuse"
         m->init();
         DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
         QString inports = QString::fromStdString(mix->getParameterAsString("Inports"));
@@ -85,6 +88,8 @@ void P8BaseLine::createShape(QString filename, QString name, QString typ )
 
 void P8BaseLine::createRaster(QString filename, QString name)
 {
+    if(this->getSimulation()->getModuleByName(name.toStdString())!=0)
+        return;
     DM::Module * m = this->getSimulation()->addModule("ImportRasterData");
     cout << "Raster: " << m << endl;
     if (m!=NULL)
@@ -94,6 +99,7 @@ void P8BaseLine::createRaster(QString filename, QString name)
         m->setParameterValue("Filename", filename.toStdString());
         DM::Logger(DM::Debug) << filename;
         m->setParameterValue("DataName", name.toStdString()); //"Landuse"
+        m->setName(name.toStdString()); //"Landuse"
         m->init();
 
         DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
