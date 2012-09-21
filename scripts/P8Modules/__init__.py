@@ -26,6 +26,7 @@ from importshape import *
 from ExportToShapeFile import *
 from rain import *
 from ReadTable import *
+from ReadTableSecondary import *
 from raintest import *
 #from memtestsyste import *
 #from plotvectordata import *
