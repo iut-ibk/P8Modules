@@ -22,7 +22,7 @@ class Ui_ReadTable_GUI(object):
         self.verticalLayout = QtGui.QVBoxLayout(ReadTable_GUI)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.groupBox = QtGui.QGroupBox(ReadTable_GUI)
-        self.groupBox.setTitle(QtGui.QApplication.translate("ReadTable_GUI", "Data Table", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox.setTitle(QtGui.QApplication.translate("ReadTable_GUI", "Performance Table", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.gridLayout = QtGui.QGridLayout(self.groupBox)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
@@ -43,26 +43,7 @@ class Ui_ReadTable_GUI(object):
 	self.table.setColumnCount(4)
 	self.table.setColumnWidth(0,210)
 	self.table.setColumnWidth(2,110)
-	self.f = open('Perf_TTE.txt','r')
-	self.text = shlex.shlex(self.f.read(),posix = True)
-	self.text.whitespace = ','
-	self.text.whitespace += '\n'
-	self.text.whitespace_split = True
-	self.list = list(self.text)
-	i = 0
-	for rows in range(self.table.rowCount()):
-	    if rows ==2:
-		i=i+4	
-	    for cols in range(self.table.columnCount()):
-		widget = QtGui.QLineEdit(str(self.list[i]))
-		if rows == 0:
-			font = QtGui.QFont()
-			font.setBold(True)		
-			widget.setFont(font)
-		elif cols !=0:
-			widget = QtGui.QLineEdit(str(float(self.list[i])))
-		self.table.setCellWidget(rows,cols,widget)
-		i = i + 1
+
 	self.verticalLayout.addWidget(self.table)
         self.buttonBox = QtGui.QDialogButtonBox(ReadTable_GUI)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
