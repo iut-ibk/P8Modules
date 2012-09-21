@@ -18,7 +18,7 @@ P8BaseLine_GUI::P8BaseLine_GUI(P8BaseLine * p8, QWidget *parent) :
     ui->le_p->setText(QString::fromStdString(p8->getParameterAsString("FileNameP")));
     ui->le_d->setText(QString::fromStdString(p8->getParameterAsString("FileNameD")));
     ui->le_l->setText(QString::fromStdString(p8->getParameterAsString("FileNameL")));
-    ui->sb_gs->setValue(QString::fromStdString(p8->getParameterAsString("RasterSize")).toDouble());
+    //ui->sb_gs->setValue(QString::fromStdString(p8->getParameterAsString("RasterSize")).toDouble());
 }
 
 P8BaseLine_GUI::~P8BaseLine_GUI()
@@ -76,8 +76,8 @@ void P8BaseLine_GUI::on_pb_l_released()
 
 void P8BaseLine_GUI::on_sb_gs_editingFinished()
 {
-    QString rs=QString("%1").arg(ui->sb_gs->value());
-    p8baseline->setParameterValue("RasterSize",rs.toStdString());
+    //QString rs=QString("%1").arg(ui->sb_gs->value());
+    //p8baseline->setParameterValue("RasterSize",rs.toStdString());
 }
 
 void P8BaseLine_GUI::on_buttonBox_accepted()

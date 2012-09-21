@@ -10,6 +10,9 @@
 class DM_HELPER_DLL_EXPORT P8Scenario :public DM::Group
 {
     DM_DECLARE_GROUP(P8Scenario)
+
+    private:
+        bool modulesHaveBeenCreated;
 public:
 
     P8Scenario();

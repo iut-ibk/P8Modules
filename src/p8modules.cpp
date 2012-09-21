@@ -29,6 +29,8 @@
 #include "p8baseline.h"
 #include "p8rain.h"
 #include "p8scenario.h"
+//#include "p8simulation.h"
+//#include "p8evaluation.h"
 #include "appendrasterasattribute.h"
 
 using namespace std;
@@ -40,6 +42,8 @@ extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
     registry->addNodeFactory(new NodeFactory<P8BaseLine>());
     registry->addNodeFactory(new NodeFactory<P8Rain>());
     registry->addNodeFactory(new NodeFactory<P8Scenario>());
+//    registry->addNodeFactory(new NodeFactory<P8Simulation>());
+//    registry->addNodeFactory(new NodeFactory<P8Evaluation>());
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
 }
 

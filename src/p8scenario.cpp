@@ -12,6 +12,9 @@ DM_DECLARE_GROUP_NAME(P8Scenario, CRCP8)
 P8Scenario::P8Scenario()
 {
     this->Steps = 1;
+    modulesHaveBeenCreated = false;
+
+    this->addParameter("ModulesCreated", DM::BOOL, & modulesHaveBeenCreated);
 }
 
 void P8Scenario::run()
@@ -22,20 +25,20 @@ void P8Scenario::run()
 void P8Scenario::init() {
     this->addTuplePort("out", DM::OUTTUPLESYSTEM);
     this->addTuplePort("in", DM::INTUPLESYSTEM);
-    if (mmap.size()==0)
+
+    if (!modulesHaveBeenCreated)
     {
 
-
         //created by netread
-
         DM::Module *blocDelin;
         blocDelin=this->getSimulation()->addModule("delinblocks");
         blocDelin->setGroup(this);
+        blocDelin->setName("blocDelin");
         blocDelin->init();
         mmap.insert("blocDelin",QString::fromStdString(blocDelin->getUuid()));
-
         DM::Module *basinDelin;
         basinDelin=this->getSimulation()->addModule("delinbasin");
+        basinDelin->setName("delinbasin");
         basinDelin->setGroup(this);
         basinDelin->init();
         mmap.insert("basinDelin",QString::fromStdString(basinDelin->getUuid()));
@@ -43,6 +46,7 @@ void P8Scenario::init() {
         DM::Module *planbbUrban;
         planbbUrban=this->getSimulation()->addModule("urbplanbb");
         planbbUrban->setGroup(this);
+        planbbUrban->setName("planbbUrban");
         planbbUrban->init();
         mmap.insert("planbbUrban",QString::fromStdString(planbbUrban->getUuid()));
 
@@ -91,6 +95,7 @@ void P8Scenario::init() {
         DM::Module *placementTech;
         placementTech=this->getSimulation()->addModule("techplacement");
         placementTech->setGroup(this);
+        placementTech->setName("placementTech");
         placementTech->init();
         mmap.insert("placementTech",QString::fromStdString(placementTech->getUuid()));
 
@@ -160,6 +165,7 @@ void P8Scenario::init() {
         DM::ModuleLink *l_placementTech_precTechOpp=this->getSimulation()->addLink( placementTech->getOutPort("City"),precTechOpp->getInPort("City"));
         DM::ModuleLink *l_precTechOpp_mixer2=this->getSimulation()->addLink( precTechOpp->getOutPort("City"),mixer2->getInPort("techopp_precinct"));
         // end created by netread
+        modulesHaveBeenCreated = true;
 
     }
 }
@@ -167,19 +173,19 @@ void P8Scenario::init() {
 void P8Scenario::open_ui_delinblocks()
 {
     DM::Module *bd;
-    bd=this->getSimulation()->getModuleWithUUID(mmap.value("blocDelin").toStdString());
+    bd=this->getSimulation()->getModuleByName("blocDelin");
     bd->createInputDialog();
 }
 void P8Scenario::open_ui_urbplanbb()
 {
     DM::Module *bd;
-    bd=this->getSimulation()->getModuleWithUUID(mmap.value("planbbUrban").toStdString());
+    bd=this->getSimulation()->getModuleByName("planbbUrban");
     bd->createInputDialog();
 }
 void P8Scenario::open_ui_techplacement()
 {
     DM::Module *bd;
-    bd=this->getSimulation()->getModuleWithUUID(mmap.value("placementTech").toStdString());
+    bd=this->getSimulation()->getModuleByName("placementTech");
     bd->createInputDialog();
 }
 
