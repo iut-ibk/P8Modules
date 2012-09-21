@@ -85,11 +85,11 @@ class Rain(Module):
 	    lats = netCDF.variables['lat'][:]
 	    #looking here in the netCDF vector for the index of our values
 	    
-	    x = numpy.where(longs==xValue) #use find_nearest func with the real coodinates
-	    y = numpy.where(lats==yValue)
+	    x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
+	    y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
 	    datas = Attribute().getDoubleVector()
 	    for i in range(0,len(netCDF.variables['rain'][:]),1):
-	    	datas.append(float(netCDF.variables['rain'][i][int(y[0])][int(x[0])]))
+	    	datas.append(float(netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]))
 	    return datas
 
 
