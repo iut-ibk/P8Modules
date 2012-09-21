@@ -11,6 +11,8 @@ class ReadTable(Module):
 	    self.createParameter("FileName", FILENAME,"")
 	    self.Filename = ""
 	    #Views
+	    self.blocks = View("Block", FACE, READ)
+	    
 
 	    self.TableData = View("Table Data",COMPONENT,WRITE)
 	    self.TableData.addAttribute("Type")
@@ -22,7 +24,7 @@ class ReadTable(Module):
 
 	    datastream =[]
 	    datastream.append(self.TableData)
-
+	    datastream.append(self.blocks)
 	    self.addData("City",datastream)
 
         def run(self):
