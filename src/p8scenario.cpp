@@ -6,10 +6,10 @@
 
 #include <cmath>
 
-DM_DECLARE_GROUP_NAME(P8Scenario, CRCP8)
+DM_DECLARE_GROUP_NAME(SCENARIO, CRCP8)
 
 
-P8Scenario::P8Scenario()
+SCENARIO::SCENARIO()
 {
     this->Steps = 1;
     modulesHaveBeenCreated = false;
@@ -17,12 +17,12 @@ P8Scenario::P8Scenario()
     this->addParameter("ModulesCreated", DM::BOOL, & modulesHaveBeenCreated);
 }
 
-void P8Scenario::run()
+void SCENARIO::run()
 {
     Group::run();
 }
 
-void P8Scenario::init() {
+void SCENARIO::init() {
     this->addTuplePort("out", DM::OUTTUPLESYSTEM);
     this->addTuplePort("in", DM::INTUPLESYSTEM);
 
@@ -170,27 +170,27 @@ void P8Scenario::init() {
     }
 }
 
-void P8Scenario::open_ui_delinblocks()
+void SCENARIO::open_ui_delinblocks()
 {
     DM::Module *bd;
     bd=this->getSimulation()->getModuleByName("blocDelin");
     bd->createInputDialog();
 }
-void P8Scenario::open_ui_urbplanbb()
+void SCENARIO::open_ui_urbplanbb()
 {
     DM::Module *bd;
     bd=this->getSimulation()->getModuleByName("planbbUrban");
     bd->createInputDialog();
 }
-void P8Scenario::open_ui_techplacement()
+void SCENARIO::open_ui_techplacement()
 {
     DM::Module *bd;
     bd=this->getSimulation()->getModuleByName("placementTech");
     bd->createInputDialog();
 }
 
-bool P8Scenario::createInputDialog() {
-    QWidget * w = new P8Scenario_GUI(this);
+bool SCENARIO::createInputDialog() {
+    QWidget * w = new SCENARIO_GUI(this);
     w->show();
     return true;
 }

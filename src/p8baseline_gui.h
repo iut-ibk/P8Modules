@@ -3,19 +3,19 @@
 
 #include <QDialog>
 
-class P8BaseLine;
+class URBAN_FORM;
 
 namespace Ui {
-class P8BaseLine_GUI;
+class URBAN_FORM_GUI;
 }
 
-class P8BaseLine_GUI : public QDialog
+class URBAN_FORM_GUI : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit P8BaseLine_GUI(P8BaseLine * p8,QWidget *parent = 0);
-    ~P8BaseLine_GUI();
+    explicit URBAN_FORM_GUI(URBAN_FORM * p8,QWidget *parent = 0);
+    ~URBAN_FORM_GUI();
     
 private slots:
     /*
@@ -38,8 +38,8 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::P8BaseLine_GUI *ui;
-    P8BaseLine * p8baseline;
+    Ui::URBAN_FORM_GUI *ui;
+    URBAN_FORM * p8baseline;
 
 
 };

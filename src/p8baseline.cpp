@@ -6,10 +6,10 @@
 
 #include <cmath>
 
-DM_DECLARE_GROUP_NAME(P8BaseLine, CRCP8)
+DM_DECLARE_GROUP_NAME(URBAN_FORM, CRCP8)
 
 
-P8BaseLine::P8BaseLine()
+URBAN_FORM::URBAN_FORM()
 {
     this->Steps = 1;
     fileNameC = "";
@@ -27,24 +27,25 @@ P8BaseLine::P8BaseLine()
     this->addParameter("FileNameD", DM::STRING, &this->fileNameD);
     this->addParameter("FileNameL", DM::STRING, &this->fileNameL);
     this->addParameter("RasterSize", DM::DOUBLE, &this->rasterSize);
+    this->setName("URBAN_FORM");
 }
 
-void P8BaseLine::run()
+void URBAN_FORM::run()
 {
     Group::run();
 }
 
-void P8BaseLine::init()
+void URBAN_FORM::init()
 {
     this->addTuplePort("out", DM::OUTTUPLESYSTEM);
-    if (mmap.size()==0)
+    if (this->getSimulation()->getModuleByName("Mixer")==NULL)
     {
         cout << "Creating Mixer"<<endl;
         DM::Module *mix;
         mix=this->getSimulation()->addModule("AppendViewFromSystem");
         mix->setGroup(this);
         mix->init();
-        mmap.insert("Mixer",QString::fromStdString(mix->getUuid()));
+        mix->setName("Mixer");
         cout << "created: " << mix << "("<< mix->getUuid()<< ")"<<endl;
 
         cout << "Createing Links"<<endl;
@@ -53,15 +54,15 @@ void P8BaseLine::init()
     }
 }
 
-bool P8BaseLine::createInputDialog()
+bool URBAN_FORM::createInputDialog()
 {
-    QWidget * w = new P8BaseLine_GUI(this);
+    QWidget * w = new URBAN_FORM_GUI(this);
     w->show();
     return true;
 }
 
 
-void P8BaseLine::createShape(QString filename, QString name, QString typ )
+void URBAN_FORM::createShape(QString filename, QString name, QString typ )
 {
     if(this->getSimulation()->getModuleByName(name.toStdString())!=0)
         return;
@@ -69,7 +70,7 @@ void P8BaseLine::createShape(QString filename, QString name, QString typ )
     if (m!=NULL)
     {
         //        DM::Logger(DM::Debug) << "1";
-        mmap.insert(name,QString::fromStdString(m->getUuid()));
+//        mmap.insert(name,QString::fromStdString(m->getUuid()));
         m->setGroup(this);
         m->setParameterValue("FileName", filename.toStdString());
         DM::Logger(DM::Debug) << filename;
@@ -77,7 +78,7 @@ void P8BaseLine::createShape(QString filename, QString name, QString typ )
         m->setParameterValue(typ.toStdString(), "1"); //"isEdge"
         m->setName(name.toStdString()); //"Landuse"
         m->init();
-        DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
+        DM::Module *mix=this->getSimulation()->getModuleByName("Mixer");
         QString inports = QString::fromStdString(mix->getParameterAsString("Inports"));
         inports += "*|*" + name;
         mix->setParameterValue("Inports",inports.toStdString());
@@ -86,7 +87,7 @@ void P8BaseLine::createShape(QString filename, QString name, QString typ )
     }
 }
 
-void P8BaseLine::createRaster(QString filename, QString name)
+void URBAN_FORM::createRaster(QString filename, QString name)
 {
     if(this->getSimulation()->getModuleByName(name.toStdString())!=0)
         return;
@@ -94,7 +95,7 @@ void P8BaseLine::createRaster(QString filename, QString name)
     cout << "Raster: " << m << endl;
     if (m!=NULL)
     {
-        mmap.insert(name,QString::fromStdString(m->getUuid()));
+//        mmap.insert(name,QString::fromStdString(m->getUuid()));
         m->setGroup(this);
         m->setParameterValue("Filename", filename.toStdString());
         DM::Logger(DM::Debug) << filename;
@@ -102,7 +103,7 @@ void P8BaseLine::createRaster(QString filename, QString name)
         m->setName(name.toStdString()); //"Landuse"
         m->init();
 
-        DM::Module *mix=this->getSimulation()->getModuleWithUUID(mmap.value("Mixer").toStdString());
+        DM::Module *mix=this->getSimulation()->getModuleByName("Mixer");
         QString inports = QString::fromStdString(mix->getParameterAsString("Inports"));
         inports += "*|*" + name;
         mix->setParameterValue("Inports",inports.toStdString());

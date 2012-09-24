@@ -7,45 +7,45 @@
  * This file is part of DynaMind
  *
  * Copyright (C) 2011  Christian Urich
-
+ 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
-
+ 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
-#include "dmnodefactory.h"
-#include "dmmoduleregistry.h"
-#include "p8scenariogroup.h"
-#include "p8baseline.h"
-#include "p8rain.h"
-#include "p8scenario.h"
-//#include "p8simulation.h"
-//#include "p8evaluation.h"
-#include "graphicplacement.h"
-#include "appendrasterasattribute.h"
 
-using namespace std;
-using namespace DM;
+#ifndef GRAPHICPLACEMENT_H
+#define GRAPHICPLACEMENT_H
 
+#include <QVector>
+#include <QPoint>
 
-extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
+#include <dmmodule.h>
+#include <dm.h>
+class GraphicPlacement : public  DM::Module
 {
-    registry->addNodeFactory(new NodeFactory<URBAN_FORM>());
-    registry->addNodeFactory(new NodeFactory<P8Rain>());
-    registry->addNodeFactory(new NodeFactory<SCENARIO>());
-    registry->addNodeFactory(new NodeFactory<GraphicPlacement>());
-//    registry->addNodeFactory(new NodeFactory<P8Simulation>());
-//    registry->addNodeFactory(new NodeFactory<P8Evaluation>());
-    registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
-}
+    DM_DECLARE_NODE( GraphicPlacement )
+    private:
+        DM::View block ;
+    long color;
 
+public:
+    GraphicPlacement();
+    void run();
+    void createGraphic(double px, double py, int no);
+    void createFace_Box( double px, double py, double w, double h, long color);
+    void createFace_Circle( double px, double py, double r, long color);
+    void createFace_Polygon( QVector<QPoint> points, long color);
+};
+
+#endif // BLOCK_H
