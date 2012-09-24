@@ -53,6 +53,12 @@ class Rain(Module):
 	    # read the time stamps and convert it to a 2012-12-31 23:59:59 format
 	    for i in range(0,data.variables['time'].size,1):
 		times.append(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y-%m-%d %H:%M:%S'))
+	    datas = self.getRainData(151.25,-34.05,data)[:]
+	    f = open("RainData.txt",'w')
+	    for i in range(len(times)):
+		f.write(str(times[i])+","+str(datas[i])+"\n")
+	    f.close()
+	    print "done"
 	    #read all blocks and add a rain attribute
 	    i = 0
 	    for catch in catchments:                
