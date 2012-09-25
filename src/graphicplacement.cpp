@@ -53,12 +53,16 @@ GraphicPlacement::GraphicPlacement()
 }
 void GraphicPlacement::run()
 {
+#if 0
+    createFace_Circle(0, 0, 1, 256);
+#else
     for (int i=0;i<200;i++)
     {
         double ulx=rand()%1000;
         double uly=rand()%1000;
         createGraphic(ulx,uly,1);//rand()%2);
     }
+#endif
 
 };
 
@@ -82,80 +86,81 @@ void GraphicPlacement::createGraphic(double px, double py, int no)
 
 void GraphicPlacement::createFace_Box( double px, double py, double w, double h, long color)
 {
-    QVector<QPoint> p;
-    p<<QPoint(px, py);
-    p<<QPoint(px+w, py);
-    p<<QPoint(px+w, py+h);
-    p<<QPoint(px, py+h);
+    QVector<QPointF> p;
+    p<<QPointF(px, py);
+    p<<QPointF(px+w, py);
+    p<<QPointF(px+w, py+h);
+    p<<QPointF(px, py+h);
     createFace_Polygon(p,color);
 }
 
 void GraphicPlacement::createFace_Circle( double px, double py, double r, long color)
 {
-    /*
-    int g=30;
+#if 1
+    int g=36;
 
-    QVector<QPoint> p;
+    QVector<QPointF> p;
 
     for (int i=0;i<=360;i+=g)
     {
-        double x=r*cos(M_PI*i/180.0);
-        double y=r*sin(M_PI*i/180.0);
-        p<<QPoint(px+x, py+y);
+        double x=r*cos(M_PI*(double)i/180.0);
+        double y=r*sin(M_PI*(double)i/180.0);
+        p<<QPointF(px+x, py+y);
     }
     createFace_Polygon(p,color);
     p.clear();
 
-*/
-    QVector<QPoint> p;
+#else
+    QVector<QPointF> p;
     int n=5;
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     for (int i=0;i<n;i++)
     {
         double x=-r*cos(M_PI*i/(n-1));
         double y=sqrt(r*r-x*x);
-        p<<QPoint(px+x, py+y);
+        p<<QPointF(px+x, py+y);
     }
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     createFace_Polygon(p,color);
     p.clear();
 
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     for (int i=0;i<n;i++)
     {
         double x=-r*cos(M_PI*i/(n-1));
         double y=sqrt(r*r-x*x);
-        p<<QPoint(px+x, py-y);
+        p<<QPointF(px+x, py-y);
     }
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     createFace_Polygon(p,color);
     p.clear();
 
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     for (int i=0;i<n;i++)
     {
         double x=-r*cos(M_PI*i/(n-1));
         double y=sqrt(r*r-x*x);
-        p<<QPoint(px-x, py-y);
+        p<<QPointF(px-x, py-y);
     }
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     createFace_Polygon(p,color);
     p.clear();
 
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     for (int i=0;i<n;i++)
     {
         double x=-r*cos(M_PI*i/(n-1));
         double y=sqrt(r*r-x*x);
-        p<<QPoint(px-x, py+y);
+        p<<QPointF(px-x, py+y);
     }
-    p<<QPoint(px,py);
+    p<<QPointF(px,py);
     createFace_Polygon(p,color);
     p.clear();
+#endif
 
 }
 
-void GraphicPlacement::createFace_Polygon( QVector<QPoint> points, long color)
+void GraphicPlacement::createFace_Polygon( QVector<QPointF> points, long color)
 {
     DM::System * blocks = this->getData("City");
     std::vector<DM::Node*> ve;

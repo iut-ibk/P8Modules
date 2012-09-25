@@ -28,7 +28,7 @@
 #define GRAPHICPLACEMENT_H
 
 #include <QVector>
-#include <QPoint>
+#include <QPointF>
 
 #include <dmmodule.h>
 #include <dm.h>
@@ -45,7 +45,7 @@ public:
     void createGraphic(double px, double py, int no);
     void createFace_Box( double px, double py, double w, double h, long color);
     void createFace_Circle( double px, double py, double r, long color);
-    void createFace_Polygon( QVector<QPoint> points, long color);
+    void createFace_Polygon( QVector<QPointF> points, long color);
 };
 
 #endif // BLOCK_H
