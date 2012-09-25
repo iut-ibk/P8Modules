@@ -103,11 +103,10 @@ class ReadTableSecondary(Module):
 	    VolumePredev = preTotalsum * 60*60*24*1000/1000000
 	    exfilSum = self.SumAllValues(vec6)
 	    FVg = exfilSum * 60*60*24*1000/1000000
-	    print FVg
+
     	    FvForest = self.find_nearest(self.ForestX,FVg)
 	    FvPasture = self.find_nearest(self.PastureX,FVg)
-	    print FvForest
-	    print FvPasture
+
 	    if FVg < FvForest:
 		self.FV = FVg/FvForest
 	    elif FVg > FvPasture:
@@ -115,12 +114,16 @@ class ReadTableSecondary(Module):
 	    else:
 		self.FV = 1
 
-
-
-	    self.FF = 1- max((FreqTreated-FreqPredev)/(FreqUntreated-FreqPredev),0)
+	    self.FF = 1 - max((float(FreqTreated)-float(FreqPredev))/(float(FreqUntreated)-float(FreqPredev)),0)
 	    self.VR = 1-(VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev)
 	    self.WQ = (tss+tn+tp)/3
 
+
+	    #for numbers with only value after the comma
+	    self.FF = float(int(self.FF*1000))/10 
+	    self.VR = float(int(self.VR*1000))/10 
+	    self.WQ = float(int(self.WQ*1000))/10 
+   	    self.FV = float(int(self.FV*1000))/10 
 	def createInputDialog(self):
             form = ReadTableSecondary_Gui(self, QApplication.activeWindow())
             form.show()
@@ -129,12 +132,17 @@ class ReadTableSecondary(Module):
 		count1 = 0
 		count2 = 0
 		count3 = 0
+		tmpVec = vec3
+		sorted(tmpVec)
+		index = (80/100)*len(tmpVec) 
+		boundry2 = tmpVec[index]#float(max(vec3)) * 0.2
+		
 		for i in range(len(vec1)):
 			if float(vec1[i]) > float(boundry):
 				count1 += 1
 			if float(vec2[i]) > float(boundry):
 				count2 += 1
-			if float(vec3[i]) > float(boundry):
+			if float(vec3[i]) > float(boundry2):
 				count3 += 1
 		ergVec = [count1,count2,count3]
 		return ergVec
