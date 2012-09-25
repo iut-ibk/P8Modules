@@ -28,6 +28,9 @@
 #include <dm.h>
 #include <dmview.h>
 #include <dmlogger.h>
+#include <dmcomponent.h>
+
+#include <QColorDialog>
 
 #include <cmath>
 #ifndef M_PI
@@ -43,7 +46,15 @@
 DM_DECLARE_NODE_NAME( GraphicPlacement,CRCP8 )
 GraphicPlacement::GraphicPlacement()
 {
+    //QColorDialog::getColor();
     std::vector<DM::View> views;
+
+    graphicPositions = DM::View("graphicPositions", DM::COMPONENT, DM::READ);
+    graphicPositions.getAttribute("xCoords");
+    graphicPositions.getAttribute("yCoords");
+    graphicPositions.getAttribute("Types");
+    views.push_back(graphicPositions);
+
     block = DM::View("GraphicPlacement", DM::FACE, DM::WRITE);
     block.addAttribute("Color");
     views.push_back(block);
@@ -53,25 +64,86 @@ GraphicPlacement::GraphicPlacement()
 }
 void GraphicPlacement::run()
 {
-#if 0
-    createFace_Circle(0, 0, 1, 256);
-#else
-    for (int i=0;i<200;i++)
+    DM::System * city = this->getData("City");
+    std::vector<std::string> strvec = city->getUUIDsOfComponentsInView(graphicPositions);
+    cout<< "strvec length: "<< strvec.size() << endl;
+
+    foreach (std::string str, strvec)
+    {
+        DM::Component *graposAttr = city->getComponent(str);
+        std::vector<double> xCoords =  graposAttr->getAttribute("xCoords")->getDoubleVector();
+        std::vector<double> yCoords =  graposAttr->getAttribute("yCoords")->getDoubleVector();
+        std::vector<double> gTypes =  graposAttr->getAttribute("Types")->getDoubleVector();
+
+        for (int i=0;i<xCoords.size();i++)
+        {
+            createGraphic(xCoords[i],yCoords[i],int(gTypes[i]));//rand()%2);
+            cout << "create graphic: "<<xCoords[i]<<","<<yCoords[i]<<endl;
+        }
+    }
+    /*
+    for (int i=0;i<20;i++)
     {
         double ulx=rand()%1000;
         double uly=rand()%1000;
-        createGraphic(ulx,uly,1);//rand()%2);
+        createGraphic(ulx,uly,0);//rand()%2);
     }
-#endif
 
+*/
 };
 
 void GraphicPlacement::createGraphic(double px, double py, int no)
 {
+    /*
+WSUR - Wetland = 1 –  green circle - 107
+PB - Pond = 2 – orange circle - 40
+IS - Infil = 3 – dark red circle - 360
+BF - BioRetention = 4 - ? - 176
+SW - Swale = 5 – green - black square - 262
+*/
+
+    double w=100;
+    double h=100;
+    long color;
+
+    if (no==1) //Wetland
+    {
+        color=107;
+        createFace_Box(px,py,w,h,color);
+    }
+    else if (no==2) //Pond
+    {
+        color=40;
+        createFace_Box(px,py,w,h,color);
+    }
+    else if (no==3) //Infil
+    {
+        color=360;
+        createFace_Box(px,py,w,h,color);
+    }
+    else if (no==4) //BioRetention
+    {
+        color=176;
+        createFace_Box(px,py,w,h,color);
+    }
+    else if (no==5) //Swale
+    {
+        color=262;
+        createFace_Box(px,py,w,h,color);
+    }
+    else
+    {
+        color=130;
+        createFace_Box(px,py,w,h,color);
+    }
+
+
+
+/*
     if (no==0)
     {
-        double w=rand()%100;
-        double h=rand()%100;
+        double w=100;
+        double h=100;
         long color=rand()%256;
         createFace_Box(px,py,w,h,color);
     }
@@ -81,16 +153,17 @@ void GraphicPlacement::createGraphic(double px, double py, int no)
         long color=rand()%256;
         createFace_Circle(px,py,r,color);
     }
+    */
 }
 
 
 void GraphicPlacement::createFace_Box( double px, double py, double w, double h, long color)
 {
     QVector<QPointF> p;
-    p<<QPointF(px, py);
-    p<<QPointF(px+w, py);
-    p<<QPointF(px+w, py+h);
-    p<<QPointF(px, py+h);
+    p<<QPointF(px-w/2.0, py-h/2.0);
+    p<<QPointF(px+w/2.0, py-h/2.0);
+    p<<QPointF(px+w/2.0, py+h/2.0);
+    p<<QPointF(px-w/2.0, py+h/2.0);
     createFace_Polygon(p,color);
 }
 

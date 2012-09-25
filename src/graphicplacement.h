@@ -37,6 +37,8 @@ class GraphicPlacement : public  DM::Module
     DM_DECLARE_NODE( GraphicPlacement )
     private:
         DM::View block ;
+    DM::View graphicPositions;
+
     long color;
 
 public:
