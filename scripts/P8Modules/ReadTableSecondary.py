@@ -4,7 +4,7 @@ from pydynamind import *
 from ReadTableSecondary_Gui import *
 import shlex
 import numpy as np
-class ReadTableSecondary(Module):
+class EnviromentalBenefitsResults(Module):
 	def __init__(self):
 	    Module.__init__(self)
 	    

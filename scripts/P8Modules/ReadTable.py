@@ -4,7 +4,7 @@ from pydynamind import *
 from ReadTable_Gui import *
 import shlex
 
-class ReadTable(Module):
+class TreatmentPerformanceResults(Module):
 	def __init__(self):
 	    Module.__init__(self)
 	    
