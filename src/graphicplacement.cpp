@@ -53,7 +53,7 @@ GraphicPlacement::GraphicPlacement()
 }
 void GraphicPlacement::run()
 {
-    for (int i=0;i<20;i++)
+    for (int i=0;i<200;i++)
     {
         double ulx=rand()%1000;
         double uly=rand()%1000;
@@ -92,17 +92,26 @@ void GraphicPlacement::createFace_Box( double px, double py, double w, double h,
 
 void GraphicPlacement::createFace_Circle( double px, double py, double r, long color)
 {
-/*    double U=2*M_PI*r;
-    int n=U/4.0/10.0;
-    if (n<2)
-        n=2;*/
-    int n=5;
+    /*
+    int g=30;
 
     QVector<QPoint> p;
 
+    for (int i=0;i<=360;i+=g)
+    {
+        double x=r*cos(M_PI*i/180.0);
+        double y=r*sin(M_PI*i/180.0);
+        p<<QPoint(px+x, py+y);
+    }
+    createFace_Polygon(p,color);
+    p.clear();
+
+*/
+    QVector<QPoint> p;
+    int n=5;
+    p<<QPoint(px,py);
     for (int i=0;i<n;i++)
     {
-//        double x=r*i/(n-1);
         double x=-r*cos(M_PI*i/(n-1));
         double y=sqrt(r*r-x*x);
         p<<QPoint(px+x, py+y);
@@ -111,6 +120,7 @@ void GraphicPlacement::createFace_Circle( double px, double py, double r, long c
     createFace_Polygon(p,color);
     p.clear();
 
+    p<<QPoint(px,py);
     for (int i=0;i<n;i++)
     {
         double x=-r*cos(M_PI*i/(n-1));
@@ -121,6 +131,7 @@ void GraphicPlacement::createFace_Circle( double px, double py, double r, long c
     createFace_Polygon(p,color);
     p.clear();
 
+    p<<QPoint(px,py);
     for (int i=0;i<n;i++)
     {
         double x=-r*cos(M_PI*i/(n-1));
@@ -131,6 +142,7 @@ void GraphicPlacement::createFace_Circle( double px, double py, double r, long c
     createFace_Polygon(p,color);
     p.clear();
 
+    p<<QPoint(px,py);
     for (int i=0;i<n;i++)
     {
         double x=-r*cos(M_PI*i/(n-1));
