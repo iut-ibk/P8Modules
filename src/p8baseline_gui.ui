@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>P8BaseLine_GUI</class>
- <widget class="QDialog" name="P8BaseLine_GUI">
+ <class>URBAN_FORM_GUI</class>
+ <widget class="QDialog" name="URBAN_FORM_GUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -150,7 +150,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>P8BaseLine_GUI</receiver>
+   <receiver>URBAN_FORM_GUI</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -166,7 +166,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>P8BaseLine_GUI</receiver>
+   <receiver>URBAN_FORM_GUI</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

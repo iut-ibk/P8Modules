@@ -7,15 +7,15 @@
 #include <QMap>
 #include <QString>
 
-class DM_HELPER_DLL_EXPORT P8Scenario :public DM::Group
+class DM_HELPER_DLL_EXPORT SCENARIO :public DM::Group
 {
-    DM_DECLARE_GROUP(P8Scenario)
+    DM_DECLARE_GROUP(SCENARIO)
 
     private:
         bool modulesHaveBeenCreated;
 public:
 
-    P8Scenario();
+    SCENARIO();
     void run();
     virtual bool createInputDialog();
     void init();

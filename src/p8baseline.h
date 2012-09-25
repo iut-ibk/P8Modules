@@ -7,18 +7,18 @@
 #include <QMap>
 #include <QString>
 
-class DM_HELPER_DLL_EXPORT P8BaseLine :public DM::Group
+class DM_HELPER_DLL_EXPORT URBAN_FORM :public DM::Group
 {
-    DM_DECLARE_GROUP(P8BaseLine)
+    DM_DECLARE_GROUP(URBAN_FORM)
 public:
-    P8BaseLine();
+    URBAN_FORM();
     void run();
     virtual bool createInputDialog();
     void createShape(QString filename, QString name, QString typ );
     void createRaster(QString filename, QString name);
     void init();
 
-    QMap<QString,QString> mmap;
+    //QMap<QString,QString> mmap;
 
     std::string fileNameC;
     std::string fileNameS;

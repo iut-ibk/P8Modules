@@ -3,9 +3,9 @@
 #include "p8baseline.h"
 #include <QFileDialog>
 
-P8BaseLine_GUI::P8BaseLine_GUI(P8BaseLine * p8, QWidget *parent) :
+URBAN_FORM_GUI::URBAN_FORM_GUI(URBAN_FORM * p8, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::P8BaseLine_GUI)
+    ui(new Ui::URBAN_FORM_GUI)
 {
     ui->setupUi(this);
     this->p8baseline = p8;
@@ -21,12 +21,12 @@ P8BaseLine_GUI::P8BaseLine_GUI(P8BaseLine * p8, QWidget *parent) :
     //ui->sb_gs->setValue(QString::fromStdString(p8->getParameterAsString("RasterSize")).toDouble());
 }
 
-P8BaseLine_GUI::~P8BaseLine_GUI()
+URBAN_FORM_GUI::~URBAN_FORM_GUI()
 {
     delete ui;
 }
 
-void P8BaseLine_GUI::on_pb_c_released()
+void URBAN_FORM_GUI::on_pb_c_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Catchment Boundarys",QDir::currentPath(),"*.shp");
     this->p8baseline->createShape(fname,"Catchment Boundarys","isFace");
@@ -34,7 +34,7 @@ void P8BaseLine_GUI::on_pb_c_released()
     ui->le_c->setText(fname);
 }
 
-void P8BaseLine_GUI::on_pb_s_released()
+void URBAN_FORM_GUI::on_pb_s_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Soil Map",QDir::currentPath(),"*.*");
     this->p8baseline->createRaster(fname,"Soil");
@@ -42,7 +42,7 @@ void P8BaseLine_GUI::on_pb_s_released()
     ui->le_s->setText(fname);
 }
 
-void P8BaseLine_GUI::on_pb_t_released()
+void URBAN_FORM_GUI::on_pb_t_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Topology",QDir::currentPath(),"*.*");
     this->p8baseline->createRaster(fname,"Topology");
@@ -50,7 +50,7 @@ void P8BaseLine_GUI::on_pb_t_released()
     ui->le_t->setText(fname);
 }
 
-void P8BaseLine_GUI::on_pb_p_released()
+void URBAN_FORM_GUI::on_pb_p_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Plan Map",QDir::currentPath(),"*.*");
     this->p8baseline->createRaster(fname,"Plan Map");
@@ -58,7 +58,7 @@ void P8BaseLine_GUI::on_pb_p_released()
     ui->le_p->setText(fname);
 }
 
-void P8BaseLine_GUI::on_pb_d_released()
+void URBAN_FORM_GUI::on_pb_d_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Population Map",QDir::currentPath(),"*.*");
     this->p8baseline->createRaster(fname,"Population Density");
@@ -66,7 +66,7 @@ void P8BaseLine_GUI::on_pb_d_released()
     ui->le_d->setText(fname);
 }
 
-void P8BaseLine_GUI::on_pb_l_released()
+void URBAN_FORM_GUI::on_pb_l_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Landuse Map",QDir::currentPath(),"*.*");
     this->p8baseline->createRaster(fname,"Landuse");
@@ -74,13 +74,13 @@ void P8BaseLine_GUI::on_pb_l_released()
     ui->le_l->setText(fname);
 }
 
-void P8BaseLine_GUI::on_sb_gs_editingFinished()
+void URBAN_FORM_GUI::on_sb_gs_editingFinished()
 {
     //QString rs=QString("%1").arg(ui->sb_gs->value());
     //p8baseline->setParameterValue("RasterSize",rs.toStdString());
 }
 
-void P8BaseLine_GUI::on_buttonBox_accepted()
+void URBAN_FORM_GUI::on_buttonBox_accepted()
 {
 //    this->p8baseline->createCityBlocksFromShape(ui->sb_gs->value(), ui->sb_gs->value());
 }
