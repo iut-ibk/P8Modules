@@ -22,7 +22,6 @@ public:
     void open_ui_delinblocks();
     void open_ui_urbplanbb();
     void open_ui_techplacement();
-    QMap<QString,QString> mmap;
 };
 
 #endif // P8BASELINE_H
