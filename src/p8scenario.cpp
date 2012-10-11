@@ -11,6 +11,8 @@ DM_DECLARE_GROUP_NAME(SCENARIO, CRCP8)
 
 SCENARIO::SCENARIO()
 {
+    cout << "1=====================" << endl;
+
     this->Steps = 1;
     modulesHaveBeenCreated = false;
 
@@ -171,7 +173,7 @@ void SCENARIO::init() {
 #else
  //new serialized version
         //created by netread
-
+        cout << "1=====================" << endl;
         DM::Module *blocDelin;
         blocDelin=this->getSimulation()->addModule("delinblocks");
         blocDelin->setGroup(this);
