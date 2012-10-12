@@ -32,7 +32,7 @@ void SCENARIO::init() {
     {
  //new serialized version
         //created by netread
-        cout << "1=====================" << endl;
+        cout << "2=====================" << endl;
         DM::Module *blocDelin;
         blocDelin=this->getSimulation()->addModule("delinblocks");
         blocDelin->setGroup(this);
@@ -59,6 +59,7 @@ void SCENARIO::init() {
         urbplanResidential->init();
        // mmap.insert("urbplanResidential",QString::fromStdString(urbplanResidential->getUuid()));
 
+        cout << "3=====================" << endl;
          DM::Module *urbplanNonResidential;
         urbplanNonResidential=this->getSimulation()->addModule("ubp_nonres");
         urbplanNonResidential->setGroup(this);
@@ -76,12 +77,14 @@ void SCENARIO::init() {
         urbplanSpaces->setGroup(this);
         urbplanSpaces->init();
         //mmap.insert("urbplanSpaces",QString::fromStdString(urbplanSpaces->getUuid()));
+        cout << "4=====================" << endl;
 
         DM::Module *planSummaryUrban;
-        planSummaryUrban=this->getSimulation()->addModule("urbanplansummary");
+        planSummaryUrban=this->getSimulation()->addModule("urbplansummary");
         planSummaryUrban->setGroup(this);
         planSummaryUrban->init();
         //mmap.insert("planSummaryUrban",QString::fromStdString(planSummaryUrban->getUuid()));
+
 
         DM::Module *placementTech;
         placementTech=this->getSimulation()->addModule("techplacement");
@@ -107,9 +110,10 @@ void SCENARIO::init() {
         neighTechOpp->setGroup(this);
         neighTechOpp->init();
         //mmap.insert("neighTechOpp",QString::fromStdString(neighTechOpp->getUuid()));
+        cout << "4b====================" << endl;
 
         DM::Module *precTechOpp;
-        precTechOpp=this->getSimulation()->addModule("techopp_prec");
+        precTechOpp=this->getSimulation()->addModule("techopp_precinct");
         precTechOpp->setGroup(this);
         precTechOpp->init();
        // mmap.insert("precTechOpp",QString::fromStdString(precTechOpp->getUuid()));
@@ -119,6 +123,7 @@ void SCENARIO::init() {
         evalTechStrategy->setGroup(this);
         evalTechStrategy->init();
         //mmap.insert("evalTechStrategy",QString::fromStdString(evalTechStrategy->getUuid()));
+        cout << "5=====================" << endl;
 
         DM::ModuleLink *l_START_blocDelin=this->getSimulation()->addLink( this->getInPortTuple("in")->getOutPort(),blocDelin->getInPort("City"));
         DM::ModuleLink *l_blocDelin_basinDelin=this->getSimulation()->addLink( blocDelin->getOutPort("City"),basinDelin->getInPort("City"));
@@ -139,6 +144,7 @@ void SCENARIO::init() {
         // end created by netread
 
         modulesHaveBeenCreated = true;
+        cout << "6=====================" << endl;
 
     }
 }
