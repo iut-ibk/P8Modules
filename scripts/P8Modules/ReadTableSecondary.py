@@ -13,7 +13,8 @@ class EnviromentalBenefitsResults(Module):
 
 	    #Views
 	    self.blocks = View("Block", FACE, READ)
-	    
+	    self.simulation = View("SimulationData",COMPONENT,READ)
+            self.simulation.getAttribute("SimulationCity")
 
 	    self.TableData = View("Table Data",COMPONENT,WRITE)
 	    self.TableData.addAttribute("Type")
@@ -30,10 +31,24 @@ class EnviromentalBenefitsResults(Module):
 	    datastream =[]
 	    datastream.append(self.TableData)
 	    datastream.append(self.blocks)
+	    datastream.append(self.simulation)
 	    self.addData("City",datastream)
 
         def run(self):
 	    city = self.getData("City")
+	    strvec = city.getUUIDsOfComponentsInView(self.simulation)
+	    simuAttr = city.getComponent(strvec[0])
+	    tmpRain = simuAttr.getAttribute("SimulationCity").getDouble()
+	    if tmpRain == 0:
+		AnnualRain = 520
+	    elif tmpRain == 1:
+		AnnualRain = 1200
+	    elif tmpRain == 2:
+		AnnualRain = 650
+	    elif tmpRain == 3:
+		AnnualRain = 790
+	    elif tmpRain == 4:
+		AnnualRain = 1175
 
 	    list1 = self.readFileToList("PredevelopRunoffFrequency"+self.FileName+".TXT")
 	    list2 = self.readFileToList("UntreatedRunoffFrequency"+self.FileName+".TXT")
@@ -73,9 +88,9 @@ class EnviromentalBenefitsResults(Module):
 		if i%4==1:
 		    tssVec.append(list7[i])
 		if i%4==2:
-		    tpVec.append(list7[i])
-		if i%4==3:
 		    tnVec.append(list7[i])
+		if i%4==3:
+		    tpVec.append(list7[i])
 
 	    tssVec = sorted(tssVec)
 	    tpVec = sorted(tpVec)
@@ -83,10 +98,9 @@ class EnviromentalBenefitsResults(Module):
 	    tss = tssVec[len(tssVec)/2]
 	    tp = tpVec[len(tpVec)/2]
 	    tn = tnVec[len(tnVec)/2]
-
 	    tss = 1-max((float(tss)-20)/(150-20),0)
-	    tn = 1-max((float(tn)-0.6)/(150-20),0)
-	    tp = 1-max((float(tp)-0.5)/(0.35-0.05),0)
+	    tp = 1-max((float(tp)-0.6)/(2.2-0.6),0)
+	    tn = 1-max((float(tn)-0.05)/(0.35-0.05),0)
 
 	    
 
@@ -96,17 +110,46 @@ class EnviromentalBenefitsResults(Module):
 	    FreqUntreated = freqVec[1]
 	    FreqTreated = freqVec[2]
 	    ETsum = self.SumAllValues(vec4)
+	    TreatSum = self.SumAllValues(vec3)
+	    VolumeTreat = TreatSum *60*60*24*1000/1000000
 	    VolumeET = ETsum * 60*60*24*1000/1000000
 	    UntreadSum = self.SumAllValues(vec2)
 	    VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
 	    preTotalsum = self.SumAllValues(vec5)
 	    VolumePredev = preTotalsum * 60*60*24*1000/1000000
 	    exfilSum = self.SumAllValues(vec6)
-	    FVg = exfilSum * 60*60*24*1000/1000000
+	    FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeTreat
 
-    	    FvForest = self.find_nearest(self.ForestX,FVg)
-	    FvPasture = self.find_nearest(self.PastureX,FVg)
 
+    	    #FvForest = self.find_nearest(self.ForestX,FVg)
+	    #FvPasture = self.find_nearest(self.PastureX,FVg)
+	    indexPX = self.find_nearest(self.PastureY,AnnualRain)
+	    indexFX = self.find_nearest(self.ForestY,AnnualRain)
+
+	    if self.ForestY[indexFX] > AnnualRain:
+		Fx1 = self.ForestX[indexFX-1]
+		Fx2 = self.ForestX[indexFX]
+		Fy1 = self.ForestY[indexFX-1]
+		Fy2 = self.ForestY[indexFX]
+	    else:
+		Fx1 = self.ForestX[indexFX]
+		Fx2 = self.ForestX[indexFX+1]
+		Fy1 = self.ForestY[indexFX]
+		Fy2 = self.ForestY[indexFX+1]
+
+	    if self.PastureY[indexPX] > AnnualRain:
+		Px1 = self.PastureX[indexPX-1]
+		Px2 = self.PastureX[indexPX]
+		Py1 = self.PastureY[indexPX-1]
+		Py2 = self.PastureY[indexPX]
+	    else:
+		Px1 = self.PastureX[indexPX]
+		Px2 = self.PastureX[indexPX+1]
+		Py1 = self.PastureY[indexPX]
+		Py2 = self.PastureY[indexPX+1]
+
+            FvForest = np.abs((((Fx2-Fx1)*(Fy2-AnnualRain))/(Fy2-Fy1))-Fx2)
+            FvPasture = np.abs((((Px2-Px1)*(Py2-AnnualRain))/(Py2-Py1))-Px2)
 	    if FVg < FvForest:
 		self.FV = FVg/FvForest
 	    elif FVg > FvPasture:
@@ -123,7 +166,7 @@ class EnviromentalBenefitsResults(Module):
 	    self.FF = float(int(self.FF*1000))/10 
 	    self.VR = float(int(self.VR*1000))/10 
 	    self.WQ = float(int(self.WQ*1000))/10 
-   	    self.FV = float(int(self.FV*1000))/10 
+   	    self.FV = float(int(self.FV*1000))/10
 	def createInputDialog(self):
             form = ReadTableSecondary_Gui(self, QApplication.activeWindow())
             form.show()
@@ -165,7 +208,7 @@ class EnviromentalBenefitsResults(Module):
     	    for i in array:
 		tmp.append(i-value)
 	    idx=(np.abs(tmp)).argmin()
-	    return array[idx]
+	    return idx
 
 
 
