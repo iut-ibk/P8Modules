@@ -57,12 +57,15 @@ class EnviromentalBenefitsResults(Module):
 	    list5 = self.readFileToList("PredevelopTotalRunoff"+self.FileName+".TXT")
 	    list6 = self.readFileToList("Exfiltration"+self.FileName+".TXT")
 	    list7 = self.readFileToList("WQ"+self.FileName+".TXT")
+	    list8 = self.readFileToList("PredevelopBaseflowFrequency"+self.FileName+".TXT")
 	    vec1 = []
 	    vec2 = []
 	    vec3 = []
 	    vec4 = []
 	    vec5 = []
 	    vec6 = []
+	    vec8 = []
+	    vec9 = []
 	    tssVec = []
 	    tnVec = []
 	    tpVec = []
@@ -71,9 +74,9 @@ class EnviromentalBenefitsResults(Module):
 		    continue
 		vec1.append(list1[i])
 		vec2.append(list2[i])
-		vec3.append(list3[i])
 		vec5.append(list5[i])
 		vec6.append(list6[i])
+		vec8.append(list8[i])
 
 	    for i in range(len(list4)):
 		if i <2 or (i+1)%2:
@@ -102,23 +105,29 @@ class EnviromentalBenefitsResults(Module):
 	    tp = 1-max((float(tp)-0.6)/(2.2-0.6),0)
 	    tn = 1-max((float(tn)-0.05)/(0.35-0.05),0)
 
+
 	    
-
-
-	    freqVec = self.getNotZeroDays(vec1,vec2,vec3,0)
+	    freqVec = self.getNotZeroDays(vec1,vec2,vec2,0)
 	    FreqPredev = freqVec[0]
 	    FreqUntreated = freqVec[1]
-	    FreqTreated = freqVec[2]
+	    vec8 = sorted(vec8)
+	    cin = 3 * float(vec8[len(vec8)/2])
+	    for i in range(len(list3)):
+		if i<2 or ((i)%2==0):
+		    continue
+		if (float(list3[i])<cin):
+		    continue
+		if i%2==1:
+		    vec3.append(list3[i])
+	    FreqTreated = len(vec3)
 	    ETsum = self.SumAllValues(vec4)
-	    TreatSum = self.SumAllValues(vec3)
-	    VolumeTreat = TreatSum *60*60*24*1000/1000000
 	    VolumeET = ETsum * 60*60*24*1000/1000000
 	    UntreadSum = self.SumAllValues(vec2)
 	    VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
 	    preTotalsum = self.SumAllValues(vec5)
 	    VolumePredev = preTotalsum * 60*60*24*1000/1000000
 	    exfilSum = self.SumAllValues(vec6)
-	    FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeTreat
+	    FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
 
 
     	    #FvForest = self.find_nearest(self.ForestX,FVg)
@@ -209,14 +218,3 @@ class EnviromentalBenefitsResults(Module):
 		tmp.append(i-value)
 	    idx=(np.abs(tmp)).argmin()
 	    return idx
-
-
-
-
-
-
-
-
-
-
-
