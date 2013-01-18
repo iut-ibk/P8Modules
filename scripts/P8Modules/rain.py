@@ -9,6 +9,8 @@ import tempfile
 import datetime
 import numpy as np
 import os
+import osgeo.ogr as ogr
+import osgeo.osr as osr
 
 class Rain(Module):
 	def __init__(self):
@@ -21,8 +23,14 @@ class Rain(Module):
             datastream = []
             self.blocks = View("Block", FACE, READ)
             self.blocks.addAttribute("Rain")
+	    
+	    self.coords = View("CoordOffset", COMPONENT, READ)
+	    self.coords.getAttribute("Xoffset")
+	    self.coords.getAttribute("Yoffset")
+
 
             datastream.append(self.blocks)
+	    datastream.append(self.coords)
             self.addData("City", datastream)
 
 
@@ -30,6 +38,10 @@ class Rain(Module):
         def run(self):
             dataflow = self.getData("City")
             catchments = dataflow.getUUIDsOfComponentsInView(self.blocks) 
+	    coordvec = dataflow.getUUIDsOfComponentsInView(self.coords)
+	    comp = dataflow.getComponent(coordvec[0])
+ 	    xoffset = comp.getAttribute("Xoffset").getDouble()
+	    yoffset = comp.getAttribute("Yoffset").getDouble()
 
             data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 
@@ -54,23 +66,51 @@ class Rain(Module):
 	    for i in range(0,data.variables['time'].size,1):
 		times.append(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y-%m-%d %H:%M:%S'))
 	    datas = self.getRainData(151.25,-34.05,data)[:]
+	    
 	    f = open("RainData.txt",'w')
 	    for i in range(len(times)):
 		f.write(str(times[i])+","+str(datas[i])+"\n")
 	    f.close()
 	    print "done"
 	    #read all blocks and add a rain attribute
+	    
 	    i = 0
-	    for catch in catchments:                
-                block = dataflow.getComponent(catch)  
+	    
+	    for catch in catchments:    
+                block = dataflow.getFace(catch)
+		nodes = block.getNodes()
+		n = dataflow.getNode(nodes[0])
+		n1 = dataflow.getNode(nodes[1])
+		n2 = dataflow.getNode(nodes[2])
+		x = (n.getX() + n1.getX())/2
+		y = (n1.getY() + n2.getY())/2
+		x = x + xoffset
+		y = y + yoffset
+		wtk = 'POINT(%s %s)' % (x, y)
+
+		#CREATE PROJECTION OBJECTS
+		target = osr.SpatialReference()
+		target.ImportFromEPSG(32755)
+
+		source = osr.SpatialReference()
+		source.ImportFromEPSG(4326)
+		
+		# CREATE OGR POINT OBJECT, ASSIGN PROJECTION, REPROJECT
+		point = ogr.CreateGeometryFromWkt(wtk)
+		point.AssignSpatialReference(target)
+	    
+		point.TransformTo(source)
+	    	#print "old: " + str(x) + " " + str(y)
+		#print "new: " + str(point.GetX()) + " " + str(point.GetY())
+	      
                 rainattr = Attribute("Rain")
 		# the first two parameters have to bet the x and y position of the block
-		datas = self.getRainData(151.25,-34.05,data)[:]
+		datas = self.getRainData(point.GetX(),point.GetY(),data)[:]
 		rainattr.addTimeSeries(times,datas)
                 block.addAttribute(rainattr)
 		i = i + 1
 	    	print "Adding Rain to Blocks: " + str(i) + " of " + str(len(catchments))
-		
+	    
 	      
 	def createInputDialog(self):
             form = RainGui(self, QApplication.activeWindow())
@@ -96,6 +136,7 @@ class Rain(Module):
 	    datas = Attribute().getDoubleVector()
 	    for i in range(0,len(netCDF.variables['rain'][:]),1):
 	    	datas.append(float(netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]))
+	    	#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 	    return datas
 
 
