@@ -1,0 +1,38 @@
+/*
+#ifndef P8SIMULATION_GUI_H
+#define P8SIMULATION_GUI_H
+
+#include <QDialog>
+
+class P8Simulation;
+
+namespace Ui {
+class P8Simulation_GUI;
+}
+
+class P8Simulation_GUI : public QDialog
+{
+    Q_OBJECT
+    
+public:
+    explicit P8Simulation_GUI(P8Simulation * p8,QWidget *parent = 0);
+    ~P8Simulation_GUI();
+    
+private slots:
+    void on_buttonBox_accepted();
+
+    void on_pb_ui_delinblocks_released();
+
+    void on_pb_ui_urbplanbb_released();
+
+    void on_pb_ui_techplacement_released();
+
+private:
+    Ui::P8Simulation_GUI *ui;
+    P8Simulation * P8simulation;
+
+
+};
+
+#endif // P8BASELINE_GUI_H
+*/
