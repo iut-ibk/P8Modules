@@ -4,6 +4,9 @@
 #include "dmporttuple.h"
 #include "sstream"
 
+#include "dmsystem.h"
+#include "dmview.h"
+
 #include <cmath>
 
 DM_DECLARE_GROUP_NAME(SCENARIO, CRCP8)
@@ -49,7 +52,7 @@ void SCENARIO::init() {
         DM::Module *planbbUrban;
         planbbUrban=this->getSimulation()->addModule("urbplanbb");
         planbbUrban->setGroup(this);
-        planbbUrban->setName("plannbbUrban");
+        planbbUrban->setName("planbbUrban");
         planbbUrban->init();
         //mmap.insert("planbbUrban",QString::fromStdString(planbbUrban->getUuid()));
 
