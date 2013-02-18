@@ -46,7 +46,6 @@ class ReadTableSecondary_Gui(QtGui.QDialog):
 	f.write("Water Quality Index," + str(self.module.WQ) + "\n")
 	f.close()
     def copyToClipboard(self):
-	print " drin"
 	r = Tk()
 	r.withdraw()
 	r.clipboard_clear()
