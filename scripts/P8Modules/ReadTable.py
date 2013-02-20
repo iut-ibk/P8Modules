@@ -7,9 +7,7 @@ import shlex
 class TreatmentPerformanceResults(Module):
 	def __init__(self):
 	    Module.__init__(self)
-	    
-	    self.createParameter("FileName", FILENAME,"")
-	    self.Filename = ""
+
 	    #Views
 	    self.blocks = View("Block", FACE, READ)
 	    
