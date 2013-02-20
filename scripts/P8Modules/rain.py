@@ -44,7 +44,11 @@ class Rain(Module):
 	    yoffset = comp.getAttribute("Yoffset").getDouble()
 
             data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
-
+	    print "Start rain"
+	    print data
+	    print data.variables['time']
+	    print data.variables['lon']
+	    print data.variables['lat']
 	    
             #time = data.variables['time']
 	    #print "lon: " + str(a.variables['lon'][125])
