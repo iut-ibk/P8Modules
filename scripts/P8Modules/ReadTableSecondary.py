@@ -4,6 +4,7 @@ from pydynamind import *
 from ReadTableSecondary_Gui import *
 import shlex
 import numpy as np
+import os.path
 class EnviromentalBenefitsResults(Module):
 	def __init__(self):
 	    Module.__init__(self)
@@ -15,6 +16,7 @@ class EnviromentalBenefitsResults(Module):
 	    self.blocks = View("Block", FACE, READ)
 	    self.simulation = View("SimulationData",COMPONENT,READ)
             self.simulation.getAttribute("SimulationCity")
+	    self.simulation.getAttribute("Runs")
 
 	    self.TableData = View("Table Data",COMPONENT,WRITE)
 	    self.TableData.addAttribute("Type")
@@ -36,6 +38,12 @@ class EnviromentalBenefitsResults(Module):
 
         def run(self):
 	    city = self.getData("City")
+	    self.FF = []
+	    self.VR = [] 
+	    self.WQ = [] 
+   	    self.FV = []
+	    self.tmpFile = "EBRtable.txt"
+	    
 	    strvec = city.getUUIDsOfComponentsInView(self.simulation)
 	    simuAttr = city.getComponent(strvec[0])
 	    tmpRain = simuAttr.getAttribute("SimulationCity").getDouble()
@@ -49,133 +57,144 @@ class EnviromentalBenefitsResults(Module):
 		AnnualRain = 790
 	    elif tmpRain == 4:
 		AnnualRain = 1175
+	    runs = int(simuAttr.getAttribute("Runs").getDouble())
+	    for j in range(runs):
+		j = j + 1
+		list1 = self.readFileToList("PredevelopRunoffFrequency"+str(j)+".TXT")
+		list2 = self.readFileToList("UntreatedRunoffFrequency"+str(j)+".TXT")
+		list3 = self.readFileToList("TreatedRunoffFrequency"+str(j)+".TXT")
+		list4 = self.readFileToList("ETandRe-useFluxes"+str(j)+".TXT")
+		list5 = self.readFileToList("PredevelopTotalRunoff"+str(j)+".TXT")
+		list6 = self.readFileToList("Exfiltration"+str(j)+".TXT")
+		list7 = self.readFileToList("WQ"+str(j)+".TXT")
+		list8 = self.readFileToList("PredevelopBaseflowFrequency"+str(j)+".TXT")
+		vec1 = []
+		vec2 = []
+		vec3 = []
+		vec4 = []
+		vec5 = []
+		vec6 = []
+		vec8 = []
+		vec9 = []
+		tssVec = []
+		tnVec = []
+		tpVec = []
+		for i in range(len(list1)):
+		    if i <2 or (i+1)%2:
+			continue
+		    vec1.append(list1[i])
+		    vec2.append(list2[i])
+		    vec5.append(list5[i])
+		    vec6.append(list6[i])
+		    vec8.append(list8[i])
 
-	    list1 = self.readFileToList("PredevelopRunoffFrequency"+self.FileName+".TXT")
-	    list2 = self.readFileToList("UntreatedRunoffFrequency"+self.FileName+".TXT")
-	    list3 = self.readFileToList("TreatedRunoffFrequency"+self.FileName+".TXT")
-	    list4 = self.readFileToList("ETandRe-useFluxes"+self.FileName+".TXT")
-	    list5 = self.readFileToList("PredevelopTotalRunoff"+self.FileName+".TXT")
-	    list6 = self.readFileToList("Exfiltration"+self.FileName+".TXT")
-	    list7 = self.readFileToList("WQ"+self.FileName+".TXT")
-	    list8 = self.readFileToList("PredevelopBaseflowFrequency"+self.FileName+".TXT")
-	    vec1 = []
-	    vec2 = []
-	    vec3 = []
-	    vec4 = []
-	    vec5 = []
-	    vec6 = []
-	    vec8 = []
-	    vec9 = []
-	    tssVec = []
-	    tnVec = []
-	    tpVec = []
-	    for i in range(len(list1)):
-		if i <2 or (i+1)%2:
-		    continue
-		vec1.append(list1[i])
-		vec2.append(list2[i])
-		vec5.append(list5[i])
-		vec6.append(list6[i])
-		vec8.append(list8[i])
+		for i in range(len(list4)):
+		    if i <2 or (i+1)%2:
+			continue
+		    vec4.append(list4[i])
 
-	    for i in range(len(list4)):
-		if i <2 or (i+1)%2:
-		    continue
-		vec4.append(list4[i])
+		for i in range(len(list7)):
+		    if i<4 or ((i)%4==0):
+			continue
+		    if (float(list7[i])<0):
+			continue
+		    if i%4==1:
+			tssVec.append(list7[i])
+		    if i%4==2:
+			tnVec.append(list7[i])
+		    if i%4==3:
+			tpVec.append(list7[i])
 
-	    for i in range(len(list7)):
-		if i<4 or ((i)%4==0):
-		    continue
-		if (float(list7[i])<0):
-		    continue
-		if i%4==1:
-		    tssVec.append(list7[i])
-		if i%4==2:
-		    tnVec.append(list7[i])
-		if i%4==3:
-		    tpVec.append(list7[i])
-
-	    tssVec = sorted(tssVec)
-	    tpVec = sorted(tpVec)
-	    tnVec = sorted(tnVec)
-	    tss = tssVec[len(tssVec)/2]
-	    tp = tpVec[len(tpVec)/2]
-	    tn = tnVec[len(tnVec)/2]
-	    tss = 1-max((float(tss)-20)/(150-20),0)
-	    tp = 1-max((float(tp)-0.6)/(2.2-0.6),0)
-	    tn = 1-max((float(tn)-0.05)/(0.35-0.05),0)
-
-
-	    
-	    freqVec = self.getNotZeroDays(vec1,vec2,vec2,0)
-	    FreqPredev = freqVec[0]
-	    FreqUntreated = freqVec[1]
-	    vec8 = sorted(vec8)
-	    cin = 3 * float(vec8[len(vec8)/2])
-	    for i in range(len(list3)):
-		if i<2 or ((i)%2==0):
-		    continue
-		if (float(list3[i])<cin):
-		    continue
-		if i%2==1:
-		    vec3.append(list3[i])
-	    FreqTreated = len(vec3)
-	    ETsum = self.SumAllValues(vec4)
-	    VolumeET = ETsum * 60*60*24*1000/1000000
-	    UntreadSum = self.SumAllValues(vec2)
-	    VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
-	    preTotalsum = self.SumAllValues(vec5)
-	    VolumePredev = preTotalsum * 60*60*24*1000/1000000
-	    exfilSum = self.SumAllValues(vec6)
-	    FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
+		tssVec = sorted(tssVec)
+		tpVec = sorted(tpVec)
+		tnVec = sorted(tnVec)
+		tss = tssVec[len(tssVec)/2]
+		tp = tpVec[len(tpVec)/2]
+		tn = tnVec[len(tnVec)/2]
+		tss = 1-max((float(tss)-20)/(150-20),0)
+		tp = 1-max((float(tp)-0.6)/(2.2-0.6),0)
+		tn = 1-max((float(tn)-0.05)/(0.35-0.05),0)
 
 
-    	    #FvForest = self.find_nearest(self.ForestX,FVg)
-	    #FvPasture = self.find_nearest(self.PastureX,FVg)
-	    indexPX = self.find_nearest(self.PastureY,AnnualRain)
-	    indexFX = self.find_nearest(self.ForestY,AnnualRain)
-
-	    if self.ForestY[indexFX] > AnnualRain:
-		Fx1 = self.ForestX[indexFX-1]
-		Fx2 = self.ForestX[indexFX]
-		Fy1 = self.ForestY[indexFX-1]
-		Fy2 = self.ForestY[indexFX]
-	    else:
-		Fx1 = self.ForestX[indexFX]
-		Fx2 = self.ForestX[indexFX+1]
-		Fy1 = self.ForestY[indexFX]
-		Fy2 = self.ForestY[indexFX+1]
-
-	    if self.PastureY[indexPX] > AnnualRain:
-		Px1 = self.PastureX[indexPX-1]
-		Px2 = self.PastureX[indexPX]
-		Py1 = self.PastureY[indexPX-1]
-		Py2 = self.PastureY[indexPX]
-	    else:
-		Px1 = self.PastureX[indexPX]
-		Px2 = self.PastureX[indexPX+1]
-		Py1 = self.PastureY[indexPX]
-		Py2 = self.PastureY[indexPX+1]
-
-            FvForest = np.abs((((Fx2-Fx1)*(Fy2-AnnualRain))/(Fy2-Fy1))-Fx2)
-            FvPasture = np.abs((((Px2-Px1)*(Py2-AnnualRain))/(Py2-Py1))-Px2)
-	    if FVg < FvForest:
-		self.FV = FVg/FvForest
-	    elif FVg > FvPasture:
-		self.FV = max(0,(1-(FVg-FvPasture)/FvForest))
-	    else:
-		self.FV = 1
-
-	    self.FF = 1 - max((float(FreqTreated)-float(FreqPredev))/(float(FreqUntreated)-float(FreqPredev)),0)
-	    self.VR = 1-(VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev)
-	    self.WQ = (tss+tn+tp)/3
+		    
+		freqVec = self.getNotZeroDays(vec1,vec2,vec2,0)
+		FreqPredev = freqVec[0]
+		FreqUntreated = freqVec[1]
+		vec8 = sorted(vec8)
+		cin = 3 * float(vec8[len(vec8)/2])
+		for i in range(len(list3)):
+		    if i<2 or ((i)%2==0):
+			continue
+		    if (float(list3[i])<cin):
+			continue
+		    if i%2==1:
+			vec3.append(list3[i])
+		FreqTreated = len(vec3)
+		ETsum = self.SumAllValues(vec4)
+		VolumeET = ETsum * 60*60*24*1000/1000000
+		UntreadSum = self.SumAllValues(vec2)
+		VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
+		preTotalsum = self.SumAllValues(vec5)
+		VolumePredev = preTotalsum * 60*60*24*1000/1000000
+		exfilSum = self.SumAllValues(vec6)
+		FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
 
 
-	    #for numbers with only value after the comma
-	    self.FF = float(int(self.FF*1000))/10 
-	    self.VR = float(int(self.VR*1000))/10 
-	    self.WQ = float(int(self.WQ*1000))/10 
-   	    self.FV = float(int(self.FV*1000))/10
+	    	#FvForest = self.find_nearest(self.ForestX,FVg)
+		#FvPasture = self.find_nearest(self.PastureX,FVg)
+		indexPX = self.find_nearest(self.PastureY,AnnualRain)
+		indexFX = self.find_nearest(self.ForestY,AnnualRain)
+
+		if self.ForestY[indexFX] > AnnualRain:
+		    Fx1 = self.ForestX[indexFX-1]
+		    Fx2 = self.ForestX[indexFX]
+		    Fy1 = self.ForestY[indexFX-1]
+		    Fy2 = self.ForestY[indexFX]
+		else:
+		    Fx1 = self.ForestX[indexFX]
+		    Fx2 = self.ForestX[indexFX+1]
+		    Fy1 = self.ForestY[indexFX]
+		    Fy2 = self.ForestY[indexFX+1]
+
+		if self.PastureY[indexPX] > AnnualRain:
+	            Px1 = self.PastureX[indexPX-1]
+		    Px2 = self.PastureX[indexPX]
+		    Py1 = self.PastureY[indexPX-1]
+		    Py2 = self.PastureY[indexPX]
+		else:
+		    Px1 = self.PastureX[indexPX]
+		    Px2 = self.PastureX[indexPX+1]
+		    Py1 = self.PastureY[indexPX]
+		    Py2 = self.PastureY[indexPX+1]
+
+		FvForest = np.abs((((Fx2-Fx1)*(Fy2-AnnualRain))/(Fy2-Fy1))-Fx2)
+		FvPasture = np.abs((((Px2-Px1)*(Py2-AnnualRain))/(Py2-Py1))-Px2)
+		if FVg < FvForest:
+		    tmpFV = FVg/FvForest
+		elif FVg > FvPasture:
+		    tmpFV = max(0,(1-(FVg-FvPasture)/FvForest))
+		else:
+		    tmpFV = 1
+
+		tmpFF = 1 - max((float(FreqTreated)-float(FreqPredev))/(float(FreqUntreated)-float(FreqPredev)),0)
+		tmpVR = 1-(VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev)
+		tmpWQ = (tss+tn+tp)/3
+
+
+		#for numbers with only value after the comma
+		self.FF.append(float(int(tmpFF*1000))/10) 
+		self.VR.append(float(int(tmpVR*1000))/10) 
+		self.WQ.append(float(int(tmpWQ*1000))/10)
+	   	self.FV.append(float(int(tmpFV*1000))/10)
+		print str(j)+","+str(self.FF[j-1])+","+str(self.VR[j-1])+","+str(self.FV[j-1])+","+str(self.WQ[j-1])
+	    	if os.path.exists(self.tmpFile):
+		    f = open(self.tmpFile,'a')
+		    f.write(str(j)+","+str(self.FF[j-1])+","+str(self.VR[j-1])+","+str(self.FV[j-1])+","+str(self.WQ[j-1])+"\n")		
+		    f.close()
+	        else:
+		    f = open(self.tmpFile,'w')
+		    f.write(str(j)+","+str(self.FF[j-1])+","+str(self.VR[j-1])+","+str(self.FV[j-1])+","+str(self.WQ[j-1])+"\n")		
+		    f.close()	
 	def createInputDialog(self):
             form = ReadTableSecondary_Gui(self, QApplication.activeWindow())
             form.show()
@@ -205,6 +224,7 @@ class EnviromentalBenefitsResults(Module):
 	    t.whitespace += '\n\r'
 	    t.whitespace_split = True
 	    liste = list(t)
+	    f.close
 	    return liste
 	
 	def SumAllValues(self,vec):
