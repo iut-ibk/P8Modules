@@ -26,6 +26,7 @@ from rain import *
 from ReadTable import *
 from ReadTableSecondary import *
 from raintest import *
+from Analyser import *
 #from memtestsyste import *
 #from plotvectordata import *
 #from plotraster import *
