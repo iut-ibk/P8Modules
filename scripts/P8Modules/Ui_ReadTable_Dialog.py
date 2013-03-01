@@ -18,7 +18,7 @@ class Ui_ReadTable_GUI(object):
     def setupUi(self, ReadTable_GUI):
         ReadTable_GUI.setObjectName(_fromUtf8("ReadTable_GUI"))
         ReadTable_GUI.resize(565, 310)
-        ReadTable_GUI.setWindowTitle(QtGui.QApplication.translate("ReadTable_GUI", "Data Table", None, QtGui.QApplication.UnicodeUTF8))
+        ReadTable_GUI.setWindowTitle(QtGui.QApplication.translate("ReadTable_GUI", "Treatment/Harvesting Performance", None, QtGui.QApplication.UnicodeUTF8))
         self.verticalLayout = QtGui.QVBoxLayout(ReadTable_GUI)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.groupBox = QtGui.QGroupBox(ReadTable_GUI)
