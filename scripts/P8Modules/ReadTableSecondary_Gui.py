@@ -20,8 +20,7 @@ class ReadTableSecondary_Gui(QtGui.QDialog):
 	QtCore.QObject.connect(self.ui.pb_clipboard, QtCore.SIGNAL("released()"),self.copyToClipboard)
 	#QtCore.QObject.connect(self.ui.pb_plot, QtCore.SIGNAL("released()"),self.plot)
     def save(self):
-        filename = str(self.ui.le_r.text())
-        self.module.setParameterValue("FileName", filename)
+    	pass
 	
     def Load(self):
 	widget = QtGui.QLineEdit(str("Enviromental Benefit"))
