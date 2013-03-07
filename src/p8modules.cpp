@@ -27,9 +27,10 @@
 #include "dmmoduleregistry.h"
 #include "p8scenariogroup.h"
 #include "p8baseline.h"
-#include "p8rain.h"
+//#include "p8rain.h"
 #include "p8scenario.h"
 #include "p8treatment_performance.h"
+#include "p8enviromental_benefits.h"
 //#include "p8simulation.h"
 //#include "p8evaluation.h"
 #include "graphicplacement.h"
@@ -42,10 +43,11 @@ using namespace DM;
 extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
 {
     registry->addNodeFactory(new NodeFactory<URBAN_FORM>());
-    registry->addNodeFactory(new NodeFactory<P8Rain>());
+   // registry->addNodeFactory(new NodeFactory<P8Rain>());
     registry->addNodeFactory(new NodeFactory<SCENARIO>());
     registry->addNodeFactory(new NodeFactory<GraphicPlacement>());
     registry->addNodeFactory(new NodeFactory<Treatment_Performance>());
+    registry->addNodeFactory(new NodeFactory<Enviromental_Benefits>());
 //    registry->addNodeFactory(new NodeFactory<P8Simulation>());
 //    registry->addNodeFactory(new NodeFactory<P8Evaluation>());
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
