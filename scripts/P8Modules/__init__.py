@@ -28,6 +28,8 @@ from ReadTableSecondary import *
 from raintest import *
 from Analyser import *
 from realisations import *
+from Microclimate import *
+from Economic import *
 #from memtestsyste import *
 #from plotvectordata import *
 #from plotraster import *
