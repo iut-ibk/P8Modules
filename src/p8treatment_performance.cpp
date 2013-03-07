@@ -32,13 +32,10 @@ void Treatment_Performance::init()
     this->addTuplePort("in", DM::INTUPLESYSTEM);
     if (!modulesHaveBeenCreated)
     {
-        cout << "1=====================" << endl;
-
         DM::Module *musicWrite;
         musicWrite=this->getSimulation()->addModule("TreatmentPerformance");
         musicWrite->setGroup(this);
         musicWrite->init();
-        cout << "2=====================" << endl;
 
         DM::Module *tableRead;
         tableRead=this->getSimulation()->addModule("TreatmentPerformanceResults");
@@ -46,13 +43,10 @@ void Treatment_Performance::init()
         tableRead->setName("tableRead");
         tableRead->init();
 
-        cout << "3=====================" << endl;
 
         DM::ModuleLink *l_START_musicWrite=this->getSimulation()->addLink( this->getInPortTuple("in")->getOutPort(),musicWrite->getInPort("City"));
-        cout << "4=====================" << endl;
-
+        DM::ModuleLink *l_musicWrite_tableRead=this->getSimulation()->addLink( musicWrite->getOutPort("City"),tableRead->getInPort("City"));
         DM::ModuleLink * l_tableRead_END=this->getSimulation()->addLink( tableRead->getOutPort("City"),this->getOutPortTuple("out")->getInPort());
-        cout << "5=====================" << endl;
 
         modulesHaveBeenCreated = true;
     }
