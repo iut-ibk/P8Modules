@@ -15,7 +15,7 @@ class EnviromentalBenefitsResults(Module):
 	    #Views
 	    self.blocks = View("Block", FACE, READ)
 	    self.simulation = View("SimulationData",COMPONENT,READ)
-            self.simulation.getAttribute("SimulationCity")
+	    self.simulation.getAttribute("SimulationCity")
 	    self.simulation.getAttribute("Runs")
 
 	    self.TableData = View("Table Data",COMPONENT,WRITE)
