@@ -17,13 +17,11 @@ class realisations(Module):
 
         self.simulation = View("SimulationData",COMPONENT,WRITE)
         self.simulation.addAttribute("Runs")
-
-        self.block = View("Block", FACE, READ)
-        self.block.addAttribute("BlockID")
+        self.topology = View("Topology", RASTERDATA, READ)
 
         datastream = []
         datastream.append(self.simulation)
-        datastream.append(self.block)
+        datastream.append(self.topology)
         self.addData("City", datastream)
 
     def run(self):
@@ -34,7 +32,7 @@ class realisations(Module):
     	simu = Component()
     	simu.addAttribute("Runs",int(self.Runs))
     	city.addComponent(simu,self.simulation)
-        print str(self.Runs)
+        print "realisations runs" + str(self.Runs)
         f = open("runs.txt",'w')
         f.write(str(self.Runs))
         f.close()
