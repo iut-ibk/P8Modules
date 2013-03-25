@@ -45,7 +45,7 @@ class ReadTableSecondary_Gui(QtGui.QDialog):
 	    self.ui.table.setCellWidget(4,i,QtGui.QLineEdit(str(self.module.WQ[i-1])))
 
     def export(self):
-	f = open('TableSecondaryExport.csv','w')
+	f = open('EnvironmentalBenefit.csv','w')
 	f.write("Enviromental Benefit,%\n")
 	f.write("Flow-Frequency Index," + str(self.module.FF) + "\n")
 	f.write("Volume Reduction Index," + str(self.module.VR) + "\n")
