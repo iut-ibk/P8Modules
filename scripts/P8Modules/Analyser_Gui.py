@@ -21,6 +21,7 @@ class Analyser_Gui(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_plotEBR, QtCore.SIGNAL("released()"),self.plotEBR)
 		QtCore.QObject.connect(self.ui.pb_plotTPR, QtCore.SIGNAL("released()"),self.plotTPR)
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
+		QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
 		self.colorarr = ['#0b09ae','#b01717','#37c855','#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']
 	def delete(self):
 		if os.path.exists(self.TPRFile):
@@ -173,3 +174,110 @@ class Analyser_Gui(QtGui.QDialog):
 			f.write("2,"+str(bars3[0])+","+str(bars3[1])+","+str(bars3[2])+","+str(bars3[3])+"\n")
 		'''
 		f.close()
+	def plotUtil(self):
+		f = open("runs.txt",'r')
+		for line in f:
+			runs = int(float(line))
+		f.close()
+		mpl.rcParams['toolbar'] = 'None'
+		ResultVec = []
+		fig = plt.figure()
+		ax = fig.add_subplot(111)
+		for i in range(runs):
+			i = i + 1
+			f = open("UB_BasinStrategy No 1-" + str(i) + ".csv",'r')
+			j = 0
+			serviceVec = []
+			lines = []
+			BFsum = 0
+			PBsum = 0
+			ISsum = 0
+			WSURsum = 0
+			SWsum = 0
+			for line in f:
+				j = j + 1
+				text = shlex.shlex(line,posix = False)
+				text.whitespace += ','
+				text.whitespace_split = True
+				liste = list(text)
+				if (j >11):
+					lines.append(liste)
+			for k in range(len(lines)):
+				serviceVec.append((lines[k][1],float(lines[k][3])*float(lines[k][4])*float(lines[k][5])/100))
+				serviceVec.append((lines[k][6],float(lines[k][8])))
+				serviceVec.append((lines[k][9],float(lines[k][11])))
+				serviceVec.append((lines[k][12],float(lines[k][14])))
+			for k in range(len(serviceVec)):
+				if (serviceVec[k][0] == "BF"):
+					BFsum += serviceVec[k][1]
+				elif (serviceVec[k][0] == "PB"):
+					PBsum += serviceVec[k][1]
+				elif (serviceVec[k][0] == "IS"):
+					ISsum += serviceVec[k][1]
+				elif (serviceVec[k][0] == "WSUR"):
+					WSURsum += serviceVec[k][1]
+				elif (serviceVec[k][0] == "SW"):
+					SWsum += serviceVec[k][1]
+			allsums = BFsum + PBsum + ISsum + WSURsum + SWsum
+			BF = BFsum *100/allsums
+			PB = PBsum *100/allsums
+			IS = ISsum *100/allsums
+			WSUR = WSURsum *100/allsums
+			SW = SWsum *100/allsums
+			print BF
+			print PB
+			print IS
+			print WSUR
+			print SW
+			ResultVec.append((allsums*100,BF,PB,IS,WSUR,SW))
+		BFvec =[]
+		PBvec = []
+		ISvec = []
+		WSURvec = []
+		SWvec = []
+		for i in range(len(ResultVec)):
+			BFvec.append(ResultVec[i][1])
+			PBvec.append(ResultVec[i][2])
+			ISvec.append(ResultVec[i][3])
+			WSURvec.append(ResultVec[i][4])
+			SWvec.append(ResultVec[i][5])
+		ind = np.arange(runs)
+		width = 0.9 / runs
+		BFvec = np.array(BFvec)
+		PBvec = np.array(PBvec)
+		ISvec = np.array(ISvec)
+		WSURvec = np.array(WSURvec)
+		SWvec = np.array(SWvec)
+		p1 = plt.bar(ind,BFvec,width,color ='b')
+		p1.set_label('BF')
+		p2 = plt.bar(ind,PBvec,width,color = 'r',bottom = BFvec)
+		p2.set_label('PB')
+		p3 = plt.bar(ind,ISvec,width,color = 'y',bottom = BFvec + PBvec)
+		p3.set_label('IS')
+		p4 = plt.bar(ind,WSURvec,width,color = 'g',bottom = ISvec + BFvec + PBvec)
+		p4.set_label('WSUR')
+		p5 = plt.bar(ind,SWvec,width, color = 'black',bottom = BFvec + PBvec + ISvec + WSURvec)
+		p5.set_label('SW')
+		plt.ylim([0,100])
+		ax.set_xticks(ind+width)
+		xticksvec = []
+		for i in range(runs):
+			i = i + 1
+			xticksvec.append("Realisation " + str(i))
+		ax.set_xticklabels(xticksvec)
+		ax.legend()
+		ax.legend(loc='best')
+		fig.canvas.set_window_title(' ')
+		box = ax.get_position()
+		ax.set_position([box.x0, box.y0 + box.height * 0.2, box.width * 0.8, box.height *0.8 ])
+		ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+		BFstring = " "
+		PBstring = " "
+		WSURstring = " "
+		for i in range(len(BFvec)):
+			BFstring += str('%.2f' % BFvec[i]) + "% \t"
+			PBstring += str('%.2f' % PBvec[i]) + "% \t"
+			WSURstring += str('%.2f' % WSURvec[i]) + "% \t"
+		txt = "WSUR - Surface Wetland    " + WSURstring + "\nPB-Ponds & Basins             " + PBstring + "\nBF-Biofiltration System      " + BFstring
+		fig.text(0.05,0.05,txt)
+		plt.show()
