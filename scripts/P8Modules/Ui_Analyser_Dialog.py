@@ -16,7 +16,10 @@ class Ui_Analyser_GUI(object):
 		self.groupBox.setObjectName(_fromUtf8("groupBox"))
 		self.gridLayout = QtGui.QGridLayout(self.groupBox)
 		self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
-
+		self.pb_plotUtil = QtGui.QPushButton(self.groupBox)
+		self.pb_plotUtil.setText(QtGui.QApplication.translate("Analyser_GUI", "View Utilisation", None, QtGui.QApplication.UnicodeUTF8))
+		self.pb_plotUtil.setObjectName(_fromUtf8("pb_plotUtil"))
+		self.gridLayout.addWidget(self.pb_plotUtil)
 		self.pb_plotTPR = QtGui.QPushButton(self.groupBox)
 		self.pb_plotTPR.setText(QtGui.QApplication.translate("Analyser_GUI", "View Treatment Performance", None, QtGui.QApplication.UnicodeUTF8))
 		self.pb_plotTPR.setObjectName(_fromUtf8("pb_plotTPR"))
