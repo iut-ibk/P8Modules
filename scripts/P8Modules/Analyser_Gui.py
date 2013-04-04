@@ -175,16 +175,11 @@ class Analyser_Gui(QtGui.QDialog):
 		'''
 		f.close()
 	def plotUtil(self):
-		f = open("runs.txt",'r')
-		for line in f:
-			runs = int(float(line))
-		f.close()
 		mpl.rcParams['toolbar'] = 'None'
 		ResultVec = []
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
-		for i in range(runs):
-			i = i + 1
+		for i in self.module.Utilvec:
 			f = open("UB_BasinStrategy No 1-" + str(i) + ".csv",'r')
 			j = 0
 			serviceVec = []
@@ -241,8 +236,8 @@ class Analyser_Gui(QtGui.QDialog):
 			ISvec.append(ResultVec[i][3])
 			WSURvec.append(ResultVec[i][4])
 			SWvec.append(ResultVec[i][5])
-		ind = np.arange(runs)
-		width = 0.9 / runs
+		ind = np.arange(self.module.runs)
+		width = 0.9 / self.module.runs
 		BFvec = np.array(BFvec)
 		PBvec = np.array(PBvec)
 		ISvec = np.array(ISvec)
@@ -261,9 +256,8 @@ class Analyser_Gui(QtGui.QDialog):
 		plt.ylim([0,100])
 		ax.set_xticks(ind+width)
 		xticksvec = []
-		for i in range(runs):
-			i = i + 1
-			xticksvec.append("Realisation " + str(i))
+		for i in range(self.module.runs):
+			xticksvec.append("Realisation " + str(i+1) + "\n" + str('%.2f' % ResultVec[i][0]) + "%")
 		ax.set_xticklabels(xticksvec)
 		ax.legend()
 		ax.legend(loc='best')
@@ -275,9 +269,9 @@ class Analyser_Gui(QtGui.QDialog):
 		PBstring = " "
 		WSURstring = " "
 		for i in range(len(BFvec)):
-			BFstring += str('%.2f' % BFvec[i]) + "% \t"
-			PBstring += str('%.2f' % PBvec[i]) + "% \t"
-			WSURstring += str('%.2f' % WSURvec[i]) + "% \t"
+			BFstring += str('%.2f' % BFvec[i]) + "% "
+			PBstring += str('%.2f' % PBvec[i]) + "% "
+			WSURstring += str('%.2f' % WSURvec[i]) + "% "
 		txt = "WSUR - Surface Wetland    " + WSURstring + "\nPB-Ponds & Basins             " + PBstring + "\nBF-Biofiltration System      " + BFstring
 		fig.text(0.05,0.05,txt)
 		plt.show()
