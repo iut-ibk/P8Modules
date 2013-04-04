@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 from pydynamind import *
 import math
 
-class realisations(Module):
+class Realisations(Module):
 
 
     def __init__(self):
