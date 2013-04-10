@@ -45,7 +45,14 @@ class EnviromentalBenefitsResults(Module):
 	    self.tmpFile = "EBRtable.txt"
 	    
 	    strvec = city.getUUIDsOfComponentsInView(self.simulation)
-	    simuAttr = city.getComponent(strvec[0])
+	    tmpvec = []
+	    for value in strvec:
+		simuData = city.getComponent(value)
+		run = int(simuData.getAttribute("Runs").getDouble())
+		if (run != 0):
+		    tmpvec.append(simuData)
+	    print tmpvec
+	    simuAttr = tmpvec[0]
 	    tmpRain = simuAttr.getAttribute("SimulationCity").getDouble()
 	    if tmpRain == 0:
 		AnnualRain = 520
