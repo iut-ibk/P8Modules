@@ -20,7 +20,7 @@ class Ui_RealisationsDialog(object):
         self.gridLayout = QtGui.QGridLayout(self.groupBox)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.label = QtGui.QLabel(self.groupBox)
-        self.label.setText(QtGui.QApplication.translate("realisationsguic", "Select the number of top ranked realisation you want to evaluate", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("realisationsguic", "Select the number of top ranked realisations you want to create", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setObjectName(_fromUtf8("label"))
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.le_r = QtGui.QLineEdit(self.groupBox)
