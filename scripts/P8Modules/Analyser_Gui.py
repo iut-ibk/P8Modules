@@ -95,6 +95,7 @@ class Analyser_Gui(QtGui.QDialog):
 		#fig.autofmt_xdate()
 		plt.ylim([0,100])
 		plt.show()
+		plt.savefig('EviromentalBenefitsPlot.png')
 		
 	def plotTPR(self):
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", "Open New File",self.tr("Text Files (*.txt)"))
@@ -174,6 +175,7 @@ class Analyser_Gui(QtGui.QDialog):
 			f.write("2,"+str(bars3[0])+","+str(bars3[1])+","+str(bars3[2])+","+str(bars3[3])+"\n")
 		'''
 		f.close()
+		plt.savefig('TreatmentPerformancePlot.png')
 	def plotUtil(self):
 		mpl.rcParams['toolbar'] = 'None'
 		ResultVec = []
@@ -259,6 +261,7 @@ class Analyser_Gui(QtGui.QDialog):
 		for i in range(self.module.runs):
 			xticksvec.append("Realisation " + str(i+1) + "\n" + str('%.2f' % ResultVec[i][0]) + "%")
 		ax.set_xticklabels(xticksvec)
+		ax.set_ylabel("Proportion of Utilisation (%)")
 		ax.legend()
 		ax.legend(loc='best')
 		fig.canvas.set_window_title(' ')
@@ -275,3 +278,4 @@ class Analyser_Gui(QtGui.QDialog):
 		txt = "WSUR - Surface Wetland    " + WSURstring + "\nPB-Ponds & Basins             " + PBstring + "\nBF-Biofiltration System      " + BFstring
 		fig.text(0.05,0.05,txt)
 		plt.show()
+		plt.savefig('UtilisationsPlot.png')
