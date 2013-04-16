@@ -49,11 +49,13 @@ class EnviromentalBenefitsResults(Module):
 	    for value in strvec:
 		simuData = city.getComponent(value)
 		run = int(simuData.getAttribute("Runs").getDouble())
+		simcity = int(simuData.getAttribute("SimulationCity").getDouble())
 		if (run != 0):
 		    tmpvec.append(simuData)
+		if (simcity != 0):
+		    tmpRain = simcity
 	    print tmpvec
 	    simuAttr = tmpvec[0]
-	    tmpRain = simuAttr.getAttribute("SimulationCity").getDouble()
 	    if tmpRain == 0:
 		AnnualRain = 520
 	    elif tmpRain == 1:
@@ -65,6 +67,8 @@ class EnviromentalBenefitsResults(Module):
 	    elif tmpRain == 4:
 		AnnualRain = 1175
 	    runs = int(simuAttr.getAttribute("Runs").getDouble())
+	    print runs
+	    print tmpRain
 	    for j in range(runs):
 		j = j + 1
 		list1 = self.readFileToList("PredevelopRunoffFrequency"+str(j)+".TXT")
