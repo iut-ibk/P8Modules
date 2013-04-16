@@ -1,3 +1,4 @@
+
 #ifndef P8REALISATIONS_H
 #define P8REALISATIONS_H
 
@@ -9,15 +10,17 @@ class DM_HELPER_DLL_EXPORT Realisations : public DM::Module
 {
     DM_DECLARE_NODE(Realisations)
 private:
-    std::string RealisationNr;
     DM::View Simu;
-
+    DM::View Block;
 
 public:
     Realisations();
     void run();
     void init();
     virtual bool createInputDialog();
+    std::string RealisationNr;
+
 };
 
 #endif // P8REALISATIONS_H
+
