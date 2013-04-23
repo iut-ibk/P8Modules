@@ -2,7 +2,7 @@
 #include "ui_p8realisation_gui.h"
 #include "p8realisations.h"
 
-p8realisation_gui::p8realisation_gui(Realisations * p8,QWidget *parent) :
+p8realisation_gui::p8realisation_gui(Current_Realisation * p8,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::p8realisation_gui)
 {

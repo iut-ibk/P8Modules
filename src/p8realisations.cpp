@@ -4,15 +4,15 @@
 
 #include <QWidget>
 
-DM_DECLARE_NODE_NAME(Realisations,P8Modules)
+DM_DECLARE_NODE_NAME(Current_Realisation,P8Modules)
 
-Realisations::Realisations()
+Current_Realisation::Current_Realisation()
 {
     RealisationNr = "";
     this->addParameter("RealisationNr",DM::STRING,&this->RealisationNr);
 }
 
-void Realisations::init()
+void Current_Realisation::init()
 {
     Block = DM::View("Block",DM::FACE,DM::READ);
 
@@ -24,7 +24,7 @@ void Realisations::init()
     this->addData("City",vdata);
 }
 
-void Realisations::run()
+void Current_Realisation::run()
 {
     DM::System * sys = this->getData("City");
     DM::Component * cmp = new DM::Component();
@@ -33,7 +33,7 @@ void Realisations::run()
     cmp->addAttribute("MusicFileNo",atoi(this->RealisationNr.c_str()));
 }
 
-bool Realisations::createInputDialog()
+bool Current_Realisation::createInputDialog()
 {
     QWidget * w = new p8realisation_gui(this);
     w->show();

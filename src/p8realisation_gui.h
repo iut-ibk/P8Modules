@@ -17,7 +17,7 @@ class p8realisation_gui : public QDialog
     Q_OBJECT
     
 public:
-    explicit p8realisation_gui(Realisations * p8, QWidget *parent = 0);
+    explicit p8realisation_gui(Current_Realisation * p8, QWidget *parent = 0);
 
 
     ~p8realisation_gui();
@@ -30,7 +30,7 @@ private slots:
 
 private:
     Ui::p8realisation_gui *ui;
-    Realisations *p8realisation;
+    Current_Realisation *p8realisation;
 };
 
 #endif // P8REALISATION_GUI_H
