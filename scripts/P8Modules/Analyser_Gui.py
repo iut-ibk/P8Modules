@@ -232,12 +232,31 @@ class Analyser_Gui(QtGui.QDialog):
 		ISvec = []
 		WSURvec = []
 		SWvec = []
+		
+		BfFlag = False
+		PbFlag = False
+		IsFlag = False
+		WsurFlag = False
+		SwFlag = False
+
 		for i in range(len(ResultVec)):
 			BFvec.append(ResultVec[i][1])
 			PBvec.append(ResultVec[i][2])
 			ISvec.append(ResultVec[i][3])
 			WSURvec.append(ResultVec[i][4])
 			SWvec.append(ResultVec[i][5])
+			if(ResultVec[i][1] > 0):
+				BfFlag = True
+			if(ResultVec[i][2] > 0):
+				PbFlag = True
+			if(ResultVec[i][3] > 0):
+				IsFlag = True
+			if(ResultVec[i][4] > 0):
+				WsurFlag = True
+			if(ResultVec[i][5] > 0):
+				SwFlag = True
+
+
 		ind = np.arange(self.module.runs)
 		width = 0.9 / self.module.runs
 		BFvec = np.array(BFvec)
@@ -245,16 +264,21 @@ class Analyser_Gui(QtGui.QDialog):
 		ISvec = np.array(ISvec)
 		WSURvec = np.array(WSURvec)
 		SWvec = np.array(SWvec)
-		p1 = plt.bar(ind,BFvec,width,color ='b')
+		if(BfFlag):
+			p1 = plt.bar(ind,BFvec,width,color ='b')
 		p1.set_label('BF')
-		p2 = plt.bar(ind,PBvec,width,color = 'r',bottom = BFvec)
-		p2.set_label('PB')
-		p3 = plt.bar(ind,ISvec,width,color = 'y',bottom = BFvec + PBvec)
-		p3.set_label('IS')
-		p4 = plt.bar(ind,WSURvec,width,color = 'g',bottom = ISvec + BFvec + PBvec)
-		p4.set_label('WSUR')
-		p5 = plt.bar(ind,SWvec,width, color = 'black',bottom = BFvec + PBvec + ISvec + WSURvec)
-		p5.set_label('SW')
+		if(PbFlag):
+			p2 = plt.bar(ind,PBvec,width,color = 'r',bottom = BFvec)
+			p2.set_label('PB')
+		if(IsFlag):
+			p3 = plt.bar(ind,ISvec,width,color = 'y',bottom = BFvec + PBvec)
+			p3.set_label('IS')
+		if(WsurFlag):
+			p4 = plt.bar(ind,WSURvec,width,color = 'g',bottom = ISvec + BFvec + PBvec)
+			p4.set_label('WSUR')
+		if(SwFlag):
+			p5 = plt.bar(ind,SWvec,width, color = 'black',bottom = BFvec + PBvec + ISvec + WSURvec)
+			p5.set_label('SW')
 		plt.ylim([0,100])
 		ax.set_xticks(ind+width)
 		xticksvec = []
@@ -269,13 +293,42 @@ class Analyser_Gui(QtGui.QDialog):
 		ax.set_position([box.x0, box.y0 + box.height * 0.2, box.width * 0.8, box.height *0.8 ])
 		ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 		BFstring = " "
+
 		PBstring = " "
+		ISstring = " "
 		WSURstring = " "
+		SWstring = " "
 		for i in range(len(BFvec)):
-			BFstring += str('%.2f' % BFvec[i]) + "% "
-			PBstring += str('%.2f' % PBvec[i]) + "% "
-			WSURstring += str('%.2f' % WSURvec[i]) + "% "
-		txt = "WSUR - Surface Wetland    " + WSURstring + "\nPB-Ponds & Basins             " + PBstring + "\nBF-Biofiltration System      " + BFstring
-		fig.text(0.05,0.05,txt)
+			if (BfFlag):
+				BFstring += str('%.2f' % BFvec[i]) + "%,"
+			if(PbFlag):
+				PBstring += str('%.2f' % PBvec[i]) + "%,"
+			if(IsFlag):
+				ISstring += str('%.2f' % ISvec[i]) + "%,"
+			if(WsurFlag):
+				WSURstring += str('%.2f' % WSURvec[i]) + "%,"
+			if(SwFlag):
+				SWstring += str('%.2f' % SWstring[i] + "%,")
+		txt = ""
+		outtxt = ""
+		if (BfFlag):
+			txt += "BF-Biofiltration System       " + BFstring + "\n"
+			outtxt += "BF-Biofiltration System," + BFstring + "\n"
+		if(PbFlag):
+			txt += "PB-Ponds & Basins             " + PBstring + "\n"
+			outtxt += "PB-Ponds & Basins," + PBstring + "\n"
+		if (IsFlag):
+			txt += "Infiltration System               " + ISstring + "\n"
+			outtxt+= "Infiltration System," + ISstring + "\n"
+		if(WsurFlag):
+			txt += "WSUR - Surface Wetland    " + WSURstring + "\n"
+			outtxt += "WSUR - Surface Wetland," + WSURstring + "\n"
+		if (SwFlag):
+			txt += "Swale                                  " + SWstring + "\n"
+			outtxt += "Swale," + SWstring + "\n"
+		fig.text(0.05,0.01,txt)
 		plt.show()
 		plt.savefig('UtilisationsPlot.png')
+		f = open("util.csv", "w")
+		f.write(outtxt)
+		f.close()
