@@ -29,6 +29,8 @@ URBAN_FORM_GUI::~URBAN_FORM_GUI()
 void URBAN_FORM_GUI::on_pb_c_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Catchment Boundarys",QDir::currentPath(),"*.shp");
+    if (fname == "")
+        return;
     this->p8baseline->createShape(fname,"Catchment Boundarys","isFace");
     p8baseline->setParameterValue("FileNameC",fname.toStdString());
     ui->le_c->setText(fname);
