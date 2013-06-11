@@ -45,10 +45,6 @@ class Rain(Module):
 
             data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 	    print "Start rain"
-	    print data
-	    print data.variables['time']
-	    print data.variables['lon']
-	    print data.variables['lat']
 	    
             #time = data.variables['time']
 	    #print "lon: " + str(a.variables['lon'][125])
@@ -67,7 +63,7 @@ class Rain(Module):
 	    times = stringvector()
 
 	    # read the time stamps and convert it to a 2012-12-31 23:59:59 format
-	    for i in range(0,data.variables['time'].size,1):
+	    for i in range(0,data.variables['precipication'].size,1):
 		times.append(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y-%m-%d %H:%M:%S'))
 	    datas = self.getRainData(151.25,-34.05,data)[:]
 	    
@@ -138,8 +134,8 @@ class Rain(Module):
 	    x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
 	    y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
 	    datas = Attribute().getDoubleVector()
-	    for i in range(0,len(netCDF.variables['rain'][:]),1):
-	    	datas.append(float(netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]))
+	    for i in range(0,len(netCDF.variables['precipication'][:]),1):
+	    	datas.append(float(netCDF.variables['precipication'][i][int(lats[y])][int(longs[x])]))
 	    	#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 	    return datas
 
