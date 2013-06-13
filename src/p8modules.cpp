@@ -36,7 +36,7 @@
 #include "graphicplacement.h"
 #include "appendrasterasattribute.h"
 #include "p8realisations.h"
-
+#include "p8realisation2.h"
 using namespace std;
 using namespace DM;
 
@@ -53,5 +53,6 @@ extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
 //    registry->addNodeFactory(new NodeFactory<P8Evaluation>());
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
     registry->addNodeFactory(new NodeFactory<Current_Realisation>());
+    registry->addNodeFactory(new NodeFactory<Current_Realisation2>());
 }
 

@@ -1,7 +1,7 @@
 FILE(GLOB MODULE_CPPS *.cpp)
 FILE(GLOB MODULE_UI_FILES *.ui)
 
-SET(MOC_MODULE_FILES p8baseline_gui.h p8rain_gui.h p8scenario_gui.h p8realisation_gui.h)
+SET(MOC_MODULE_FILES p8baseline_gui.h p8rain_gui.h p8scenario_gui.h p8realisation_gui.h p8realisation2_gui.h)
 
 QT4_WRAP_UI(MODULE_CPPS ${MODULE_UI_FILES})
 QT4_WRAP_CPP(MODULE_CPPS ${MOC_MODULE_FILES})
