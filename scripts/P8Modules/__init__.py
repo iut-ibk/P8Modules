@@ -24,10 +24,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from rain import *
 from ReadTable import *
+from ReadTable2 import *
 from ReadTableSecondary import *
 from ReadTableSecondary2 import *
+from ReadTableSecondary3 import *
 from raintest import *
 from Analyser import *
+from Analyser2 import *
 from realisations import *
 from Microclimate import *
 from Economic import *
