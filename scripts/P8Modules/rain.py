@@ -35,37 +35,36 @@ class Rain(Module):
 
 
 
-        def run(self):
-            dataflow = self.getData("City")
-            catchments = dataflow.getUUIDsOfComponentsInView(self.blocks) 
-	    coordvec = dataflow.getUUIDsOfComponentsInView(self.coords)
-	    comp = dataflow.getComponent(coordvec[0])
- 	    xoffset = comp.getAttribute("Xoffset").getDouble()
-	    yoffset = comp.getAttribute("Yoffset").getDouble()
+	def run(self):
+		dataflow = self.getData("City")
+		catchments = dataflow.getUUIDsOfComponentsInView(self.blocks) 
+		coordvec = dataflow.getUUIDsOfComponentsInView(self.coords)
+		comp = dataflow.getComponent(coordvec[0])
+		xoffset = comp.getAttribute("Xoffset").getDouble()
+		yoffset = comp.getAttribute("Yoffset").getDouble()
 
-            data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
-	    print "Start rain"
-	    
+		data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
+		print "Start rain"
+		datas = self.getRainData(151.25,-34.05,data)
+		f = open("RainData.csv",'w')
+		for i in range(0,data.variables['time'].size,1):
+			print i
+			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i])+"\n")
+		f.close()
+		'''old code for old rain file
             #time = data.variables['time']
 	    #print "lon: " + str(a.variables['lon'][125])
 	    #print "lat: " + str(a.variables['lat'][125])
 	    
 	    
-            '''plt.plot(data)
-            filename = "plot"
-            filename+= "rain"
-            filename+= ".png"
-            print tempfile.gettempdir()
-            plt.savefig(tempfile.gettempdir()+'/'+filename)
-            plt.close()
-            '''
+
 	    
 	    times = stringvector()
 
 	    # read the time stamps and convert it to a 2012-12-31 23:59:59 format
-	    for i in range(0,data.variables['precipication'].size,1):
+	    for i in range(0,data.variables['time'].size,1):
 		times.append(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y-%m-%d %H:%M:%S'))
-	    datas = self.getRainData(151.25,-34.05,data)[:]
+	    datas = self.getRainData(151.25,-34.05,data)
 	    
 	    f = open("RainData.txt",'w')
 	    for i in range(len(times)):
@@ -76,7 +75,7 @@ class Rain(Module):
 	    
 	    i = 0
 	    
-	    for catch in catchments:    
+	    for catch in catchments:
                 block = dataflow.getFace(catch)
 		nodes = block.getNodes()
 		n = dataflow.getNode(nodes[0])
@@ -110,8 +109,7 @@ class Rain(Module):
                 block.addAttribute(rainattr)
 		i = i + 1
 	    	print "Adding Rain to Blocks: " + str(i) + " of " + str(len(catchments))
-	    
-	      
+	    '''
 	def createInputDialog(self):
             form = RainGui(self, QApplication.activeWindow())
             form.show()
@@ -123,19 +121,29 @@ class Rain(Module):
 
 	    #convert xvalue
 	    #convert yvalue
-	    
 
 	    longs = doublevector()
-	    longs = netCDF.variables['lon'][:]
+	    longs = netCDF.variables['longitude'][:]
 	    lats = doublevector()
-	    lats = netCDF.variables['lat'][:]
+	    lats = netCDF.variables['latitude'][:]
 	    #looking here in the netCDF vector for the index of our values
 	    
 	    x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
 	    y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
 	    datas = Attribute().getDoubleVector()
-	    for i in range(0,len(netCDF.variables['precipication'][:]),1):
-	    	datas.append(float(netCDF.variables['precipication'][i][int(lats[y])][int(longs[x])]))
+	    size = netCDF.variables['time'].size
+	    print size
+	    counter = long(0)
+	    print counter
+	    oldpercent = 0
+	    while (counter < size):#for i in range(0,netCDF.variables['precipitation'].size,1):
+	    	
+	    	newpercent = (size /100) * counter
+	    	if(oldpercent < int(newpercent)):
+	    		oldpercent = int(newpercent)
+	    		print "Reading Rain-Data " + str(oldpercent) + "%"
+	    	datas.append(float(netCDF.variables['precipitation'][counter][int(lats[y])][int(longs[x])]))
+	    	counter = counter + 1
 	    	#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 	    return datas
 
