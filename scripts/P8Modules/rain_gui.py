@@ -21,7 +21,19 @@ class RainGui(QtGui.QDialog):
         filename = str(self.ui.le_r.text())
         a = netCDF4.Dataset(filename,'r',format='NETCDF4')
         print a
-        data = a.variables['precipication'][:][125][125]
+        print a.variables['rain']
+        print a.variables['time']
+        print a.variables['lon']
+        print a.variables['lat']
+        #print a.variables['precipitation']
+        #print a.variables['time']
+        #print a.variables['longitude']
+        #print a.variables['latitude']
+
+        #print a.variables['precipitation'][]
+        for i in range(10):
+            print len(a.variables['precipitation'][i])
+        data = a.variables['precipitation'][589][125][125]
         plt.plot(data)
         plt.show()
         a.close()
