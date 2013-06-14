@@ -3,15 +3,15 @@
 
 #include <QWidget>
 
-DM_DECLARE_NODE_NAME(Current_Realisation2,P8Modules)
+DM_DECLARE_NODE_NAME(Current_RealisationModule,P8Modules)
 
-Current_Realisation2::Current_Realisation2()
+Current_RealisationModule::Current_RealisationModule()
 {
     RealisationNr = "";
     this->addParameter("RealisationNr",DM::STRING,&this->RealisationNr);
 }
 
-void Current_Realisation2::init()
+void Current_RealisationModule::init()
 {
 
     Simu = DM::View("SimulationData",DM::COMPONENT,DM::WRITE);
@@ -20,7 +20,7 @@ void Current_Realisation2::init()
     vdata.push_back(Simu);
     this->addData("City",vdata);
 }
-void Current_Realisation2::run()
+void Current_RealisationModule::run()
 {
     DM::System * sys = this->getData("City");
     DM::Component * cmp = new DM::Component();
@@ -28,9 +28,9 @@ void Current_Realisation2::run()
 
     cmp->addAttribute("MusicFileNo",atoi(this->RealisationNr.c_str()));
 }
-bool Current_Realisation2::createInputDialog()
+bool Current_RealisationModule::createInputDialog()
 {
-    QWidget * w = new p8realisation2_gui(this);
+    QWidget * w = new p8realisationModule_gui(this);
     w->show();
     return true;
 }

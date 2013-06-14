@@ -53,6 +53,6 @@ extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
 //    registry->addNodeFactory(new NodeFactory<P8Evaluation>());
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
     registry->addNodeFactory(new NodeFactory<Current_Realisation>());
-    registry->addNodeFactory(new NodeFactory<Current_Realisation2>());
+    registry->addNodeFactory(new NodeFactory<Current_RealisationModule>());
 }
 

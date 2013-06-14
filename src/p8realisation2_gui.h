@@ -9,18 +9,18 @@
 
 
 namespace Ui {
-class p8realisation2_gui;
+class p8realisationModule_gui;
 }
 
-class p8realisation2_gui : public QDialog
+class p8realisationModule_gui : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit p8realisation2_gui(Current_Realisation2 * p8, QWidget *parent = 0);
+    explicit p8realisationModule_gui(Current_RealisationModule * p8, QWidget *parent = 0);
 
 
-    ~p8realisation2_gui();
+    ~p8realisationModule_gui();
 
 
 
@@ -29,8 +29,8 @@ private slots:
 
 
 private:
-    Ui::p8realisation2_gui *ui;
-    Current_Realisation2 *p8realisation;
+    Ui::p8realisationModule_gui *ui;
+    Current_RealisationModule *p8realisation;
 };
 
 #endif // P8REALISATION2_GUI_H

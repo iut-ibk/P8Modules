@@ -6,14 +6,14 @@
 #include <dm.h>
 
 
-class DM_HELPER_DLL_EXPORT Current_Realisation2 : public DM::Module
+class DM_HELPER_DLL_EXPORT Current_RealisationModule: public DM::Module
 {
-    DM_DECLARE_NODE(Current_Realisation2)
+    DM_DECLARE_NODE(Current_RealisationModule)
 private:
     DM::View Simu;
 
 public:
-    Current_Realisation2();
+    Current_RealisationModule();
     void run();
     void init();
     virtual bool createInputDialog();
