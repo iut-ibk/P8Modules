@@ -44,11 +44,18 @@ class Rain(Module):
 		yoffset = comp.getAttribute("Yoffset").getDouble()
 
 		data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
-		print "Start rain"
+		print "Start reading Rain Data"
 		datas = self.getRainData(151.25,-34.05,data)
 		f = open("RainData.csv",'w')
+		print "Start writing Rain Data"
+		size = float(data.variables['time'].size)
+		oldpercent = 0
+		newpercent = float(0)
 		for i in range(0,data.variables['time'].size,1):
-			print i
+			newpercent = float((float(i) /float(size)) * float(100))
+	    	if(oldpercent < int(newpercent)):
+	    		oldpercent = int(newpercent)
+	    		print "Writing Rain-Data " + str(oldpercent) + "%"
 			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i])+"\n")
 		f.close()
 		'''old code for old rain file
@@ -132,13 +139,12 @@ class Rain(Module):
 	    y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
 	    datas = Attribute().getDoubleVector()
 	    size = netCDF.variables['time'].size
-	    print size
 	    counter = long(0)
-	    print counter
 	    oldpercent = 0
+	    newpercent = float(0)
 	    while (counter < size):#for i in range(0,netCDF.variables['precipitation'].size,1):
 	    	
-	    	newpercent = (size /100) * counter
+	    	newpercent = float((float(counter) /float(size)) * float(100))
 	    	if(oldpercent < int(newpercent)):
 	    		oldpercent = int(newpercent)
 	    		print "Reading Rain-Data " + str(oldpercent) + "%"
