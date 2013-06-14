@@ -18,26 +18,14 @@ class RainGui(QtGui.QDialog):
         QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
         
     def preview(self):
+        '''
         filename = str(self.ui.le_r.text())
         a = netCDF4.Dataset(filename,'r',format='NETCDF4')
-        print a
-        print a.variables['rain']
-        print a.variables['time']
-        print a.variables['lon']
-        print a.variables['lat']
-        #print a.variables['precipitation']
-        #print a.variables['time']
-        #print a.variables['longitude']
-        #print a.variables['latitude']
-
-        #print a.variables['precipitation'][]
-        for i in range(10):
-            print len(a.variables['precipitation'][i])
-        data = a.variables['precipitation'][589][125][125]
+        data = a.variables['precipitation'][0:10000][151][-34]
         plt.plot(data)
         plt.show()
         a.close()
-
+        '''
     def save_values(self):
         filename = str(self.ui.le_r.text())
         self.module.setParameterValue("FileName", filename)
