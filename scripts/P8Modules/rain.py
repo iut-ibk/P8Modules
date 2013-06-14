@@ -12,7 +12,7 @@ import os
 import osgeo.ogr as ogr
 import osgeo.osr as osr
 
-class Rain(Module):
+class RainModule(Module):
 	def __init__(self):
 	    Module.__init__(self)
 	    self.createParameter("FileName", FILENAME, "")
