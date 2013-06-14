@@ -7,7 +7,7 @@ import numpy as np
 import os.path
 from subprocess import call
 
-class EnviromentalBenefitsResults3(Module):
+class EnviromentalBenefitsResultsModule(Module):
 	def __init__(self):
 		Module.__init__(self)
 
@@ -36,6 +36,9 @@ class EnviromentalBenefitsResults3(Module):
 				musicnr = musicNo
 		self.writeBatFile(musicnr)
 		self.writeMusicConfigFileSecondary(musicnr)
+		print "Music is running ... "
+		call(["RunMusicSecondary.bat", ""])
+		print "Music Done."
 		self.FF = []
 		self.VR = [] 
 		self.WQ = [] 
@@ -178,7 +181,7 @@ class EnviromentalBenefitsResults3(Module):
 			f = open(self.tmpFile,'w')
 			f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")		
 			f.close()
-		Scall(["RunMusicSecondary.bat", ""])
+
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
 		form.show()
