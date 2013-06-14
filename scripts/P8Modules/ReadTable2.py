@@ -42,6 +42,7 @@ class TreatmentPerformanceResultsModule(Module):
 		call(["RunMusic.bat", ""])
 		print "Music Done."
 
+
 	def writeBatFile(self,nr):
 		f = open("RunMusic.bat",'w')
 		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \".\musicConfigFile"+str(nr)+".mcf\" -light -silent\n")

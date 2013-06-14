@@ -181,7 +181,6 @@ class EnviromentalBenefitsResultsModule(Module):
 			f = open(self.tmpFile,'w')
 			f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")		
 			f.close()
-
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
 		form.show()
@@ -231,7 +230,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		f.close()
 
 	def writeMusicConfigFileSecondary(self,nr):
-		f = open("musicConfigFileSeondary"+str(nr)+".mcf", 'w')
+		f = open("musicConfigFileSecondary"+str(nr)+".mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		f.write("Export_TS (ET Fluxes, Inflow, \"ETandRe-useFluxes"+str(nr)+".TXT\",1d,total\n")
