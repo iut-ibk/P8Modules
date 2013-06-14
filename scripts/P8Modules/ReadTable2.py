@@ -5,7 +5,7 @@ from ReadTable_Gui import *
 import shlex
 from subprocess import call
 
-class TreatmentPerformanceResults2(Module):
+class TreatmentPerformanceResultsModule(Module):
 	def __init__(self):
 		Module.__init__(self)
 
@@ -38,7 +38,9 @@ class TreatmentPerformanceResults2(Module):
 				musicnr = musicNo
 		self.writeBatFile(musicnr)
 		self.writeMusicConfigFile(musicnr)
-		Scall(["RunMusic.bat", ""])
+		print "Music running ..."
+		call(["RunMusic.bat", ""])
+		print "Music Done."
 
 	def writeBatFile(self,nr):
 		f = open("RunMusic.bat",'w')
