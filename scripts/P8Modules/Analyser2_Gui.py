@@ -29,6 +29,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			os.remove(self.TPRFile)
 		if os.path.exists(self.UtilFile):
 			os.remove(self.UtilFile)
+		if os.path.exists(self.EBRFile):
+			os.remove(self.EBRFile)
 	def plotEBR(self):
 		random.seed()
 		mpl.rcParams['toolbar'] = 'None'
@@ -231,7 +233,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		print IS
 		print WSUR
 		print SW
-		ResultVec.append((allsums*100,BF,PB,IS,WSUR,SW))
+		ResultVec.append((self.module.musicnr,allsums*100,BF,PB,IS,WSUR,SW))
 		BFvec =[]
 		PBvec = []
 		ISvec = []
@@ -245,20 +247,20 @@ class Analyser2_Gui(QtGui.QDialog):
 		SwFlag = False
 		print ResultVec
 		for i in range(len(ResultVec)):
-			BFvec.append(ResultVec[i][1])
-			PBvec.append(ResultVec[i][2])
-			ISvec.append(ResultVec[i][3])
-			WSURvec.append(ResultVec[i][4])
-			SWvec.append(ResultVec[i][5])
-			if(ResultVec[i][1] > 0):
-				BfFlag = True
+			BFvec.append(ResultVec[i][2])
+			PBvec.append(ResultVec[i][3])
+			ISvec.append(ResultVec[i][4])
+			WSURvec.append(ResultVec[i][5])
+			SWvec.append(ResultVec[i][6])
 			if(ResultVec[i][2] > 0):
-				PbFlag = True
+				BfFlag = True
 			if(ResultVec[i][3] > 0):
-				IsFlag = True
+				PbFlag = True
 			if(ResultVec[i][4] > 0):
-				WsurFlag = True
+				IsFlag = True
 			if(ResultVec[i][5] > 0):
+				WsurFlag = True
+			if(ResultVec[i][6] > 0):
 				SwFlag = True
 
 
@@ -288,7 +290,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		ax.set_xticks(ind+width)
 		xticksvec = []
 		for i in range(len(ResultVec)):
-			xticksvec.append("Realisation " + str(i+1) + "\n" + str('%.2f' % ResultVec[i][0]) + "%")
+			xticksvec.append("Realisation " + str(int(ResultVec[i][0])) + "\n" + str('%.2f' % ResultVec[i][1]) + "%")
 		ax.set_xticklabels(xticksvec)
 		ax.set_ylabel("Proportion of Utilisation (%)")
 		ax.legend()
@@ -313,7 +315,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			if(WsurFlag):
 				WSURstring += str('%.2f' % WSURvec[i]) + "%,"
 			if(SwFlag):
-				SWstring += str('%.2f' % SWstring[i] + "%,")
+				SWstring += str('%.2f' % SWvec[i]) + "%,"
 		txt = ""
 		outtxt = ""
 		if (BfFlag):
@@ -344,12 +346,12 @@ class Analyser2_Gui(QtGui.QDialog):
 		f = open(self.UtilFile,"r")
 		for line in f:
 			linearr = line.strip('\n').split(',')
-			tmpbar = (round(float(linearr[0])),round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])),round(float(linearr[5])))
+			tmpbar = (round(float(linearr[0])),round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])),round(float(linearr[5])),round(float(linearr[5])))
 			vec.append(tmpbar)
 		f.close()
 		return vec
 	def writeUtilFile(self,vec):
 		f = open(self.UtilFile,"w")
 		for i in range(len(vec)):
-			f.write(str(vec[i][0])+","+str(vec[i][1])+","+str(vec[i][2])+","+str(vec[i][3])+","+str(vec[i][4])+","+str(vec[i][5])+"\n")
+			f.write(str(vec[i][0])+","+str(vec[i][1])+","+str(vec[i][2])+","+str(vec[i][3])+","+str(vec[i][4])+","+str(vec[i][5])+","+str(vec[i][6])+"\n")
 		f.close()
