@@ -3,7 +3,7 @@ from PyQt4.QtGui import *
 from pydynamind import *
 from Analyser2_Gui import *
 
-class Analyser2(Module):
+class AnalyserModule(Module):
 	def __init__(self):
 		Module.__init__(self)
 
