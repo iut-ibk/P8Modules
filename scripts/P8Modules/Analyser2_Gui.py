@@ -346,7 +346,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		f = open(self.UtilFile,"r")
 		for line in f:
 			linearr = line.strip('\n').split(',')
-			tmpbar = (round(float(linearr[0])),round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])),round(float(linearr[5])),round(float(linearr[5])))
+			tmpbar = (round(float(linearr[0]),2),round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[4]),2),round(float(linearr[5]),2),round(float(linearr[6]),2))
 			vec.append(tmpbar)
 		f.close()
 		return vec
