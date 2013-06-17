@@ -4,7 +4,7 @@ from Ui_Rain_Dialog import Ui_P8Rain_GUI
 import netCDF4
 from matplotlib import *
 import matplotlib.pyplot as plt
-
+import numpy as np
 class RainGui(QtGui.QDialog):
     def __init__(self, m, parent=None):
         self.module = Module
@@ -19,17 +19,8 @@ class RainGui(QtGui.QDialog):
         
     def preview(self):
         vec = []
-        f = open("RainData.txt","r")
-        for line in f:
-            linearr = line.strip('\n').split(',')
-            tmpbar = round(float(linearr[1]),2)
-            vec.append(tmpbar)
-        f.close()
-        for item in vec:
-            if (item<0.01):
-                print "drin"
-                vec.remove(item)
-        print vec
+        dic = {}
+
         '''
         filename = str(self.ui.le_r.text())
         a = netCDF4.Dataset(filename,'r',format='NETCDF4')
@@ -38,6 +29,34 @@ class RainGui(QtGui.QDialog):
         plt.show()
         a.close()
         '''
+
+        f = open("RainData.txt","r")
+        for line in f:
+            linearr = line.strip('\n').split(',')
+            tmpbar = round(float(linearr[1]),1)
+            if (tmpbar>0.00):
+                if (tmpbar in dic):
+                    dic[tmpbar]=dic[tmpbar]+1       
+                else:
+                    dic[tmpbar]=1
+        f.close()
+        for key, value in dic.iteritems():
+            temp = [key,value]
+            vec.append(temp)
+        svec=sorted(vec)
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        count = []
+        ind  = []
+        for i in svec:
+            count.append(i[1])
+            ind.append(i[0])
+        bars = ax.bar(ind,count,.1,color='blue',edgecolor='none')
+        ax.set_title('Rainfall frequenzy distribution')
+        ax.set_ylabel('Count [-]')
+        ax.set_xlabel('Height [mm/6min]')
+        plt.show()
+
     def save_values(self):
         filename = str(self.ui.le_r.text())
         self.module.setParameterValue("FileName", filename)
