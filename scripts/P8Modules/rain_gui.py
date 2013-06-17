@@ -18,6 +18,18 @@ class RainGui(QtGui.QDialog):
         QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
         
     def preview(self):
+        vec = []
+        f = open("RainData.txt","r")
+        for line in f:
+            linearr = line.strip('\n').split(',')
+            tmpbar = round(float(linearr[1]),2)
+            vec.append(tmpbar)
+        f.close()
+        for item in vec:
+            if (item<0.01):
+                print "drin"
+                vec.remove(item)
+        print vec
         '''
         filename = str(self.ui.le_r.text())
         a = netCDF4.Dataset(filename,'r',format='NETCDF4')
