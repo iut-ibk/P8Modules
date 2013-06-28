@@ -30,7 +30,7 @@ class RainGui(QtGui.QDialog):
         a.close()
         '''
 
-        f = open("RainData.txt","r")
+        f = open("RainData.csv","r")
         for line in f:
             linearr = line.strip('\n').split(',')
             tmpbar = round(float(linearr[1]),1)
