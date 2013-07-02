@@ -52,9 +52,9 @@ class RainGui(QtGui.QDialog):
             count.append(i[1])
             ind.append(i[0])
         bars = ax.bar(ind,count,.1,color='blue',edgecolor='none')
-        ax.set_title('Rainfall frequenzy distribution')
-        ax.set_ylabel('Count [-]')
-        ax.set_xlabel('Height [mm/6min]')
+        ax.set_title('Rainfall frequency')
+        ax.set_ylabel('Frequency [-]')
+        ax.set_xlabel('Rainfall [mm/h]')
         plt.show()
 
     def save_values(self):
