@@ -43,7 +43,7 @@ class RainModule(Module):
 			if(oldpercent < int(newpercent)):
 				oldpercent = int(newpercent)
 				print "Writing Rain-Data " + str(oldpercent) + "%"
-			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i])+"\n")
+			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y/%m/%d %H:%M:%S'))+","+str(datas[i])+"\n")
 			i = i +1
 		f.close()
 		print "Done"
