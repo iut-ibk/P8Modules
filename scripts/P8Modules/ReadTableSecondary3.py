@@ -45,7 +45,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		self.FV = []
 		self.tmpFile = "EBRtable.txt"
 
-		AnnualRain = 1200
+		AnnualRain = 1000
 
 		list1 = self.readFileToList("PredevelopRunoffFrequency"+str(musicnr)+".TXT")
 		list2 = self.readFileToList("UntreatedRunoffFrequency"+str(musicnr)+".TXT")
