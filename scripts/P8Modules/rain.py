@@ -17,6 +17,10 @@ class Rain(Module):
 	    Module.__init__(self)
 	    self.createParameter("FileName", FILENAME, "")
 	    self.FileName = ""
+	    self.createParameter("csvFile",FILENAME,"")
+	    self.csvFile = ""
+	    self.createParameter("UserCsv", BOOL, "")
+	    self.UserCsv = False
 #            self.createParameter("Rain",DOUBLE,"Sample Description")
 #            self.Rain = 0
  
@@ -56,7 +60,7 @@ class Rain(Module):
 	    	if(oldpercent < int(newpercent)):
 	    		oldpercent = int(newpercent)
 	    		print "Writing Rain-Data " + str(oldpercent) + "%"
-			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y/%m/%d %H:%M:%S'))+","+str(datas[i])+"\n")
+			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i])+"\n")
 		f.close()
 		'''old code for old rain file
             #time = data.variables['time']
