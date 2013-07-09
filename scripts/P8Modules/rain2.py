@@ -17,9 +17,12 @@ class RainModule(Module):
 		Module.__init__(self)
 		self.createParameter("FileName", FILENAME, "")
 		self.FileName = ""
-
-		self.simulation = View("SimulationData",COMPONENT,READ)
-		self.simulation.addAttribute("MusicFileNo")	
+		self.createParameter("csvFile",FILENAME,"")
+		self.csvFile = ""
+		self.createParameter("UserCsv", DOUBLE, "")
+		self.UserCsv = 0
+		self.simulation = View("SimulationData",COMPONENT,WRITE)
+		self.simulation.addAttribute("UserCsv")
 
 		datastream = []
 		datastream.append(self.simulation)
@@ -28,25 +31,32 @@ class RainModule(Module):
 
 	def run(self):
 		dataflow = self.getData("City")
+		if (self.UserCsv):
+			simu = Component()
+			simu.addAttribute("UserCsv",int(self.UserCsv))
+			dataflow.addComponent(simu,self.simulation)
+		else:
+			dataflow = self.getData("City")
 
-		data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
-		print "Start reading Rain Data"
-		datas = self.getRainData(151.25,-34.05,data)
-		f = open("RainData.csv",'w')
-		print "Start writing Rain Data"
-		size = float(data.variables['time'].size)
-		oldpercent = 0
-		newpercent = float(0)
-		i = 0
-		while (i < size):
-			newpercent = float((float(i) /float(size)) * float(100))
-			if(oldpercent < int(newpercent)):
-				oldpercent = int(newpercent)
-				print "Writing Rain-Data " + str(oldpercent) + "%"
-			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%Y/%m/%d %H:%M:%S'))+","+str(datas[i])+"\n")
-			i = i +1
-		f.close()
-		print "Done"
+			data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
+			print "Start reading Rain Data"
+			datas = self.getRainData(151.25,-34.05,data)
+			f = open("RainData.csv",'w')
+			f.write(str(data.variables['time'][1]-data.variables['time'][0])+"\n")
+			print "Start writing Rain Data"
+			size = float(data.variables['time'].size)
+			oldpercent = 0
+			newpercent = float(0)
+			i = 0
+			while (i < size):
+				newpercent = float((float(i) /float(size)) * float(100))
+				if(oldpercent < int(newpercent)):
+					oldpercent = int(newpercent)
+					print "Writing Rain-Data " + str(oldpercent) + "%"
+				f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i])+"\n")
+				i = i +1
+			f.close()
+			print "Done"
 		'''old code for old rain file
             #time = data.variables['time']
 	    #print "lon: " + str(a.variables['lon'][125])
