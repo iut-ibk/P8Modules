@@ -6,7 +6,8 @@ import netCDF4
 from matplotlib import *
 import matplotlib.pyplot as plt
 import tempfile
-import datetime
+import datetime, time
+from datetime import date
 import numpy as np
 import os
 import osgeo.ogr as ogr
@@ -19,10 +20,11 @@ class RainModule(Module):
 		self.FileName = ""
 		self.createParameter("csvFile",FILENAME,"")
 		self.csvFile = ""
-		self.createParameter("UserCsv", DOUBLE, "")
-		self.UserCsv = 0
-		self.simulation = View("SimulationData",COMPONENT,WRITE)
+		self.createParameter("UserCsv", STRING, "")
+		self.UserCsv = ""
+		self.simulation = View("SimulationData",COMPONENT,READ)
 		self.simulation.addAttribute("UserCsv")
+		self.simulation.getAttribute("msfFilename")
 
 		datastream = []
 		datastream.append(self.simulation)
@@ -31,18 +33,25 @@ class RainModule(Module):
 
 	def run(self):
 		dataflow = self.getData("City")
-		if (self.UserCsv):
+		strvec = dataflow.getUUIDsOfComponentsInView(self.simulation)
+		for value in strvec:
+			simuAttr = dataflow.getComponent(value)
+			stringname = simuAttr.getAttribute("msfFilename").getString()
+			if (stringname != ""):
+				realstring = stringname
+		
+		if (self.UserCsv == "csv"):
 			simu = Component()
-			simu.addAttribute("UserCsv",int(self.UserCsv))
+			simu.addAttribute("UserCsv",self.UserCsv)
 			dataflow.addComponent(simu,self.simulation)
-		else:
-			dataflow = self.getData("City")
-
+			self.changeMusicFile(realstring,self.csvFile)
+		elif(self.UserCsv == "net"):
+			print "NET"
 			data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
 			datas = self.getRainData(151.25,-34.05,data)
 			f = open("RainData.csv",'w')
-			f.write(str(data.variables['time'][1]-data.variables['time'][0])+"\n")
+			f.write("Date,Rainfall\n")
 			print "Start writing Rain Data"
 			size = float(data.variables['time'].size)
 			oldpercent = 0
@@ -57,6 +66,9 @@ class RainModule(Module):
 				i = i +1
 			f.close()
 			print "Done"
+			self.changeMusicFile(realstring,"RainData.csv")
+		else:
+			print "nothing"
 		'''old code for old rain file
             #time = data.variables['time']
 	    #print "lon: " + str(a.variables['lon'][125])
@@ -116,44 +128,86 @@ class RainModule(Module):
 		i = i + 1
 	    	print "Adding Rain to Blocks: " + str(i) + " of " + str(len(catchments))
 	    '''
+
+	def changeMusicFile(self, musicf, csvf):
+		startdate = ""
+		enddate = ""
+		timestep = 0
+		counter = 0
+		f = open(csvf,"r")
+		for line in f:
+			counter = counter + 1
+			linearr = line.strip("\n").split(",")
+			if (counter == 2):
+				startdate = linearr[0].split(" ")
+			if (counter == 3):
+				tmp = linearr[0].split(" ")[1].split(":")
+				tmp2 = startdate[1].split(":")
+				timestep = int(tmp[0]) * 360 - int(tmp2[0]) * 360
+				timestep = timestep + (int(tmp[1]) * 60 - int(tmp2[1]) * 60)
+				timestep = timestep + int(tmp[2]) - int(tmp2[2])
+		enddate = linearr[0].split(" ")[0]
+		startdate = startdate[0]
+		print startdate
+		print enddate
+		print timestep
+		f.close()
+		infile = open(musicf,"r")
+		outfile = open(musicf+".tmp","w")
+		for line in infile:
+			linearr = line.strip("\n").split(",")
+			if (linearr[0] == "MeteorologicalTemplate"):
+				outfile.write("RainfallFile," + csvf +"\n") #todo check if pathes are correct for music
+				outfile.write("PETFile,C:\Program Files (x86)\hydro-IT\P8-WSC\et.txt\n")
+				outfile.write("StartDate," + startdate + "\n")
+				outfile.write("EndDate," + enddate + "\n")
+				outfile.write("Timestep," + str(timestep) + "\n")
+			else:
+				outfile.write(line)
+		infile.close()
+		outfile.close()
+		os.remove(musicf)
+		os.rename(musicf+".tmp",musicf)
+		'''
+		"RainfallFile,C:\Program Files (x86)\hydro-IT\P8-WSC\Rain.csv"
+		"PETFile,C:\Program Files (x86)\hydro-IT\P8-WSC\et.txt"
+		"StartDate,01/01/1990"
+		"EndDate,03/01/1990"
+		"Timestep,360"
+		'''
+
 	def createInputDialog(self):
-            form = RainGui(self, QApplication.activeWindow())
-            form.show()
-            return True 
+		form = RainGui(self, QApplication.activeWindow())
+		form.show()
+		return True 
 	def find_nearest(self,array,value):
-    	    idx=(np.abs(array-value)).argmin()
-    	    return array[idx]	
+		idx=(np.abs(array-value)).argmin()
+		return array[idx]
 	def getRainData(self,xValue, yValue, netCDF):
 
-	    #convert xvalue
-	    #convert yvalue
+		#convert xvalue
+		#convert yvalue
 
-	    longs = doublevector()
-	    longs = netCDF.variables['longitude'][:]
-	    lats = doublevector()
-	    lats = netCDF.variables['latitude'][:]
-	    #looking here in the netCDF vector for the index of our values
-	    
-	    x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
-	    y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
-	    datas = Attribute().getDoubleVector()
-	    size = netCDF.variables['time'].size
-	    counter = long(0)
-	    oldpercent = 0
-	    newpercent = float(0)
-	    while (counter < size):#for i in range(0,netCDF.variables['precipitation'].size,1):
-	    	
-	    	newpercent = float((float(counter) /float(size)) * float(100))
-	    	if(oldpercent < int(newpercent)):
-	    		oldpercent = int(newpercent)
-	    		print "Reading Rain-Data " + str(oldpercent) + "%"
-	    	datas.append(float(netCDF.variables['precipitation'][counter][int(lats[y])][int(longs[x])]))
-	    	counter = counter + 1
-	    	#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
-	    return datas
+		longs = doublevector()
+		longs = netCDF.variables['longitude'][:]
+		lats = doublevector()
+		lats = netCDF.variables['latitude'][:]
+		#looking here in the netCDF vector for the index of our values
 
-
-
-
-
-
+		x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
+		y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
+		datas = Attribute().getDoubleVector()
+		size = netCDF.variables['time'].size
+		counter = long(0)
+		oldpercent = 0
+		newpercent = float(0)
+		while (counter < size):#for i in range(0,netCDF.variables['precipitation'].size,1):
+			
+			newpercent = float((float(counter) /float(size)) * float(100))
+			if(oldpercent < int(newpercent)):
+				oldpercent = int(newpercent)
+				print "Reading Rain-Data " + str(oldpercent) + "%"
+			datas.append(float(netCDF.variables['precipitation'][counter][int(lats[y])][int(longs[x])]))
+			counter = counter + 1
+			#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
+		return datas
