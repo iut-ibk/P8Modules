@@ -11,7 +11,8 @@ class TreatmentPerformanceResultsModule(Module):
 
 		#Views
 		self.simulation = View("SimulationData",COMPONENT,READ)
-		self.simulation.addAttribute("MusicFileNo")	
+		#self.simulation.getAttribute("MusicFileNo")
+		self.simulation.getAttribute("msfFilename")
 
 
 		self.TableData = View("Table Data",COMPONENT,WRITE)
@@ -30,25 +31,45 @@ class TreatmentPerformanceResultsModule(Module):
 	def run(self):
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
-		tmpvec = []
+		''' version with musicnr
 		for value in strvec:
 			simuData = city.getComponent(value)
 			musicNo = int(simuData.getAttribute("MusicFileNo").getDouble())
 			if (musicNo != 0):
 				musicnr = musicNo
-		self.writeBatFile(musicnr)
-		self.writeMusicConfigFile(musicnr)
+		self.writeBatFileFromNr(musicnr)
+		self.writeMusicConfigFileFromNr(musicnr)
+		'''
+		#version with musicfile
+		for value in strvec:
+			simuAttr = dataflow.getComponent(value)
+			stringname = simuAttr.getAttribute("msfFilename").getString()
+			if (stringname != ""):
+				realstring = stringname
+		self.writeBatFile(realstring)
+		self.writeMusicConfigFile(realstring)
+
+
 		print "Music running ..."
 		call(["RunMusic.bat", ""])
 		print "Music Done."
 
+	def writeBatFileFromFile(self,file):
+		f = open("RunMusic.bat",'w')
+		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\"" + file + "\".\musicConfigFile.mcf\" -light -silent\n")
+		f.close()
 
-	def writeBatFile(self,nr):
+	def writeBatFileFromNr(self,nr):
 		f = open("RunMusic.bat",'w')
 		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \".\musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
-
-	def writeMusicConfigFile(self,nr):
+	def writeMusicConfigFileFromFile(self,file):
+		f = open("musicConfigFile.mcf", 'w')
+		f.write("Version = 100\n")
+		f.write("Delimiter = #44\n")
+		f.write("Export_TTE (Receiving Node,\"Perf_TTE.txt\")\n")
+		f.close()
+	def writeMusicConfigFileFromNr(self,nr):
 		f = open("musicConfigFile"+str(nr)+".mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
