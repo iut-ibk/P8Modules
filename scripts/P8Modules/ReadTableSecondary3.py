@@ -6,6 +6,8 @@ import shlex
 import numpy as np
 import os.path
 from subprocess import call
+import ubeats_music_interface as umusic
+
 
 class EnviromentalBenefitsResultsModule(Module):
 	def __init__(self):
@@ -29,13 +31,24 @@ class EnviromentalBenefitsResultsModule(Module):
 	def run(self):
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
+		''' version with musicnr
 		for value in strvec:
 			simuData = city.getComponent(value)
 			musicNo = int(simuData.getAttribute("MusicFileNo").getDouble())
 			if (musicNo != 0):
 				musicnr = musicNo
-		self.writeBatFile(musicnr)
-		self.writeMusicConfigFileSecondary(musicnr)
+		self.writeBatFileFromNr(musicnr)
+		self.writeMusicConfigFileSecondaryFromNr(musicnr)
+		'''
+		#version with musicfile
+		for value in strvec:
+			simuAttr = city.getComponent(value)
+			stringname = simuAttr.getAttribute("msfFilename").getString()
+			if (stringname != ""):
+				realstring = stringname
+		self.writeBatFileFromFile(realstring)
+		self.writeMusicConfigFileSecondaryFromFile(realstring)
+		self.convertToSecondaryMusic(realstring)
 		print "Music is running ... "
 		call(["RunMusicSecondary.bat", ""])
 		print "Music Done."
@@ -47,6 +60,7 @@ class EnviromentalBenefitsResultsModule(Module):
 
 		AnnualRain = 1000
 
+		'''version with musicnr
 		list1 = self.readFileToList("PredevelopRunoffFrequency"+str(musicnr)+".TXT")
 		list2 = self.readFileToList("UntreatedRunoffFrequency"+str(musicnr)+".TXT")
 		list3 = self.readFileToList("TreatedRunoffFrequency"+str(musicnr)+".TXT")
@@ -55,6 +69,17 @@ class EnviromentalBenefitsResultsModule(Module):
 		list6 = self.readFileToList("Exfiltration"+str(musicnr)+".TXT")
 		list7 = self.readFileToList("WQ"+str(musicnr)+".TXT")
 		list8 = self.readFileToList("PredevelopBaseflowFrequency"+str(musicnr)+".TXT")
+		'''
+		#version with music file
+		list1 = self.readFileToList("PredevelopRunoffFrequency.TXT")
+		list2 = self.readFileToList("UntreatedRunoffFrequency.TXT")
+		list3 = self.readFileToList("TreatedRunoffFrequency.TXT")
+		list4 = self.readFileToList("ETandRe-useFluxes.TXT")
+		list5 = self.readFileToList("PredevelopTotalRunoff.TXT")
+		list6 = self.readFileToList("Exfiltration.TXT")
+		list7 = self.readFileToList("WQ.TXT")
+		list8 = self.readFileToList("PredevelopBaseflowFrequency.TXT")
+
 		vec1 = []
 		vec2 = []
 		vec3 = []
@@ -172,14 +197,20 @@ class EnviromentalBenefitsResultsModule(Module):
 		self.VR.append(float(int(tmpVR*1000))/10) 
 		self.WQ.append(float(int(tmpWQ*1000))/10)
 		self.FV.append(float(int(tmpFV*1000))/10)
-		print str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])
+		#print str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])
 		if os.path.exists(self.tmpFile):
-			f = open(self.tmpFile,'a')
-			f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")		
+			f = open(self.tmpFile,'a+')
+			nr = 0
+			for line in f:
+				linearr = line.strip("\n").split(",")
+				if(nr < linearr[0]):
+					nr = linearr[0]
+			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")		
 			f.close()
 		else:
 			f = open(self.tmpFile,'w')
-			f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")		
+			#f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
+			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
 			f.close()
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
@@ -224,12 +255,29 @@ class EnviromentalBenefitsResultsModule(Module):
 			tmp.append(i-value)
 		idx=(np.abs(tmp)).argmin()
 		return idx
-	def writeBatFile(self,nr):
+	def writeBatFileFromFile(self,file):
+		f = open("RunMusicSecondary.bat",'w')
+		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ file +"\" \".\musicConfigFileSecondary.mcf\" -light -silent\n")
+		f.close()
+	def writeBatFileFromNr(self,nr):
 		f = open("RunMusicSecondary.bat",'w')
 		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \".\musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
-
-	def writeMusicConfigFileSecondary(self,nr):
+	def writeMusicConfigFileSecondaryFromFile(self,file):
+		f = open("musicConfigFileSecondary.mcf", 'w')
+		f.write("Version = 100\n")
+		f.write("Delimiter = #44\n")
+		f.write("Export_TS (ET Fluxes, Inflow, \"ETandRe-useFluxes.TXT\",1d)\n")
+		f.write("Export_TS (Infiltration Fluxes, Inflow, \"Exfiltration.TXT\",1d)\n")
+		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff.TXT\",1d)\n")
+		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency.TXT \",1d)\n")
+		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency.TXT\",1d)\n")
+		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment.TXT\",1d)\n")
+		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency.TXT\",1d)\n")
+		f.write("Export_TS (Receiving Node, Inflow, \"TreatedRunoffFrequency.TXT\",1d)\n")
+		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQTXT\",1d)\n")
+		f.close()
+	def writeMusicConfigFileSecondaryFromNr(self,nr):
 		f = open("musicConfigFileSecondary"+str(nr)+".mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
@@ -242,4 +290,98 @@ class EnviromentalBenefitsResultsModule(Module):
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Receiving Node, Inflow, \"TreatedRunoffFrequency"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(nr)+".TXT\",1d)\n")
+		f.close()
+	def convertToSecondaryMusic(self, filename):
+		f = open(filename,"a+")
+		recvcounter = 0
+		sumID = 0
+		urbansourcenode = False
+		WSUR = False
+		PB = False
+		IS = False
+		BF = False
+		SW = False
+		area = 0.0
+		EtFlux_list = []
+		fluxinfl_list = []
+		fluxinfl_list2 = []
+		i = 0
+		for line in f:
+			i = i + 1
+			print i
+			linearr = line.strip("\n").split(",")
+			if (recvcounter == 2):
+				receivingnodeid = int(linearr[1])
+				recvcounter = 0
+			if (recvcounter == 1):
+				recvcounter = 2
+			if(linearr[0] == "Node Type"):
+				if(linearr[1] == "ReceivingNode"):
+					recvcounter = 1
+			if(linearr[0] == "Node ID"):
+				if(linearr[1] > sumID):
+					sumID = int(linearr[1]) +1
+			if(linearr[0] == "Node Type"):
+				if(linearr[1] == "UrbanSourceNode"):
+					urbansourcenode = True
+			if(urbansourcenode):
+				if(linearr[0] == "Areas - Total Area (ha)"):
+					area = area + float(linearr[1])
+					urbansourcenode = False
+			if(linearr[0] == "Node Type" and linearr[1] == "WetlandNode"):
+				WSUR = True
+			if(linearr[0] == "Node Type" and linearr[1] == "PondNode"):
+				PB = True
+			if(linearr[0] == "Node Type" and linearr[1] == "InfiltrationSystemNodeV4"):
+				IS = True
+			if(linearr[0] == "Node Type" and linearr[1] == "BioRetentionNodeV4"):
+				BF = True
+			if(linearr[0] == "Node Type" and linearr[1] == "SwaleNode"):
+				SW = True
+			
+			if (IS and linearr[0] == "Node ID"):
+				IS = False
+				EtFlux_list.append(linearr[1])
+				fluxinfl_list2.append(linearr[1])
+			if (linearr[0] == "Node ID" and (WSUR or PB or BF or SW)):
+				WSUR = False
+				PB = False
+				BF = False
+				SW = False
+				EtFlux_list.append(linearr[1])
+				fluxinfl_list.append(linearr[1])
+		print "Summary:"
+		print "sumID: " + str(sumID)
+		print "Area sum: " + str(area)
+		print "ReceivingNode: " + str(receivingnodeid)
+		print "Lists: " 
+		print EtFlux_list
+		print fluxinfl_list
+		print fluxinfl_list2
+		areaSumID = sumID
+		catchment_paramter_list = [1,120,30,20,200,1,10,25,5,0]
+		umusic.writeMUSICcatchmentnode2(f, "Pre-developed Total Runoff", "", areaSumID, 0, 0, area,1, catchment_paramter_list)
+		umusic.writeMUSICjunction2(f, "Pre-developed Baseflows", areaSumID+1, 0, 0)
+		umusic.writeMUSIClinkToIgnore(f,areaSumID,areaSumID+1)
+		umusic.writeMUSICjunction2(f, "Pre-developed Runoff Frequency", areaSumID+2, 0, 0)
+		umusic.writeMUSIClinkToFrequenzy(f,areaSumID,areaSumID+2)
+		umusic.writeMUSICjunction2(f, "ET Fluxes",areaSumID+3,0,0)
+		umusic.writeMUSICjunction2(f, "Infiltration Fluxes",areaSumID+4,0,0)
+
+
+		catchment_paramter_list2 = [1,30,30,20,200,1,10,25,5,0]
+		umusic.writeMUSICcatchmentnode3(f, "Urbanised Catchment", "", areaSumID+5, 0, 0, area,1, catchment_paramter_list)
+		umusic.writeMUSICjunction2(f, "Ignore", areaSumID+6, 0, 0)
+		umusic.writeMUSIClinkToIgnore(f,areaSumID+5,areaSumID+6)
+		umusic.writeMUSICjunction2(f, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
+		umusic.writeMUSIClinkToFrequenzy(f,areaSumID+5,areaSumID+7)
+
+		for i in EtFlux_list:
+		    umusic.writeMUSIClinkToFlux(f, i, areaSumID+3)
+		for j in fluxinfl_list:
+		    umusic.writeMUSIClinkToInfilFlux1(f, j, areaSumID+4)
+		for k in fluxinfl_list2:
+		    umusic.writeMUSIClinkToInfilFlux2(f, k, areaSumID+4)
+		umusic.writeMUSIClink(f, areaSumID+4,int(receivingnodeid))
+		umusic.writeMUSICfooter(f)
 		f.close()
