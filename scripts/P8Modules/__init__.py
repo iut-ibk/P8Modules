@@ -37,6 +37,7 @@ from Microclimate import *
 from Economic import *
 from ImportMSF import *
 from ubeats_music_interface import *
+from StreamErosionIndex import *
 #from memtestsyste import *
 #from plotvectordata import *
 #from plotraster import *
