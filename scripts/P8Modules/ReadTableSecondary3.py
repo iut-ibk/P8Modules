@@ -275,7 +275,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment.TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency.TXT\",1d)\n")
 		f.write("Export_TS (Receiving Node, Inflow, \"TreatedRunoffFrequency.TXT\",1d)\n")
-		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQTXT\",1d)\n")
+		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ.TXT\",1d)\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromNr(self,nr):
 		f = open("musicConfigFileSecondary"+str(nr)+".mcf", 'w')
