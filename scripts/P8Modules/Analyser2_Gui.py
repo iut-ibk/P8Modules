@@ -23,6 +23,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_plotTPR, QtCore.SIGNAL("released()"),self.plotTPR)
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
 		QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
+		QtCore.QObject.connect(self.ui.pb_plotSEI, QtCore.SIGNAL("released()"),self.plotSEI)
 		self.colorarr = ['#0b09ae','#b01717','#37c855','#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']
 	def delete(self):
 		if os.path.exists(self.TPRFile):
@@ -340,7 +341,41 @@ class Analyser2_Gui(QtGui.QDialog):
 		f.write(outtxt)
 		f.close()
 		self.writeUtilFile(ResultVec)
+	def plotSEI(self):
+		mpl.rcParams['toolbar'] = 'None'
+		pre = self.readSEItable("pretable.csv")
+		urb = self.readSEItable("urbtable.csv")
+		wsud = self.readSEItable("wsudtable.csv")
+		a = []
+		b = []
+		c = []
+		d = []
+		e = []
+		f = []
+		for line in pre:
+			a.append(line[0])
+			b.append(line[1])
+		for line in urb:
+			c.append(line[0])
+			d.append(line[1])
+		for line in wsud:
+			e.append(line[0])
+			f.append(line[1])
 
+		plt.plot(b,a,"g^",label = "Pre-developed Catchment")
+		plt.plot(d,c,"rs",label = "Urbanised Catchment no treatment")
+		plt.plot(f,e,"bo",label = "Post WSUD")
+		plt.yscale("log")
+		plt.xscale("log")
+		plt.plot([0.5, 0.5], [0.01, 100], 'b-', lw=2)
+		plt.plot([0.2, 0.2], [0.01, 100], 'y-', lw=2)
+		plt.plot([1.1, 1.1], [0.01, 100], 'g-', lw=2)
+		plt.plot([2, 2], [0.01, 100], 'k-', lw=2)
+
+		plt.title("SEI Plot")
+		plt.text(1,1,"SEI Urbanised = " + str(self.module.SEIurb) + "\nSEI WSUD = " + str(self.module.SEIwsud))
+		plt.legend(loc = 4,prop={"size":8})
+		plt.show()
 	def loadUtilFile(self):
 		vec = []
 		f = open(self.UtilFile,"r")
@@ -355,3 +390,14 @@ class Analyser2_Gui(QtGui.QDialog):
 		for i in range(len(vec)):
 			f.write(str(vec[i][0])+","+str(vec[i][1])+","+str(vec[i][2])+","+str(vec[i][3])+","+str(vec[i][4])+","+str(vec[i][5])+","+str(vec[i][6])+"\n")
 		f.close()
+	def readSEItable(self,filename):
+		arr = []
+		f = open(filename,"r")
+		for line in f:
+			linearr = line.strip("\n").split(",")
+			tmp = []
+			tmp.append(float(linearr[0]))
+			tmp.append(float(linearr[1]))
+			arr.append(tmp)
+		f.close()
+		return arr
