@@ -42,7 +42,7 @@ class TreatmentPerformanceResultsModule(Module):
 		'''
 		#version with musicfile
 		for value in strvec:
-			simuAttr = dataflow.getComponent(value)
+			simuAttr = city.getComponent(value)
 			stringname = simuAttr.getAttribute("msfFilename").getString()
 			if (stringname != ""):
 				realstring = stringname
