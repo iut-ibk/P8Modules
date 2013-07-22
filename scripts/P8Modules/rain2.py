@@ -153,7 +153,9 @@ class RainModule(Module):
 		print timestep
 		f.close()
 		infile = open(musicf,"r")
-		outfile = open(musicf+".tmp","w")
+		tmpfile = musicf.split(".")
+		outfile = open(str(tmpfile[0]) + "Secondary." + tmpfile[1] ,"w")
+		csvf.replace("/","\\")
 		for line in infile:
 			linearr = line.strip("\n").split(",")
 			if (linearr[0] == "MeteorologicalTemplate"):
@@ -166,8 +168,6 @@ class RainModule(Module):
 				outfile.write(line)
 		infile.close()
 		outfile.close()
-		os.remove(musicf)
-		os.rename(musicf+".tmp",musicf)
 		'''
 		"RainfallFile,C:\Program Files (x86)\hydro-IT\P8-WSC\Rain.csv"
 		"PETFile,C:\Program Files (x86)\hydro-IT\P8-WSC\et.txt"
