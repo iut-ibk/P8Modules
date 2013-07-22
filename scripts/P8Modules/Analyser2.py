@@ -8,7 +8,8 @@ class AnalyserModule(Module):
 		Module.__init__(self)
 
 		self.simulation = View("SimulationData",COMPONENT,READ)
-		self.simulation.addAttribute("MusicFileNo")	
+		self.simulation.getAttribute("SEIurb")
+		self.simulation.getAttribute("SEIwsud")	
 
 		datastream = []
 		datastream.append(self.simulation)
@@ -17,13 +18,16 @@ class AnalyserModule(Module):
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
 		tmpvec = []
+		self.SEIwsud = 0.0
+		self.SEIurb = 0.0
 		for value in strvec:
 			simuData = city.getComponent(value)
-			musicNo = int(simuData.getAttribute("MusicFileNo").getDouble())
-			if (musicNo != 0):
-				musicnr = musicNo
-		self.musicnr = musicnr
-
+			urb = simuData.getAttribute("SEIurb").getDouble()
+			wsud = simuData.getAttribute("SEIwsud").getDouble()
+			if (urb != 0):
+				self.SEIurb = urb
+			if(wsud != 0):
+				self.SEIwsud = wsud
 	def createInputDialog(self):
 		form = Analyser2_Gui(self, QApplication.activeWindow())
 		form.show()
