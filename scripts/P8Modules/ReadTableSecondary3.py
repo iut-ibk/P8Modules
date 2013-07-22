@@ -319,7 +319,7 @@ class EnviromentalBenefitsResultsModule(Module):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
 			if(linearr[0] == "Node ID"):
-				if(linearr[1] > sumID):
+				if(linearr[1] >= sumID):
 					sumID = int(linearr[1]) +1
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "UrbanSourceNode"):
