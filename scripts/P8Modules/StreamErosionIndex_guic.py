@@ -9,15 +9,29 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.module = Module
 		self.module = m
 		QtGui.QDialog.__init__(self, parent)
+
 		self.ui = Ui_StreamErosionIndexDialog()
 		self.ui.setupUi(self)
-		self.ui.le_r.setText(self.module.getParameterAsString("Filename"))
+		self.ui.le_r.setText(self.module.getParameterAsString("Csvfile"))
+		self.ui.le_r2.setText(self.module.getParameterAsString("ETfile"))
+		self.ui.le_A.setText(self.module.getParameterAsString("alpha"))
+		self.ui.le_NoY.setText(self.module.getParameterAsString("NoY"))
+		self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
+
 		QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
 		QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
+		QtCore.QObject.connect(self.ui.pb_r2, QtCore.SIGNAL("released()"), self.load2)
 
 	def save_values(self):
 		Filename = str(self.ui.le_r.text())
-		self.module.setParameterValue("Filename", Filename)
+		self.module.setParameterValue("Csvfile", Filename)
+		Filename = str(self.ui.le_r2.text())
+		self.module.setParameterValue("ETfile",Filename)
+		city = self.ui.city_combo.currentIndex()
+		self.module.setParameterValue("SimulationCity",str(city))
 	def load(self):
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Music File", "Open new file", self.tr("Text Files (*.msf)"))
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Csv File", "Open new file", self.tr("Csv Files (*.csv)"))
 		self.ui.le_r.setText(filename)
+	def load2(self):
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", "Open new file", self.tr("Text Files (*.txt)"))
+		self.ui.le_r2.setText(filename)
