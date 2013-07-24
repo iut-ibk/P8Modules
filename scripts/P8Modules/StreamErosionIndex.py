@@ -10,6 +10,8 @@ from operator import itemgetter
 import numpy as np
 import os
 import platform
+from subprocess import call
+
 class StreamErosionIndex(Module):
 
 
