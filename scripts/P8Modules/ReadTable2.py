@@ -4,6 +4,7 @@ from pydynamind import *
 from ReadTable_Gui import *
 import shlex
 from subprocess import call
+import platform
 
 class TreatmentPerformanceResultsModule(Module):
 	def __init__(self):
@@ -51,10 +52,11 @@ class TreatmentPerformanceResultsModule(Module):
 
 
 		print "Music running ..."
-		call(["RunMusic.bat", ""])
+		if (platform.system() != "Linux"):
+			call(["RunMusic.bat", ""])
 		print "Music Done."
 
-	def writeBatFileFromFile(self,file):
+	def writeBatFile(self,file):
 		f = open("RunMusic.bat",'w')
 		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\"" + file + "\".\musicConfigFile.mcf\" -light -silent\n")
 		f.close()
@@ -63,7 +65,7 @@ class TreatmentPerformanceResultsModule(Module):
 		f = open("RunMusic.bat",'w')
 		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \".\musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
-	def writeMusicConfigFileFromFile(self,file):
+	def writeMusicConfigFile(self,file):
 		f = open("musicConfigFile.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
