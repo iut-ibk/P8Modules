@@ -65,7 +65,7 @@ class RainGui(QtGui.QDialog):
         filename = str(self.ui.le_r.text())
         if (filename != ""):
             Net = True
-            self.module.setParameterValue("FileName", filename)
+            self.module.setParameterValue("Netfile", filename)
         filename = str(self.ui.le_csv.text())
         if (filename != ""):
             Csv = True

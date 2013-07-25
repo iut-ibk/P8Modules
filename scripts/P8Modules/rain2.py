@@ -12,13 +12,14 @@ import numpy as np
 import os
 import osgeo.ogr as ogr
 import osgeo.osr as osr
+import platform
 
 class RainModule(Module):
 	def __init__(self):
 		Module.__init__(self)
-		self.createParameter("FileName", FILENAME, "")
-		self.FileName = ""
-		self.createParameter("csvFile",FILENAME,"")
+		self.createParameter("Netfile", STRING, "")
+		self.Netfile = ""
+		self.createParameter("csvFile",STRING,"")
 		self.csvFile = ""
 		self.createParameter("UserCsv", STRING, "")
 		self.UserCsv = ""
@@ -47,7 +48,7 @@ class RainModule(Module):
 			self.changeMusicFile(realstring,self.csvFile)
 		elif(self.UserCsv == "net"):
 			print "NET"
-			data = netCDF4.Dataset(self.FileName)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
+			data = netCDF4.Dataset(self.Netfile)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
 			datas = self.getRainData(151.25,-34.05,data)
 			f = open("RainData.csv",'w')
@@ -66,7 +67,7 @@ class RainModule(Module):
 				i = i +1
 			f.close()
 			print "Done"
-			self.changeMusicFile(realstring,"RainData.csv")
+			self.changeMusicFile(realstring,".\RainData.csv")
 		else:
 			print "nothing"
 		'''old code for old rain file
@@ -145,7 +146,7 @@ class RainModule(Module):
 				tmp2 = startdate[1].split(":")
 				timestep = int(tmp[0]) * 360 - int(tmp2[0]) * 360
 				timestep = timestep + (int(tmp[1]) * 60 - int(tmp2[1]) * 60)
-				timestep = timestep + int(tmp[2]) - int(tmp2[2])
+				#timestep = timestep + int(tmp[2]) - int(tmp2[2]) 			#not considering seconds into timestep calc
 		enddate = linearr[0].split(" ")[0]
 		startdate = startdate[0]
 		print startdate
@@ -154,7 +155,7 @@ class RainModule(Module):
 		f.close()
 		infile = open(musicf,"r")
 		tmpfile = musicf.split(".")
-		outfile = open(str(tmpfile[0]) + "Secondary." + tmpfile[1] ,"w")
+		outfile = open(str(tmpfile[0]) + "NewRain." + tmpfile[1] ,"w")
 		csvf.replace("/","\\")
 		for line in infile:
 			linearr = line.strip("\n").split(",")
@@ -168,13 +169,6 @@ class RainModule(Module):
 				outfile.write(line)
 		infile.close()
 		outfile.close()
-		'''
-		"RainfallFile,C:\Program Files (x86)\hydro-IT\P8-WSC\Rain.csv"
-		"PETFile,C:\Program Files (x86)\hydro-IT\P8-WSC\et.txt"
-		"StartDate,01/01/1990"
-		"EndDate,03/01/1990"
-		"Timestep,360"
-		'''
 
 	def createInputDialog(self):
 		form = RainGui(self, QApplication.activeWindow())
