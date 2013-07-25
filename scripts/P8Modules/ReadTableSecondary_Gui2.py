@@ -19,8 +19,12 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	QtCore.QObject.connect(self.ui.pb_export, QtCore.SIGNAL("released()"),self.export)
 	QtCore.QObject.connect(self.ui.pb_clipboard, QtCore.SIGNAL("released()"),self.copyToClipboard)
 	#QtCore.QObject.connect(self.ui.pb_plot, QtCore.SIGNAL("released()"),self.plot)
+	self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
+
     def save(self):
-    	pass
+	city = self.ui.city_combo.currentIndex()
+	self.module.setParameterValue("SimulationCity",str(city))
+	pass
 	
     def Load(self):
 	widget = QtGui.QLineEdit(str("Enviromental Benefit"))
