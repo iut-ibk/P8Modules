@@ -93,8 +93,6 @@ class ReadTable_Gui(QtGui.QDialog):
 	liste = list(text)
 	i = 0
 	for rows in range(self.ui.table.rowCount()):
-	    if rows ==2:
-		i=i+4	
 	    for cols in range(self.ui.table.columnCount()):
 		widget = QtGui.QLineEdit(str(liste[i]))
 		if rows == 0:
