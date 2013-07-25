@@ -53,26 +53,28 @@ class TreatmentPerformanceResultsModule(Module):
 
 		print "Music running ..."
 		if (platform.system() != "Linux"):
-			call(["RunMusic.bat", ""])
+			call(["RunMusicTP.bat", ""])
 		print "Music Done."
 
 	def writeBatFile(self,file):
-		f = open("RunMusic.bat",'w')
-		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\"" + file + "\".\musicConfigFile.mcf\" -light -silent\n")
+		f = open("RunMusicTP.bat",'w')
+		if (platform.system() != "Linux"):
+			file = file.replace("/","\\")
+		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \"" + file + "\" \".\musicConfigFileTP.mcf\" -light -silent\n")
 		f.close()
 
 	def writeBatFileFromNr(self,nr):
-		f = open("RunMusic.bat",'w')
+		f = open("RunMusicTP.bat",'w')
 		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \".\musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
 	def writeMusicConfigFile(self,file):
-		f = open("musicConfigFile.mcf", 'w')
+		f = open("musicConfigFileTP.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		f.write("Export_TTE (Receiving Node,\"Perf_TTE.txt\")\n")
 		f.close()
 	def writeMusicConfigFileFromNr(self,nr):
-		f = open("musicConfigFile"+str(nr)+".mcf", 'w')
+		f = open("musicConfigFileTP"+str(nr)+".mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		f.write("Export_TTE (Receiving Node,\"Perf_TTE"+str(nr)+".txt\")\n")
