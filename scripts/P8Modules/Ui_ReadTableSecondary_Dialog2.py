@@ -51,6 +51,15 @@ class Ui_ReadTableSecondary_GUI2(object):
 	self.table.setColumnCount(4)
 	self.table.setColumnWidth(0,210)
 	self.verticalLayout.addWidget(self.table)
+        self.city_combo = QtGui.QComboBox(self.groupBox)
+        self.city_combo.setGeometry(QtCore.QRect(250, 39, 141, 22))
+        self.city_combo.setObjectName(_fromUtf8("city_combo"))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.gridLayout.addWidget(self.city_combo, 1,0,1,1)
         self.buttonBox = QtGui.QDialogButtonBox(ReadTableSecondary_GUI2)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Ok)
@@ -62,4 +71,9 @@ class Ui_ReadTableSecondary_GUI2(object):
         QtCore.QMetaObject.connectSlotsByName(ReadTableSecondary_GUI2)
 
     def retranslateUi(self, ReadTableSecondary_GUI2):
+        self.city_combo.setItemText(0,"Adelaide")
+        self.city_combo.setItemText(1,"Brisbane")   
+        self.city_combo.setItemText(2,"Melbourne")
+        self.city_combo.setItemText(3,"Perth")
+        self.city_combo.setItemText(4,"Sydney")
         pass
