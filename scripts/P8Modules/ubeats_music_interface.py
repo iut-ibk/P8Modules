@@ -437,6 +437,41 @@ def writeMUSICnodeSW(f, ID, nodepart, ncount, x, y, parameter_list):
     f.write("Advanced Properties - Threshold Hydraulic Loading for C** (m/yr),3500,{m/yr}\n")
     f.write("------------------------------------------------------------------------------------\n")
     return True
+def writeTankNode(f,ID,x,y,):
+    f.write("Node Type,RainWaterTankNode,{Node Type}\n")
+    f.write("Node Name,T1: tank,{Node Name}\n")
+    f.write("Node ID," + str(ID) + ",{Node ID}\n")
+    f.write("Coordinates," + str(x) + ":" + str(y) + ",{Coordinates}{X:Y}\n")
+    f.write("General - Location,T1: tank,\n")
+    f.write("General - Notes,,\n")
+    f.write("General - Fluxes,,\n")
+    f.write("Stormwater Re-use - Use stored water for irrigation or other purpose,0,\n")
+    f.write("Stormwater Re-use - Annual Demand Type,0,{Index from 0 to 1 for \"PET\" | \"PET - Rain\"}\n")
+    f.write("Stormwater Re-use - Annual Demand (kL/yr) Scaled by Daily: PET,20,{kL/yr}\n")
+    f.write("Stormwater Re-use - Annual Demand (kk/yr) Scaled by Daily: PET - Rain,0,{kk/yr}\n")
+    f.write("Stormwater Re-use - Daily Demand (kL/day),0,{kL/day}\n")
+    f.write("Stormwater Re-use - User-defined distribution of Annual Demand (kL/yr),0,{kL/yr}\n")
+    f.write("Stormwater Re-use - User-defined time series,,\n")
+    f.write("Inlet Properties - Low Flow By-pass (cubic metres per sec),0,{cubic metres per sec}\n")
+    f.write("Inlet Properties - High Flow By-pass (cubic metres per sec),100,{cubic metres per sec}\n")
+    f.write("Storage Properties - Surface Area (square metres),3.5,{square metres}\n")
+    f.write("Storage Properties - Depth above overflow (metres),0.2,{metres}\n")
+    f.write("Storage Properties - Volume below overflow pipe (kL),7,{kL}\n")
+    f.write("Outlet Properties - Overflow Pipe Diameter (mm),90,{mm}\n")
+    f.write("Advanced Properties - Orifice Discharge Coefficient,0.6,\n")
+    f.write("Advanced Properties - Number of CSTR Cells,2,\n")
+    f.write("Advanced Properties - Total Suspended Solids - k (m/yr),400,{m/yr}\n")
+    f.write("Advanced Properties - Total Suspended Solids - C* (mg/L),12,{mg/L}\n")
+    f.write("Advanced Properties - Total Suspended Solids - C** (mg/L),12,{mg/L}\n")
+    f.write("Advanced Properties - Total Phosphorus - k (m/yr),300,{m/yr}\n")
+    f.write("Advanced Properties - Total Phosphorus - C* (mg/L),0.13,{mg/L}\n")
+    f.write("Advanced Properties - Total Phosphorus - C** (mg/L),0.13,{mg/L}\n")
+    f.write("Advanced Properties - Total Nitrogen - k (m/yr),40,{m/yr}\n")
+    f.write("Advanced Properties - Total Nitrogen - C* (mg/L),1.4,{mg/L}\n")
+    f.write("Advanced Properties - Total Nitrogen - C** (mg/L),1.4,{mg/L}\n")
+    f.write("Advanced Properties - Threshold Hydraulic Loading for C** (m/yr),3500,{m/yr}\n")
+    f.write("Advanced Properties - User Defined Storage-Discharge-Height,,\n")
+    f.write("------------------------------------------------------------------------------------\n")
 
 def writeMUSIClink(f, upN, downN):
     f.write("Link Name,Drainage Link,\n")
@@ -523,6 +558,14 @@ def writeMUSICjunction2(f, ID, ncount, x, y):
     f.write("------------------------------------------------------------------------------------\n")
     return True
 
+def writeTankLinkReuse(f,up, down):
+    f.write("Link Name,Secondary Drainage Link,\n")
+    f.write("Source Node ID," + str(up) + ",{The is the ID of the upstream node}\n")
+    f.write("Target Node ID," + str(down) + ",{This is the ID of the downstream node}\n")
+    f.write("Routing,Not Routed,{either \"Not Routed\" or \"Routed\"}\n")
+    f.write("Muskingum K,30,{no value required for no routing or \"numerical value\" for routed}\n")
+    f.write("Muskingum Theta,0.25,{no value required for no routing or \"numerical value\" for routed. Must be between 0.1 and 0.49}\n")
+    f.write("Secondary Outflow Components,Reuse,{for secondary drainage link only}\n")
 
 def writeMUSICreceiving(f, ID, ncount, x, y):
     f.write("Node Type,ReceivingNode,{Node Type}\n")
