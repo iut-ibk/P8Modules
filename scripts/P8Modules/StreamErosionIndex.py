@@ -49,9 +49,14 @@ class StreamErosionIndex(Module):
                 Filename = stringname
         
         self.changeMusicFile(Filename) #running music in function
-        Pre = self.readPreTimeSeries("Pre-developedCatchment.csv")
-        Urb = self.readPreTimeSeries("Pre-developedCatchment.csv")
-        PostWSUD = self.readPreTimeSeries("Pre-developedCatchment.csv")
+        if(platform.system() == "Linux"):
+            Pre = self.readTimeSeries("Pre-developedCatchment.csv")
+            Urb = self.readTimeSeries("Pre-developedCatchment.csv")
+            PostWSUD = self.readTimeSeries("Pre-developedCatchment.csv")
+        else:
+            Pre = self.readTimeSeries("Pre-developedCatchment.csv")
+            Urb = self.readTimeSeries("UrbanisedCatchment.csv")
+            PostWSUD = self.readTimeSeries("PostWSUD.csv")
 
         idx =  self.findNearest(Pre,2)
         upper = []
@@ -102,7 +107,7 @@ class StreamErosionIndex(Module):
         simu.addAttribute("SEIurb", SEIurb)
         simu.addAttribute("SEIwsud", SEIwsud)
         city.addComponent(simu,self.simulation)
-    def readPreTimeSeries(self,filename):
+    def readTimeSeries(self,filename):
         arr = []
 
         f = open(filename,"r")
@@ -152,11 +157,12 @@ class StreamErosionIndex(Module):
         else:
             return idx -1
     def writeBatFileFromFile(self,file):
-        f = open("RunMusic.bat",'w')
-        f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ file +"\" \".\musicConfigFile.mcf\" -light -silent\n")
+        f = open("RunMusicSEI.bat",'w')
+        filearr = file.split(".")
+        f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \".\musicConfigFileSEI.mcf\" -light -silent\n")
         f.close()
     def writeMusicConfigFile(self):
-        f = open("musicConfigFile.mcf", 'w')
+        f = open("musicConfigFileSEI.mcf", 'w')
         f.write("Version = 100\n")
         f.write("Delimiter = #44\n")
         f.write("Export_TS (Pre-developed Catchment, Outflow, \"Pre-developedCatchment.csv\")\n")
@@ -189,7 +195,8 @@ class StreamErosionIndex(Module):
         startdate = startdate[0]
         f.close()
         infile = open(filename,"r")
-        outfile = open(filename + ".tmp","w")
+        filearr = filename.split(".")
+        outfile = open(filearr[0] + "SEI." + filearr[1] ,"w")
         urbansourcenode = False
         area = 0.0
         ID = 0
@@ -218,12 +225,11 @@ class StreamErosionIndex(Module):
         umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID,area,True,catchment_paramter_list)
         infile.close()
         outfile.close()
-        os.remove(filename)
-        os.rename(filename + ".tmp", filename)
+
         #Run music
         print "Music is running ... "
         if (platform.system() != "Linux"):
-            call(["RunMusicSecondary.bat", ""])
+            call(["RunMusicSEI.bat", ""])
         print "Music Done."
     def getRainEtFile(self):
         #checks wether the user chose a rain file or a city
