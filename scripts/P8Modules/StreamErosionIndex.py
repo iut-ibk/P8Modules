@@ -49,14 +49,15 @@ class StreamErosionIndex(Module):
                 Filename = stringname
         
         self.changeMusicFile(Filename) #running music in function
-        if(platform.system() == "Linux"):
+        '''if(platform.system() == "Linux"):
             Pre = self.readTimeSeries("Pre-developedCatchment.csv")
             Urb = self.readTimeSeries("Pre-developedCatchment.csv")
             PostWSUD = self.readTimeSeries("Pre-developedCatchment.csv")
         else:
-            Pre = self.readTimeSeries("Pre-developedCatchment.csv")
-            Urb = self.readTimeSeries("UrbanisedCatchment.csv")
-            PostWSUD = self.readTimeSeries("PostWSUD.csv")
+        '''
+        Pre = self.readTimeSeries("Pre-developedCatchment.csv")
+        Urb = self.readTimeSeries("UrbanisedCatchment.csv")
+        PostWSUD = self.readTimeSeries("PostWSUD.csv")
 
         idx =  self.findNearest(Pre,2)
         upper = []
@@ -109,13 +110,14 @@ class StreamErosionIndex(Module):
         city.addComponent(simu,self.simulation)
     def readTimeSeries(self,filename):
         arr = []
-
+        first = True
         f = open(filename,"r")
         date = ""
         value = 0.0
         for line in f:
             linearr = line.strip("\n").split(",")
-            if(linearr[0] == "Date"): #skip first line
+            if(first):
+                first = False
                 continue
             if(date == ""):#set values first time
                 date = linearr[0]
