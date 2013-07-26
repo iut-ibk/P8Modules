@@ -272,7 +272,8 @@ class EnviromentalBenefitsResultsModule(Module):
 		f = open("RunMusicSecondary.bat",'w')
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
-		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ file +"\" \".\musicConfigFileSecondary.mcf\" -light -silent\n")
+		filearr = file.split(".")
+		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \".\musicConfigFileSecondary.mcf\" -light -silent\n")
 		f.close()
 	def writeBatFileFromNr(self,nr):
 		f = open("RunMusicSecondary.bat",'w')
@@ -318,15 +319,16 @@ class EnviromentalBenefitsResultsModule(Module):
 		IS = False
 		BF = False
 		SW = False
+		tank = False
 		area = 0.0
 		EtFlux_list = []
 		fluxinfl_list = []
 		fluxinfl_list2 = []
+		tanklist = []
 		i = 0
 		for line in fileIn:
 			fileOut.write(line)
 			i = i + 1
-			print i
 			linearr = line.strip("\n").split(",")
 			if (recvcounter == 2):
 				receivingnodeid = int(linearr[1])
@@ -337,8 +339,8 @@ class EnviromentalBenefitsResultsModule(Module):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
 			if(linearr[0] == "Node ID"):
-				if(linearr[1] >= sumID):
-					sumID = int(linearr[1]) +1
+				if(int(linearr[1]) > sumID):
+					sumID = int(linearr[1])
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "UrbanSourceNode"):
 					urbansourcenode = True
@@ -356,7 +358,11 @@ class EnviromentalBenefitsResultsModule(Module):
 				BF = True
 			if(linearr[0] == "Node Type" and linearr[1] == "SwaleNode"):
 				SW = True
-			
+			if(linearr[0] == "Node Type" and linearr[1] == "RainWaterTankNode"):
+				tank = True
+			if ( tank and linearr[0] == "Node ID"):
+				tanklist.append(linearr[1])
+				tank = False
 			if (IS and linearr[0] == "Node ID"):
 				IS = False
 				EtFlux_list.append(linearr[1])
@@ -377,7 +383,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		print EtFlux_list
 		print fluxinfl_list
 		print fluxinfl_list2
-		areaSumID = sumID
+		areaSumID = sumID + 1
 		catchment_paramter_list = [1,120,30,20,200,1,10,25,5,0]
 		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, area,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Baseflows", areaSumID+1, 0, 0)
@@ -401,8 +407,8 @@ class EnviromentalBenefitsResultsModule(Module):
 		    umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
 		for k in fluxinfl_list2:
 		    umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
-		umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
-		umusic.writeTankNode(fileOut, areaSumID +8,0,0)
-		umusic.writeTankLinkReuse(fileOut,areaSumID + 8,areaSumID + 3)
+		umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))#
+		for l in tanklist:
+			umusic.writeTankLinkReuse(fileOut,l,areaSumID + 3)
 		umusic.writeMUSICfooter(fileOut)
 		fileOut.close()
