@@ -236,20 +236,20 @@ class StreamErosionIndex(Module):
         #return an array with the path of rainfile and the ET file in it
         files = []
         if(self.Csvfile == ""):
-            files.append("./Data2Store4ErosionIndex/Melbourne Rainfall 1990_2000 6min.csv")
+            files.append("C:/Program Files (x86)/hydro-IT/P8-WSC/Data2Store4ErosionIndex/Melbourne Rainfall 1990_2000 6min.csv")
         else:
             files.append(self.Csvfile)
         if(self.ETfile == ""):
             if(self.SimulationCity == 0):
-                files.append(".\Data2Store4ErosionIndex\Adelaide Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Adelaide Monthly Areal PET.txt")
             elif(self.SimulationCity == 1):
-                files.append(".\Data2Store4ErosionIndex\Brisbane Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Brisbane Monthly Areal PET.txt")
             elif(self.SimulationCity == 2):
-                files.append(".\Data2Store4ErosionIndex\Melbourne Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Melbourne Monthly Areal PET.txt")
             elif(self.SimulationCity == 3):
-                files.append(".\Data2Store4ErosionIndex\Perth Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Perth Monthly Areal PET.txt")
             elif(self.SimulationCity == 4):
-                files.append(".\Data2Store4ErosionIndex\Sydney Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Sydney Monthly Areal PET.txt")
         else:
             files.append(self.ETfile)
         if (platform.system() != "Linux"): #dynamics path slashes depeding on os
