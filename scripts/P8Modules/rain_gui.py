@@ -12,7 +12,7 @@ class RainGui(QtGui.QDialog):
         QtGui.QDialog.__init__(self, parent)
         self.ui = Ui_P8Rain_GUI()
         self.ui.setupUi(self)
-        self.ui.le_r.setText(self.module.getParameterAsString("FileName"))
+        self.ui.le_r.setText(self.module.getParameterAsString("Netfile"))
         self.ui.le_csv.setText(self.module.getParameterAsString("csvFile"))
         QtCore.QObject.connect(self.ui.pb_preview, QtCore.SIGNAL("released()"), self.preview)
         QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
