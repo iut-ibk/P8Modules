@@ -92,10 +92,10 @@ def writeMUSICcatchmentnode(f, ID, nodepart, ncount, x, y, area, imp, parameter_
 def writeMUSICcatchmentnodeEro(f, ID, ncount, area, imp, parameter_list):
     #f = filename variables, ID = block ID, nodepart = lot/street/treat/untreat x = x-coordinate of block, y = y-coordinate of block
     f.write("Node Type,UrbanSourceNode,{Node Type}\n")
-    f.write("Node Name,BlockID"+str(ID)+",{Node Name}\n")
+    f.write("Node Name,"+str(ID)+",{Node Name}\n")
     f.write("Node ID,"+str(ncount)+",{Node ID}\n")
     f.write("Coordinates,0:0,{Coordinates}{X:Y}\n")
-    f.write("General - Location,BlockID"+str(ID)+",\n")
+    f.write("General - Location,"+str(ID)+",\n")
     f.write("General - Notes,,\n")
     f.write("General - Fluxes - Daily,,\n")
     f.write("General - Fluxes - Sub-Daily,,\n")
