@@ -236,7 +236,7 @@ class StreamErosionIndex(Module):
         #return an array with the path of rainfile and the ET file in it
         files = []
         if(self.Csvfile == ""):
-            files.append("C:/Program Files (x86)/hydro-IT/P8-WSC/Data2Store4ErosionIndex/Melbourne Rainfall 1990_2000 6min.csv")
+            files.append("C:/Program Files (x86)/hydro-IT/P8-WSC/Data2Store4ErosionIndex/Melbourne Rainfall 1985_1995 6min.csv")
         else:
             files.append(self.Csvfile)
         if(self.ETfile == ""):
