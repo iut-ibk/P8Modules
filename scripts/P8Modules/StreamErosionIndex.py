@@ -192,7 +192,7 @@ class StreamErosionIndex(Module):
                 tmp2 = startdate[1].split(":")
                 timestep = int(tmp[0]) * 360 - int(tmp2[0]) * 360
                 timestep = timestep + (int(tmp[1]) * 60 - int(tmp2[1]) * 60)
-                timestep = timestep + int(tmp[2]) - int(tmp2[2])
+                #timestep = timestep + int(tmp[2]) - int(tmp2[2])
         enddate = linearr[0].split(" ")[0]
         startdate = startdate[0]
         f.close()
