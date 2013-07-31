@@ -5,6 +5,7 @@ from ReadTable_Gui import *
 import shlex
 from subprocess import call
 import platform
+import shutil
 
 class TreatmentPerformanceResultsModule(Module):
 	def __init__(self):
@@ -47,8 +48,11 @@ class TreatmentPerformanceResultsModule(Module):
 			stringname = simuAttr.getAttribute("msfFilename").getString()
 			if (stringname != ""):
 				realstring = stringname
-		self.writeBatFile(realstring)
-		self.writeMusicConfigFile(realstring)
+		tmp = realstring.split(".")
+		newname = str(tmp[0] + "TP." + str(tmp[1]))
+		shutil.copyfile(realstring,newname)
+		self.writeBatFile(newname)
+		self.writeMusicConfigFile(newname)
 
 
 		print "Music running ..."
