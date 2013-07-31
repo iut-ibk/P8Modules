@@ -23,7 +23,7 @@ class RainModule(Module):
 		self.csvFile = ""
 		self.createParameter("UserCsv", STRING, "")
 		self.UserCsv = ""
-		self.simulation = View("SimulationData",COMPONENT,READ)
+		self.simulation = View("SimulationData",COMPONENT,WRITE)
 		self.simulation.addAttribute("UserCsv")
 		self.simulation.getAttribute("msfFilename")
 
@@ -46,6 +46,8 @@ class RainModule(Module):
 			simu.addAttribute("UserCsv",self.UserCsv)
 			dataflow.addComponent(simu,self.simulation)
 			self.changeMusicFile(realstring,self.csvFile)
+			tmp = realstring.split(".")
+			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
 		elif(self.UserCsv == "net"):
 			print "NET"
 			data = netCDF4.Dataset(self.Netfile)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
@@ -68,6 +70,8 @@ class RainModule(Module):
 			f.close()
 			print "Done"
 			self.changeMusicFile(realstring,".\RainData.csv")
+			tmp = realstring.split(".")
+			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
 		else:
 			print "nothing"
 		'''old code for old rain file
