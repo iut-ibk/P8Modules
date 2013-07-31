@@ -8,6 +8,9 @@ import matplotlib as mpl
 import os.path
 import os
 import random
+import DragHandler as dh
+import math
+from matplotlib.ticker import ScalarFormatter, FormatStrFormatter, LogFormatter, NullFormatter
 
 class Analyser2_Gui(QtGui.QDialog):
 	def __init__(self,m,parent=None):
@@ -342,6 +345,8 @@ class Analyser2_Gui(QtGui.QDialog):
 		f.close()
 		self.writeUtilFile(ResultVec)
 	def plotSEI(self):
+		mini = 999.0
+		maxi = 0.0
 		mpl.rcParams['toolbar'] = 'None'
 		pre = self.readSEItable("pretable.csv")
 		urb = self.readSEItable("urbtable.csv")
@@ -353,32 +358,98 @@ class Analyser2_Gui(QtGui.QDialog):
 		e = []
 		f = []
 		for line in pre:
+			if(line[0] > maxi):
+				maxi = line[0]
+			if(line[0] != 0.0):
+				if(line[0] < mini):
+					mini = line[0]
 			a.append(line[0])
 			b.append(line[1])
 		for line in urb:
+			if(line[0] > maxi):
+				maxi = line[0]
+			if(line[0] != 0.0):
+				if(line[0] < mini):
+					mini = line[0]
 			c.append(line[0])
 			d.append(line[1])
 		for line in wsud:
+			if(line[0] > maxi):
+				maxi = line[0]
+			if(line[0] != 0.0):
+				if(line[0] < mini):
+					mini = line[0]
 			e.append(line[0])
 			f.append(line[1])
-		fig = plt.figure()
+
+		print mini
+		print maxi
+		if (maxi > 1):
+			if(maxi > 10):
+				if (maxi >100):
+					maxi = 1000.0
+				else:
+					maxi = 100.0
+			else:
+				maxi = 10.0
+		else:
+			maxi = 1.0
+		if (mini < 0.01):
+			if(mini < 0.001):
+				if(mini < 0.0001):
+					if(mini < 0.00001):
+						if (mini < 0.000001):
+							mini = 0.0000001
+						else:
+							mini = 0.000001
+					else: mini = 0.00001
+				else:
+					mini = 0.0001
+			else:
+				mini = 0.001
+		else: 
+			mini = 0.01
+		border = []
+		border1 = []
+		border2 = []
+		for i in range(len(a)):
+			if(b[i] < 0.3):
+				continue
+			border.append(a[i])
+		for i in range(len(c)):
+			if(d[i] < 0.3):
+				continue
+			border1.append(c[i])
+		for i in range(len(e)):
+			if(f[i] < 0.3):
+				continue
+			border2.append(e[i])
+		#positions = self.getYposForText(border,border1,border2,maxi)
+		fig = plt.figure(figsize = (12,8))
 		plt.plot(b,a,"g^",label = "Pre-developed Catchment")
 		plt.plot(d,c,"rs",label = "Urbanised Catchment no treatment")
 		plt.plot(f,e,"bo",label = "Post WSUD")
 		plt.yscale("log")
 		plt.xscale("log")
-		plt.plot([0.3, 0.3], [0.00001, 10], 'b-', lw=2)
-		plt.plot([0.6, 0.6], [0.00001, 10], 'y-', lw=2)
-		plt.plot([1, 1], [0.00001, 10], color = 'brown',linestyle = '-', lw=2)
-		plt.plot([2, 2], [0.00001, 10], 'k-', lw=2)
-		#plt.figtext(0.3,0.92,"Test")
+		plt.plot([0.3, 0.3], [mini, maxi], 'b-', lw=2)
+		plt.plot([0.6, 0.6], [mini, maxi], 'y-', lw=2)
+		plt.plot([1, 1], [mini, maxi], color = 'brown',linestyle = '-', lw=2)
+		plt.plot([2, 2], [mini, maxi], 'k-', lw=2)
 		plt.title(" ")
 		fig.canvas.set_window_title('SEI Plot')
 		plt.ylabel("Flow m^3/s")
 		plt.xlabel("Plotting Position (ARI)")
-		plt.text(1,1,"SEI Urbanised = " + str(self.module.SEIurb) + "\nSEI WSUD = " + str(self.module.SEIwsud))
+		plt.text(0.001,maxi/5,"SEI Urbanised = " + str(self.module.SEIurb) + "\nSEI WSUD = " + str(self.module.SEIwsud), backgroundcolor = "white", picker = True)
+		plt.text(0.3,maxi,"~1 in 3 months >> Stormwater quality improvement",size = "small",backgroundcolor = "b",color = "white", picker = True)
+		plt.text(0.6,maxi/10,"~1 in 6 months >> Managing stormwater as a resource",size = "small",backgroundcolor = "y", picker = True)
+		plt.text(1,maxi/100,"~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway",size = "small",backgroundcolor = "brown", picker = True)
+		plt.text(2,maxi/1000,"~1 in 24 months >> Waterway geomorphic\nprotection",size = "small", backgroundcolor = "k", color = "white", picker = True)
 		plt.legend(loc = 4,prop={"size":8})
+		plt.grid(True, which="both",ls="-")
+		dragh = dh.DragHandler()
 		plt.show()
+		plt.savefig('SEIplot.png')
+
 	def loadUtilFile(self):
 		vec = []
 		f = open(self.UtilFile,"r")
@@ -404,3 +475,70 @@ class Analyser2_Gui(QtGui.QDialog):
 			arr.append(tmp)
 		f.close()
 		return arr
+	def getYposForText(self,arr1,arr2,arr3, maxi):
+		#arr1.sort()
+		#arr2.sort()
+		#arr3.sort()
+		skip1 = False
+		skip2 = False
+		skip3 = False
+		jump = False
+		append = True
+		step = math.log(maxi,10)
+		positions = []
+		cursor = 0.0
+		cursor = maxi #-(maxi - math.pow(10,step-0.3))
+		while(len(positions)<4):
+			print jump
+			print "maxi: " + str(maxi) 
+			print "cursor: " + str(cursor)
+			if (jump):
+				while(jump):
+					if (cursor - (maxi - math.pow(10,(step-0.3))) <= maxi/10):
+						maxi = maxi / 10.0
+						cursor = maxi
+						step = math.log(maxi,10)
+					else:
+						cursor = cursor - (maxi - math.pow(10,step-0.3))
+						jump = False
+			else:
+				cursor = cursor - (maxi - math.pow(10,step-0.3))
+			append = True
+			for i in range(len(arr1)):
+				if(cursor > arr1[i] or skip1):
+					pass
+				else:
+					skip1 = True
+					cursor = arr1[0]
+					jump = True
+					append = False
+					break
+			if (append):
+				continue
+			for i in range(len(arr2)):
+				if(cursor > arr2[i] or skip2):
+					pass
+				else:
+					skip2 = True
+					cursor = arr2[0]
+					jump = True
+					append = False
+					break
+			if (append):
+				continue
+			for i in range(len(arr3)):
+				if(cursor > arr3[i] or skip3):
+					pass
+				else:
+					skip3 = True
+					cursor = arr3[0]
+					jump = True
+					append = False
+					break
+			if (append):
+				continue
+			positions.append(cursor)
+
+
+		print positions
+		return positions
