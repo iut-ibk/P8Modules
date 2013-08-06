@@ -33,6 +33,8 @@ class StreamErosionIndex(Module):
         self.simulation.getAttribute("msfFilename")
         self.simulation.addAttribute("SEIurb")
         self.simulation.addAttribute("SEIwsud")
+        self.simulation.addAttribute("NoY")
+        self.simulation.addAttribute("alpha")
 
 
         datastream = []
@@ -58,7 +60,7 @@ class StreamErosionIndex(Module):
         Pre = self.readTimeSeries("Pre-developedCatchment.csv")
         Urb = self.readTimeSeries("UrbanisedCatchment.csv")
         PostWSUD = self.readTimeSeries("PostWSUD.csv")
-
+        print Pre
         idx =  self.findNearest(Pre,2)
         upper = []
         lower = []
@@ -107,6 +109,8 @@ class StreamErosionIndex(Module):
         simu = Component()
         simu.addAttribute("SEIurb", SEIurb)
         simu.addAttribute("SEIwsud", SEIwsud)
+        simu.addAttribute("NoY", self.NoY)
+        simu.addAttribute("alpha", self.alpha)
         city.addComponent(simu,self.simulation)
     def readTimeSeries(self,filename):
         arr = []
@@ -200,9 +204,15 @@ class StreamErosionIndex(Module):
         filearr = filename.split(".")
         outfile = open(filearr[0] + "SEI." + filearr[1] ,"w")
         urbansourcenode = False
+        calcarea = False
+        readcatchmentlist = False
+        impArea = 0.0
+        perArea = 0.0
         area = 0.0
+        imp = 0.0
+        per = 0.0
         ID = 0
-        catchment_paramter_list = [1,120,30,20,200,1,10,25,5,0]
+        catchment_paramter_list = []#[1,120,30,20,200,1,10,25,5,0] old static parameter list
         for line in infile:
             linearr = line.strip("\n").split(",")
             if(linearr[0] == "Node Type"):
@@ -210,8 +220,31 @@ class StreamErosionIndex(Module):
                     urbansourcenode = True
             if(urbansourcenode):
                 if(linearr[0] == "Areas - Total Area (ha)"):
-                    area = area + float(linearr[1])
-                    urbansourcenode = False
+                    area = float(linearr[1])
+                if(linearr[0] == "Areas - Impervious (%)"):
+                    imp = float(linearr[1])
+                if(linearr[0] == "Areas - Pervious (%)"):
+                    per = float(linearr[1])
+                    calcarea = True
+                #first line of parameter list
+                if(linearr[0] == "Rainfall-Runoff - Impervious Area - Rainfall Threshold (mm/day)"):
+                    readcatchmentlist = True
+                if(readcatchmentlist):
+                    catchment_paramter_list.append(linearr[1])
+                #last line of parameter list
+                if(linearr[0] == "Rainfall-Runoff - Groundwater Properties - Daily Deep Seepage Rate (%)"):
+                    readcatchmentlist = False
+
+            if(calcarea):
+                if(imp == 0):
+                    perArea = perArea + area
+                elif(per == 0):
+                    impArea = impArea + area
+                else:
+                    perArea = perArea + (area * per / 100)
+                    impArea = impArea + (area * imp / 100)
+                calcarea = False
+
             if(linearr[0] == "Node ID"):
                 if(linearr[1] >= ID):
                     ID = int(linearr[1]) + 1
@@ -223,11 +256,12 @@ class StreamErosionIndex(Module):
                 outfile.write("Timestep," + str(timestep) + "\n")
             else:
                 outfile.write(line)
-        umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID,area,False,catchment_paramter_list)
-        umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID,area,True,catchment_paramter_list)
+        umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID,perArea,False,catchment_paramter_list) #pervious
+        umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 1,impArea,True,catchment_paramter_list) #impervious
         infile.close()
         outfile.close()
-
+        print "catchment_paramter_list"
+        print catchment_paramter_list
         #Run music
         print "Music is running ... "
         if (platform.system() != "Linux"):
