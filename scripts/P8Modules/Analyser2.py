@@ -10,6 +10,8 @@ class AnalyserModule(Module):
 		self.simulation = View("SimulationData",COMPONENT,READ)
 		self.simulation.getAttribute("SEIurb")
 		self.simulation.getAttribute("SEIwsud")	
+		self.simulation.getAttribute("NoY")
+		self.simulation.getAttribute("alpha")
 
 		datastream = []
 		datastream.append(self.simulation)
@@ -28,6 +30,10 @@ class AnalyserModule(Module):
 				self.SEIurb = urb
 			if(wsud != 0):
 				self.SEIwsud = wsud
+			if(simuData.getAttribute("NoY").getDouble() != 0):
+				self.NoY = simuData.getAttribute("NoY").getDouble()
+			if(simuData.getAttribute("alpha").getDouble() != 0):
+				self.alpha = simuData.getAttribute("alpha").getDouble()
 	def createInputDialog(self):
 		form = Analyser2_Gui(self, QApplication.activeWindow())
 		form.show()
