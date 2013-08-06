@@ -9,6 +9,8 @@ import os.path
 import os
 import random
 import math
+from operator import itemgetter
+
 
 class Analyser2_Gui(QtGui.QDialog):
 	def __init__(self,m,parent=None):
@@ -346,9 +348,9 @@ class Analyser2_Gui(QtGui.QDialog):
 		mini = 999.0
 		maxi = 0.0
 		mpl.rcParams['toolbar'] = 'None'
-		pre = self.readSEItable("pretable.csv")
-		urb = self.readSEItable("urbtable.csv")
-		wsud = self.readSEItable("wsudtable.csv")
+		pre = self.readTimeSeries("Pre-developedCatchment.csv")
+		urb = self.readTimeSeries("UrbanisedCatchment.csv")
+		wsud = self.readTimeSeries("PostWSUD.csv")
 		a = []
 		b = []
 		c = []
@@ -356,29 +358,29 @@ class Analyser2_Gui(QtGui.QDialog):
 		e = []
 		f = []
 		for line in pre:
-			if(line[0] > maxi):
-				maxi = line[0]
-			if(line[0] != 0.0):
-				if(line[0] < mini):
-					mini = line[0]
-			a.append(line[0])
-			b.append(line[1])
+			if(float(line[1]) > maxi):
+				maxi = float(line[1])
+			if(float(line[1]) != 0.0):
+				if(float(line[1]) < mini):
+					mini = float(line[1])
+			a.append(float(line[1]))
+			b.append(line[3])
 		for line in urb:
-			if(line[0] > maxi):
-				maxi = line[0]
-			if(line[0] != 0.0):
-				if(line[0] < mini):
-					mini = line[0]
-			c.append(line[0])
-			d.append(line[1])
+			if(float(line[1]) > maxi):
+				maxi = float(line[1])
+			if(float(line[1]) != 0.0):
+				if(float(line[1]) < mini):
+					mini = float(line[1])
+			c.append(float(line[1]))
+			d.append(line[3])
 		for line in wsud:
-			if(line[0] > maxi):
-				maxi = line[0]
-			if(line[0] != 0.0):
-				if(line[0] < mini):
-					mini = line[0]
-			e.append(line[0])
-			f.append(line[1])
+			if(float(line[1]) > maxi):
+				maxi = float(line[1])
+			if(float(line[1]) != 0.0):
+				if(float(line[1]) < mini):
+					mini = float(line[1])
+			e.append(float(line[1]))
+			f.append(line[3])
 
 		print mini
 		print maxi
@@ -397,7 +399,11 @@ class Analyser2_Gui(QtGui.QDialog):
 				if(mini < 0.0001):
 					if(mini < 0.00001):
 						if (mini < 0.000001):
-							mini = 0.0000001
+							if(mini < 0.0000001):
+								if(mini < 0.00000001):
+									mini = 0.00000001
+							else:
+								mini = 0.0000001
 						else:
 							mini = 0.000001
 					else: mini = 0.00001
@@ -446,7 +452,48 @@ class Analyser2_Gui(QtGui.QDialog):
 		plt.grid(True, which="both",ls="-")
 		plt.show()
 		plt.savefig('SEIplot.png')
-
+	def readTimeSeries(self,filename):
+		arr = []
+		first = True
+		f = open(filename,"r")
+		date = ""
+		value = 0.0
+		for line in f:
+			linearr = line.strip("\n\r").split(",")
+			if(first):
+				first = False
+				continue
+			if(date == ""):#set values first time
+				date = linearr[0]
+				value = linearr[1]
+			if(date.split(" ")[0] == linearr[0].split(" ")[0]):#if date same as last line
+				if(value < linearr[1]):#if value bigger than last saved line
+					date = linearr[0]
+					value = linearr[1]
+			else:#new day save value and date in array
+				new = []
+				new.append(date)
+				new.append(value)
+				new.append(0)
+				new.append(0.0)
+				arr.append(new)
+				date = linearr[0]
+				value = linearr[1]
+		f.close()
+		new = []#last day saved in array
+		new.append(date)
+		new.append(value)
+		new.append(0)
+		new.append(0.0)
+		arr.append(new)
+		arr.sort(key = itemgetter(1), reverse = True) #sort by value and biggest to highest
+		i = 0
+		for line in arr:
+			i = i + 1
+			line[2] = i
+			line[3] = (int(self.module.NoY) + 1 - 2 * float(self.module.alpha)) / (i - float(self.module.alpha))
+		print arr
+		return arr
 	def loadUtilFile(self):
 		vec = []
 		f = open(self.UtilFile,"r")
