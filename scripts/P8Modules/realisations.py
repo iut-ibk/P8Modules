@@ -39,5 +39,5 @@ class RealisationsSettings(Module):
 
     def createInputDialog(self):
         form = activaterealisationsGUI(self, QApplication.activeWindow())
-        form.show()
+        form.exec_()
         return True 
