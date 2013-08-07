@@ -347,10 +347,12 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotSEI(self):
 		mini = 999.0
 		maxi = 0.0
+		print "GO"
 		mpl.rcParams['toolbar'] = 'None'
 		pre = self.readTimeSeries("Pre-developedCatchment.csv")
 		urb = self.readTimeSeries("UrbanisedCatchment.csv")
 		wsud = self.readTimeSeries("PostWSUD.csv")
+		print "GO"
 		a = []
 		b = []
 		c = []
@@ -365,6 +367,7 @@ class Analyser2_Gui(QtGui.QDialog):
 					mini = float(line[1])
 			a.append(float(line[1]))
 			b.append(line[3])
+		print "PRE"
 		for line in urb:
 			if(float(line[1]) > maxi):
 				maxi = float(line[1])
@@ -373,6 +376,7 @@ class Analyser2_Gui(QtGui.QDialog):
 					mini = float(line[1])
 			c.append(float(line[1]))
 			d.append(line[3])
+		print "URB"
 		for line in wsud:
 			if(float(line[1]) > maxi):
 				maxi = float(line[1])
@@ -381,7 +385,7 @@ class Analyser2_Gui(QtGui.QDialog):
 					mini = float(line[1])
 			e.append(float(line[1]))
 			f.append(line[3])
-
+		print "WSUD"
 		print mini
 		print maxi
 		if (maxi > 1):
@@ -430,30 +434,30 @@ class Analyser2_Gui(QtGui.QDialog):
 			border2.append(e[i])
 		#positions = self.getYposForText(border,border1,border2,maxi)
 		fig = plt.figure(figsize = (12,8))
-		plt.plot(b,a,"g^",label = "Pre-developed Catchment")
-		plt.plot(d,c,"rs",label = "Urbanised Catchment no treatment")
-		plt.plot(f,e,"bo",label = "Post WSUD")
+		plt.plot(b,a,"gx",label = "Pre-developed Catchment")
+		plt.plot(d,c,"r+",label = "Urbanised Catchment no treatment")
+		plt.plot(f,e,"b.",label = "Post WSUD")
 		plt.yscale("log")
 		plt.xscale("log")
-		plt.plot([0.3, 0.3], [mini, maxi], 'b-', lw=2)
-		plt.plot([0.6, 0.6], [mini, maxi], 'y-', lw=2)
-		plt.plot([1, 1], [mini, maxi], color = 'brown',linestyle = '-', lw=2)
-		plt.plot([2, 2], [mini, maxi], 'k-', lw=2)
+		plt.plot([0.3, 0.3], [mini, maxi], 'b-', lw=2, label = "~1 in 3 months >> Stormwater\nquality improvement")
+		plt.plot([0.6, 0.6], [mini, maxi], 'y-', lw=2, label = "~1 in 6 months >> Managing \nstormwater as a resource")
+		plt.plot([1, 1], [mini, maxi], color = 'brown',linestyle = '-', lw=2, label = "~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway")
+		plt.plot([2, 2], [mini, maxi], 'k-', lw=2 , label = "~1 in 24 months >> Waterway geomorphic\nprotection")
 		plt.title(" ")
 		fig.canvas.set_window_title('SEI Plot')
 		plt.ylabel("Flow m^3/s")
 		plt.xlabel("Plotting Position (ARI)")
 		plt.text(0.001,maxi/5,"SEI Urbanised = " + str(self.module.SEIurb) + "\nSEI WSUD = " + str(self.module.SEIwsud), backgroundcolor = "white")
-		plt.text(0.3,maxi,"~1 in 3 months >> Stormwater quality improvement",size = "small")#,backgroundcolor = "b",color = "white", picker = True)
-		plt.text(0.6,maxi/10,"~1 in 6 months >> Managing stormwater as a resource",size = "small")#,backgroundcolor = "y", picker = True)
-		plt.text(1,maxi/100,"~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway",size = "small")#,backgroundcolor = "brown", picker = True)
-		plt.text(2,maxi/1000,"~1 in 24 months >> Waterway geomorphic\nprotection",size = "small")#, backgroundcolor = "k", color = "white", picker = True)
-		plt.legend(loc = 4,prop={"size":8})
+		#plt.text(0.3,maxi,"~1 in 3 months >> Stormwater quality improvement",size = "small")#,backgroundcolor = "b",color = "white", picker = True)
+		#plt.text(0.6,maxi/10,"~1 in 6 months >> Managing stormwater as a resource",size = "small")#,backgroundcolor = "y", picker = True)
+		#plt.text(1,maxi/100,"~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway",size = "small")#,backgroundcolor = "brown", picker = True)
+		#plt.text(2,maxi/1000,"~1 in 24 months >> Waterway geomorphic\nprotection",size = "small")#, backgroundcolor = "k", color = "white", picker = True)
+		plt.legend(loc = "best",prop={"size":8})
 		plt.grid(True, which="both",ls="-")
 		plt.show()
 		plt.savefig('SEIplot.png')
 	def readTimeSeries(self,filename):
-		arr = []
+		arr = []	
 		first = True
 		f = open(filename,"r")
 		date = ""
