@@ -60,7 +60,6 @@ class StreamErosionIndex(Module):
         Pre = self.readTimeSeries("Pre-developedCatchment.csv")
         Urb = self.readTimeSeries("UrbanisedCatchment.csv")
         PostWSUD = self.readTimeSeries("PostWSUD.csv")
-        print Pre
         idx =  self.findNearest(Pre,2)
         upper = []
         lower = []
@@ -70,7 +69,7 @@ class StreamErosionIndex(Module):
         lower.append(float(Pre[idx+1][3]))
         m = (upper[0] - lower[0]) / (upper[1] - lower[1])
         Q2 = lower[0] + m * (2 -lower[1])
-
+        print "Q2: " + str(Q2)
         sumFlowPre = 0.0
         sumFlowUrb = 0.0
         sumFlowWSUD = 0.0
@@ -221,10 +220,13 @@ class StreamErosionIndex(Module):
             if(urbansourcenode):
                 if(linearr[0] == "Areas - Total Area (ha)"):
                     area = float(linearr[1])
+                    print "area: " + str(area)
                 if(linearr[0] == "Areas - Impervious (%)"):
                     imp = float(linearr[1])
+                    print "imp: " + str(imp)
                 if(linearr[0] == "Areas - Pervious (%)"):
                     per = float(linearr[1])
+                    print "per: " + str(per)
                     calcarea = True
                 #first line of parameter list
                 if(linearr[0] == "Rainfall-Runoff - Impervious Area - Rainfall Threshold (mm/day)"):
@@ -243,7 +245,11 @@ class StreamErosionIndex(Module):
                 else:
                     perArea = perArea + (area * per / 100)
                     impArea = impArea + (area * imp / 100)
+                print "perArea: " + str(perArea)
+                print "impArea: " + str(impArea)
+
                 calcarea = False
+                UrbanSourceNode = False
 
             if(linearr[0] == "Node ID"):
                 if(linearr[1] >= ID):
@@ -260,8 +266,8 @@ class StreamErosionIndex(Module):
         umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 1,impArea,True,catchment_paramter_list) #impervious
         infile.close()
         outfile.close()
-        print "catchment_paramter_list"
-        print catchment_paramter_list
+        print "Impervious Area: " + str(impArea)
+        print "Pervious Area: " + str(perArea)
         #Run music
         print "Music is running ... "
         if (platform.system() != "Linux"):
