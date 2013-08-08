@@ -69,6 +69,25 @@ class StreamErosionIndex(Module):
         lower.append(float(Pre[idx+1][3]))
         m = (upper[0] - lower[0]) / (upper[1] - lower[1])
         Q2 = lower[0] + m * (2 -lower[1])
+        #write tables for analyzer
+        f = open("pretable.csv","w")
+        for line in Pre:
+            f.write(str(line[1]) + "," + str(line[3]) + "\n")
+        f.close()
+        f = open("urbtable.csv","w")
+        for line in Urb:
+            f.write(str(line[1]) + "," + str(line[3]) + "\n")
+        f.close()
+        f = open("wsudtable.csv","w")
+        for line in PostWSUD:
+            f.write(str(line[1]) + "," + str(line[3]) + "\n")
+        f.close()
+
+        #read csv new long time serie
+        Pre = self.readLongTimeSeries("Pre-developedCatchment.csv")
+        Urb = self.readLongTimeSeries("UrbanisedCatchment.csv")
+        PostWSUD = self.readLongTimeSeries("PostWSUD.csv")
+        #then do the calculation
         print "Q2: " + str(Q2)
         sumFlowPre = 0.0
         sumFlowUrb = 0.0
@@ -93,25 +112,47 @@ class StreamErosionIndex(Module):
                 sumFlowWSUD = sumFlowWSUD + line[1]
         SEIurb = sumFlowUrb / sumFlowPre
         SEIwsud = sumFlowWSUD / sumFlowPre
-        f = open("pretable.csv","w")
-        for line in Pre:
-            f.write(str(line[1]) + "," + str(line[3]) + "\n")
-        f.close()
-        f = open("urbtable.csv","w")
-        for line in Urb:
-            f.write(str(line[1]) + "," + str(line[3]) + "\n")
-        f.close()
-        f = open("wsudtable.csv","w")
-        for line in PostWSUD:
-            f.write(str(line[1]) + "," + str(line[3]) + "\n")
-        f.close()
+
         simu = Component()
         simu.addAttribute("SEIurb", SEIurb)
         simu.addAttribute("SEIwsud", SEIwsud)
         simu.addAttribute("NoY", self.NoY)
         simu.addAttribute("alpha", self.alpha)
         city.addComponent(simu,self.simulation)
+    def readLongTimeSeries(self,filename):
+        #only reads timeserie and puts it into a vector without changing any of the data inside
+        arr = []
+        first = True
+        f = open(filename,"r")
+        date = ""
+        value = 0.0
+        for line in f:
+            linearr = line.strip("\n").split(",")
+            if(first):
+                first = False
+                continue
+            if(date == ""):#set values first time
+                date = linearr[0]
+                value = linearr[1]
+            new = []
+            new.append(date)
+            new.append(value)
+            new.append(0)
+            new.append(0.0)
+            arr.append(new)
+            date = linearr[0]
+            value = linearr[1]
+        f.close()
+        arr.sort(key = itemgetter(1), reverse = True) #sort by value and biggest to highest
+        i = 0
+        for line in arr:
+            i = i + 1
+            line[2] = i
+            line[3] = (int(self.NoY) + 1 - 2 * float(self.alpha)) / (i - float(self.alpha))
+        return arr
+
     def readTimeSeries(self,filename):
+        # reads time series and also calculates the biggest value of each day
         arr = []
         first = True
         f = open(filename,"r")
@@ -237,17 +278,11 @@ class StreamErosionIndex(Module):
                 if(linearr[0] == "Rainfall-Runoff - Groundwater Properties - Daily Deep Seepage Rate (%)"):
                     readcatchmentlist = False
 
-            if(calcarea):
-                if(imp == 0):
-                    perArea = perArea + area
-                elif(per == 0):
-                    impArea = impArea + area
-                else:
-                    perArea = perArea + (area * per / 100)
-                    impArea = impArea + (area * imp / 100)
+            if(calcarea):  
+                impArea = impArea + (area * imp / 100)
+                perArea = perArea + area
                 print "perArea: " + str(perArea)
                 print "impArea: " + str(impArea)
-
                 calcarea = False
                 UrbanSourceNode = False
 
