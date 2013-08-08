@@ -300,5 +300,5 @@ class StreamErosionIndex(Module):
         return files
     def createInputDialog(self):
         form = activateStreamErosionIndexGUI(self, QApplication.activeWindow())
-        form.show()
+        form.exec_()
         return True 

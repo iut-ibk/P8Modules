@@ -32,5 +32,5 @@ class ImportMSF(Module):
 
     def createInputDialog(self):
         form = activateimportMSFGUI(self, QApplication.activeWindow())
-        form.show()
+        form.exec_()
         return True 

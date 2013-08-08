@@ -36,5 +36,5 @@ class AnalyserModule(Module):
 				self.alpha = simuData.getAttribute("alpha").getDouble()
 	def createInputDialog(self):
 		form = Analyser2_Gui(self, QApplication.activeWindow())
-		form.show()
+		form.exec_()
 		return True 

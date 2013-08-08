@@ -208,7 +208,7 @@ class EnviromentalBenefitsResults(Module):
 		    f.close()	
 	def createInputDialog(self):
             form = ReadTableSecondary_Gui(self, QApplication.activeWindow())
-            form.show()
+            form.exec_()
             return True
 	def getNotZeroDays(self,vec1,vec2,vec3, boundry):
 		count1 = 0
