@@ -35,5 +35,5 @@ class Analyser(Module):
 
 	def createInputDialog(self):
 		form = Analyser_Gui(self, QApplication.activeWindow())
-		form.show()
+		form.exec_()
 		return True 

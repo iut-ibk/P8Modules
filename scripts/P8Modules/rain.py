@@ -123,7 +123,7 @@ class Rain(Module):
 	    '''
 	def createInputDialog(self):
             form = RainGui(self, QApplication.activeWindow())
-            form.show()
+            form.exec_()
             return True 
 	def find_nearest(self,array,value):
     	    idx=(np.abs(array-value)).argmin()
