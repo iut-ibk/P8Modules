@@ -320,7 +320,10 @@ class EnviromentalBenefitsResultsModule(Module):
 		BF = False
 		SW = False
 		tank = False
+		calc = False
 		area = 0.0
+		tmparea = 0.0
+		imp = 0.0
 		EtFlux_list = []
 		fluxinfl_list = []
 		fluxinfl_list2 = []
@@ -346,8 +349,15 @@ class EnviromentalBenefitsResultsModule(Module):
 					urbansourcenode = True
 			if(urbansourcenode):
 				if(linearr[0] == "Areas - Total Area (ha)"):
-					area = area + float(linearr[1])
+					tmparea = float(linearr[1])
+				if(linearr[0] == "Areas - Impervious (%)"):
+					imp = float(linearr[1])
 					urbansourcenode = False
+					calc = True
+			if(calc):
+				area =  area + tmparea * (imp/100)
+				print "AREA: " + str(area)
+				calc = False
 			if(linearr[0] == "Node Type" and linearr[1] == "WetlandNode"):
 				WSUR = True
 			if(linearr[0] == "Node Type" and linearr[1] == "PondNode"):
