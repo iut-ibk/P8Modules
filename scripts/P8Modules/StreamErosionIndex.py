@@ -102,13 +102,13 @@ class StreamErosionIndex(Module):
             if(float(line[1])<(Q2/2)):
                 line[1] = 0
             else:
-                line[1] = float(line[1])
+                line[1] = float(line[1])- (Q2/2)
                 sumFlowUrb = sumFlowUrb + line[1]
         for line in PostWSUD:
             if(float(line[1])<(Q2/2)):
                 line[1] = 0
             else:
-                line[1] = float(line[1])
+                line[1] = float(line[1])- (Q2/2)
                 sumFlowWSUD = sumFlowWSUD + line[1]
         SEIurb = sumFlowUrb / sumFlowPre
         SEIwsud = sumFlowWSUD / sumFlowPre
