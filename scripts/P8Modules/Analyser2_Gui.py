@@ -120,7 +120,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		liste = list(text)
 		number = filename[len(filename)-5]
 		bars = []
-		bars1 = (round(float(liste[7])),round(float(liste[15])),round(float(liste[19])),round(float(liste[23])))
+		bars1 = (round(float(liste[7])),round(float(liste[11])),round(float(liste[15])),round(float(liste[19])))
 		bars.append([bars1,number])
 		f.close
 		if os.path.exists(self.TPRFile):
@@ -405,14 +405,15 @@ class Analyser2_Gui(QtGui.QDialog):
 		fig.canvas.set_window_title('SEI Plot')
 		plt.ylabel("Flow m^3/s")
 		plt.xlabel("Plotting Position (ARI)")
-		plt.text(0.01,ax.get_ylim()[1]/5,"SEI Urbanised = " + str(self.module.SEIurb) + "\nSEI WSUD = " + str(self.module.SEIwsud), backgroundcolor = "white")
+		plt.text(0.01,ax.get_ylim()[1]/5,"SEI Urbanised = " + str(round(self.module.SEIurb,2)) + "\nSEI WSUD = " + str(round(self.module.SEIwsud,2)), backgroundcolor = "white")
 		#plt.text(0.3,maxi,"~1 in 3 months >> Stormwater quality improvement",size = "small")#,backgroundcolor = "b",color = "white", picker = True)
 		#plt.text(0.6,maxi/10,"~1 in 6 months >> Managing stormwater as a resource",size = "small")#,backgroundcolor = "y", picker = True)
 		#plt.text(1,maxi/100,"~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway",size = "small")#,backgroundcolor = "brown", picker = True)
 		#plt.text(2,maxi/1000,"~1 in 24 months >> Waterway geomorphic\nprotection",size = "small")#, backgroundcolor = "k", color = "white", picker = True)
 		plt.legend(loc = "best",prop={"size":8})
 		plt.grid(True, which="both",ls="-")
-		plt.xlim([0.01,100])
+		xlim = ax.get_xlim()
+		plt.xlim([0.01,xlim[1]])
 		plt.show()
 		plt.savefig('SEIplot.png')
 	def loadUtilFile(self):
