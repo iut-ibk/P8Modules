@@ -193,6 +193,8 @@ class EnviromentalBenefitsResultsModule(Module):
 
 		FvForest = np.abs((((Fx2-Fx1)*(Fy2-AnnualRain))/(Fy2-Fy1))-Fx2)
 		FvPasture = np.abs((((Px2-Px1)*(Py2-AnnualRain))/(Py2-Py1))-Px2)
+		print "FvForest: " + str(FvForest)
+		print "FvPasture: " + str(FvPasture)
 		if FVg < FvForest:
 			tmpFV = FVg/FvForest
 		elif FVg > FvPasture:
@@ -200,6 +202,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		else:
 			tmpFV = 1
 
+		print "tmpFV: " + str(tmpFV)
 		tmpFF = 1 - max((float(FreqTreated)-float(FreqPredev))/(float(FreqUntreated)-float(FreqPredev)),0)
 		tmpVR = 1-(VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev)
 		tmpWQ = (tss+tn+tp)/3
