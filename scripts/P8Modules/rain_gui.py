@@ -30,7 +30,10 @@ class RainGui(QtGui.QDialog):
             a.close()
         else:
             units = "mm/6min"
-        f = open("RainData.csv","r")
+        if(self.module.UserCsv == "csv"):
+            f = open(self.module.csvFile,"r")
+        else:
+            f = open("RainData.csv","r")
         for line in f:
             linearr = line.strip('\n').split(',')
             if (linearr[0] == "Date"):
