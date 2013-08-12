@@ -321,6 +321,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		SW = False
 		tank = False
 		calc = False
+		notread = True
 		area = 0.0
 		tmparea = 0.0
 		imp = 0.0
@@ -328,6 +329,10 @@ class EnviromentalBenefitsResultsModule(Module):
 		fluxinfl_list = []
 		fluxinfl_list2 = []
 		tanklist = []
+		readcatchmentlist = False
+
+		catchment_paramter_list = [] #[1,120,30,20,200,1,10,25,5,0]
+
 		i = 0
 		for line in fileIn:
 			fileOut.write(line)
@@ -358,6 +363,16 @@ class EnviromentalBenefitsResultsModule(Module):
 				area =  area + tmparea * (imp/100)
 				print "AREA: " + str(area)
 				calc = False
+			#first line of parameter list
+			if(linearr[0] == "Rainfall-Runoff - Impervious Area - Rainfall Threshold (mm/day)" and notread):
+				readcatchmentlist = True
+			if(readcatchmentlist):
+				catchment_paramter_list.append(linearr[1])
+			#last line of parameter list
+			if(linearr[0] == "Rainfall-Runoff - Groundwater Properties - Daily Deep Seepage Rate (%)"):
+				readcatchmentlist = False
+				notread = False
+
 			if(linearr[0] == "Node Type" and linearr[1] == "WetlandNode"):
 				WSUR = True
 			if(linearr[0] == "Node Type" and linearr[1] == "PondNode"):
@@ -390,11 +405,11 @@ class EnviromentalBenefitsResultsModule(Module):
 		print "Area sum: " + str(area)
 		print "ReceivingNode: " + str(receivingnodeid)
 		print "Lists: " 
+		print catchment_paramter_list
 		print EtFlux_list
 		print fluxinfl_list
 		print fluxinfl_list2
 		areaSumID = sumID + 1
-		catchment_paramter_list = [1,120,30,20,200,1,10,25,5,0]
 		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, area,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Baseflows", areaSumID+1, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID,areaSumID+1)
@@ -404,7 +419,6 @@ class EnviromentalBenefitsResultsModule(Module):
 		umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0)
 
 
-		catchment_paramter_list2 = [1,30,30,20,200,1,10,25,5,0]
 		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, area,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Ignore", areaSumID+6, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
