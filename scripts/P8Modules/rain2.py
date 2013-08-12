@@ -160,7 +160,7 @@ class RainModule(Module):
 		infile = open(musicf,"r")
 		tmpfile = musicf.split(".")
 		outfile = open(str(tmpfile[0]) + "NewRain." + tmpfile[1] ,"w")
-		csvf.replace("/","\\")
+		csvf = csvf.replace("/","\\")
 		for line in infile:
 			linearr = line.strip("\n").split(",")
 			if (linearr[0] == "MeteorologicalTemplate"):
