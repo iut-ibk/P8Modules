@@ -427,6 +427,9 @@ class EnviromentalBenefitsResultsModule(Module):
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
 		umusic.writeMUSICjunction2(fileOut, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID+5,areaSumID+7)
+		umusic.writeDetentionBasinNode(fileOut,areaSumID+8, "DetentionBasinNode",0,0,catchment_paramter_list)
+		umusic.writeMUSIClinkToInfilFlux1(fileOut,areaSumID+8,areaSumID+4)
+		umusic.writeMUSIClinkToFlux(fileOut,areaSumID+8,areaSumID+3)
 
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
