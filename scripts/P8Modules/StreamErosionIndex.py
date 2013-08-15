@@ -112,6 +112,8 @@ class StreamErosionIndex(Module):
                 sumFlowWSUD = sumFlowWSUD + line[1]
         SEIurb = sumFlowUrb / sumFlowPre
         SEIwsud = sumFlowWSUD / sumFlowPre
+        print "SEIurb: " + str(SEIurb)
+        print "SEIwsud: " + str(SEIwsud)
 
         simu = Component()
         simu.addAttribute("SEIurb", SEIurb)
