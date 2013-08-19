@@ -14,11 +14,12 @@ class RainGui(QtGui.QDialog):
         self.ui.setupUi(self)
         self.ui.le_r.setText(self.module.getParameterAsString("Netfile"))
         self.ui.le_csv.setText(self.module.getParameterAsString("csvFile"))
+        self.ui.le_ET.setText(self.module.getParameterAsString("etFile"))
         QtCore.QObject.connect(self.ui.pb_preview, QtCore.SIGNAL("released()"), self.preview)
         QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
         QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
         QtCore.QObject.connect(self.ui.pb_csv, QtCore.SIGNAL("released()"), self.loadcsv)
-
+        QtCore.QObject.connect(self.ui.pb_ET, QtCore.SIGNAL("released()"), self.loadET)
         
     def preview(self):
         vec = []
@@ -65,6 +66,9 @@ class RainGui(QtGui.QDialog):
     def save_values(self):
         Net = False
         Csv = False
+        filename = str(self.ui.le_ET.text())
+        if(filename != ""):
+            self.module.setParameterValue("etFile", filename)
         filename = str(self.ui.le_r.text())
         if (filename != ""):
             Net = True
@@ -81,8 +85,11 @@ class RainGui(QtGui.QDialog):
             self.module.setParameterValue("UserCsv", "net")
 
     def load(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open rain file", "Open new file", self.tr("Text Files (*.nc)"))
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", "Open new file", self.tr("Rain Files (*.nc)"))
         self.ui.le_r.setText(filename)
     def loadcsv(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open rain file", "Open new file", self.tr("CSV Files (*.csv)"))
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", "Open new file", self.tr("CSV Files (*.csv)"))
         self.ui.le_csv.setText(filename)
+    def loadET(self):
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open ET File", "Open new file", self.tr("Text Files (*.txt)"))
+        self.ui.le_ET.setText(filename)
