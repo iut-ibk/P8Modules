@@ -54,6 +54,18 @@ class Ui_P8Rain_GUI(object):
         self.pb_csv.setObjectName(_fromUtf8("pb_csv"))
         self.gridLayout.addWidget(self.pb_csv, 2, 2, 1, 1)
 
+        self.labelET = QtGui.QLabel(self.groupBox)
+        self.labelET.setText(QtGui.QApplication.translate("P8Rain_GUI", "ET file", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelET.setObjectName(_fromUtf8("labelET"))
+        self.gridLayout.addWidget(self.labelET, 3, 0, 1, 1)
+        self.le_ET = QtGui.QLineEdit(self.groupBox)
+        self.le_ET.setObjectName(_fromUtf8("le_ET"))
+        self.gridLayout.addWidget(self.le_ET, 3, 1, 1, 1)
+        self.pb_ET = QtGui.QPushButton(self.groupBox)
+        self.pb_ET.setText(QtGui.QApplication.translate("P8Rain_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_ET.setObjectName(_fromUtf8("pb_Et"))
+        self.gridLayout.addWidget(self.pb_ET, 3, 2, 1, 1)
+
         self.verticalLayout.addWidget(self.groupBox)
         self.buttonBox = QtGui.QDialogButtonBox(P8Rain_GUI)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
