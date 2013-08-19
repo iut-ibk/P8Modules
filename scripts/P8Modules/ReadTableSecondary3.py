@@ -51,7 +51,7 @@ class EnviromentalBenefitsResultsModule(Module):
 				realstring = stringname
 		self.writeBatFileFromFile(realstring)
 		self.writeMusicConfigFileSecondaryFromFile(realstring)
-		self.convertToSecondaryMusic(realstring)
+		area = self.convertToSecondaryMusic(realstring)
 		print "Music is running ... "
 		if(platform.system() != "Linux"):
 			call(["RunMusicSecondary.bat", ""])
@@ -325,6 +325,9 @@ class EnviromentalBenefitsResultsModule(Module):
 		tank = False
 		calc = False
 		notread = True
+		foundDetention = False
+		detIds = []
+		deten = False
 		area = 0.0
 		tmparea = 0.0
 		imp = 0.0
@@ -388,6 +391,12 @@ class EnviromentalBenefitsResultsModule(Module):
 				SW = True
 			if(linearr[0] == "Node Type" and linearr[1] == "RainWaterTankNode"):
 				tank = True
+			if(linearr[0] == "Node Type" and linearr[1] == "DetentionBasinNode"):
+				foundDetention = True
+				deten = True
+			if(deten and linearr[0] == "Node ID"):
+				detIds.append(int(linearr[1]))
+				deten = False
 			if ( tank and linearr[0] == "Node ID"):
 				tanklist.append(linearr[1])
 				tank = False
@@ -420,16 +429,15 @@ class EnviromentalBenefitsResultsModule(Module):
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID,areaSumID+2)
 		umusic.writeMUSICjunction2(fileOut, "Reuse and ET fluxes",areaSumID+3,0,0)
 		umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0)
-
-
 		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, area,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Ignore", areaSumID+6, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
 		umusic.writeMUSICjunction2(fileOut, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID+5,areaSumID+7)
-		umusic.writeDetentionBasinNode(fileOut,areaSumID+8, "DetentionBasinNode",0,0,catchment_paramter_list)
-		umusic.writeMUSIClinkToInfilFlux1(fileOut,areaSumID+8,areaSumID+4)
-		umusic.writeMUSIClinkToFlux(fileOut,areaSumID+8,areaSumID+3)
+		if(foundDetention):
+			for nodeid in detIds:
+				umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
+				umusic.writeMUSIClinkToFlux(fileOut,nodeid,areaSumID+3)
 
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
@@ -442,3 +450,4 @@ class EnviromentalBenefitsResultsModule(Module):
 			umusic.writeTankLinkReuse(fileOut,l,areaSumID + 3)
 		umusic.writeMUSICfooter(fileOut)
 		fileOut.close()
+		return area
