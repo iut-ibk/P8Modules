@@ -51,7 +51,9 @@ class EnviromentalBenefitsResultsModule(Module):
 				realstring = stringname
 		self.writeBatFileFromFile(realstring)
 		self.writeMusicConfigFileSecondaryFromFile(realstring)
-		area = self.convertToSecondaryMusic(realstring)
+		areas = self.convertToSecondaryMusic(realstring)
+		imparea = areas[0] 		#total impervious area
+		totalarea = areas[1] 	#total area
 		print "Music is running ... "
 		if(platform.system() != "Linux"):
 			call(["RunMusicSecondary.bat", ""])
@@ -330,6 +332,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		deten = False
 		area = 0.0
 		tmparea = 0.0
+		totalarea = 0.0
 		imp = 0.0
 		EtFlux_list = []
 		fluxinfl_list = []
@@ -361,6 +364,7 @@ class EnviromentalBenefitsResultsModule(Module):
 			if(urbansourcenode):
 				if(linearr[0] == "Areas - Total Area (ha)"):
 					tmparea = float(linearr[1])
+					totalarea = totalarea + float(linearr[1])
 				if(linearr[0] == "Areas - Impervious (%)"):
 					imp = float(linearr[1])
 					urbansourcenode = False
@@ -450,4 +454,7 @@ class EnviromentalBenefitsResultsModule(Module):
 			umusic.writeTankLinkReuse(fileOut,l,areaSumID + 3)
 		umusic.writeMUSICfooter(fileOut)
 		fileOut.close()
-		return area
+		retvals = []
+		retvals.append(area)
+		retvals.append(totalarea)
+		return retvals
