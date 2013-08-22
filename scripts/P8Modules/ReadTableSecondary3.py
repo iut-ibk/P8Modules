@@ -58,6 +58,9 @@ class EnviromentalBenefitsResultsModule(Module):
 		if(platform.system() != "Linux"):
 			call(["RunMusicSecondary.bat", ""])
 		print "Music Done."
+		print "imparea: " + str(imparea)
+		EIF = imparea / totalarea
+		print "EIF: " + str(EIF)
 		self.FF = []
 		self.VR = [] 
 		self.WQ = [] 
@@ -148,22 +151,26 @@ class EnviromentalBenefitsResultsModule(Module):
 		FreqUntreated = freqVec[1]
 		vec8 = sorted(vec8)
 		cin = 3 * float(vec8[len(vec8)/2])
+
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i])<cin):
+			if (float(list3[i]) * EIF <cin):
 				continue
 			if i%2==1:
 				vec3.append(list3[i])
+
 		FreqTreated = len(vec3)
+		print "FreqTreated: " + str
 		ETsum = self.SumAllValues(vec4)
-		VolumeET = ETsum * 60*60*24*1000/1000000
+		VolumeET = ETsum * EIF * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
 		VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
 		preTotalsum = self.SumAllValues(vec5)
 		VolumePredev = preTotalsum * 60*60*24*1000/1000000
 		exfilSum = self.SumAllValues(vec6)
-		FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
+		FVg = EIF * (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
+		print "FVg: " +str(FVg)
 
 
 		#FvForest = self.find_nearest(self.ForestX,FVg)
@@ -458,3 +465,4 @@ class EnviromentalBenefitsResultsModule(Module):
 		retvals.append(area)
 		retvals.append(totalarea)
 		return retvals
+		
