@@ -28,6 +28,10 @@ class RainModule(Module):
 		self.simulation = View("SimulationData",COMPONENT,WRITE)
 		self.simulation.addAttribute("UserCsv")
 		self.simulation.getAttribute("msfFilename")
+		self.simulation.addAttribute("SEIurb")
+		self.simulation.addAttribute("SEIwsud")	
+		self.simulation.addAttribute("NoY")
+		self.simulation.addAttribute("alpha")
 
 		datastream = []
 		datastream.append(self.simulation)

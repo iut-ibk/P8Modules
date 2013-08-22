@@ -15,6 +15,10 @@ class TreatmentPerformanceResultsModule(Module):
 		self.simulation = View("SimulationData",COMPONENT,READ)
 		#self.simulation.getAttribute("MusicFileNo")
 		self.simulation.getAttribute("msfFilename")
+		self.simulation.addAttribute("SEIurb")
+		self.simulation.addAttribute("SEIwsud")	
+		self.simulation.addAttribute("NoY")
+		self.simulation.addAttribute("alpha")
 
 
 		self.TableData = View("Table Data",COMPONENT,WRITE)
