@@ -23,9 +23,15 @@ class RainModule(Module):
 		self.csvFile = ""
 		self.createParameter("UserCsv", STRING, "")
 		self.UserCsv = ""
+		self.createParameter("etFile", STRING, "")
+		self.etFile = ""
 		self.simulation = View("SimulationData",COMPONENT,WRITE)
 		self.simulation.addAttribute("UserCsv")
 		self.simulation.getAttribute("msfFilename")
+		self.simulation.addAttribute("SEIurb")
+		self.simulation.addAttribute("SEIwsud")	
+		self.simulation.addAttribute("NoY")
+		self.simulation.addAttribute("alpha")
 
 		datastream = []
 		datastream.append(self.simulation)
@@ -161,11 +167,15 @@ class RainModule(Module):
 		tmpfile = musicf.split(".")
 		outfile = open(str(tmpfile[0]) + "NewRain." + tmpfile[1] ,"w")
 		csvf = csvf.replace("/","\\")
+		if(self.etFile != ""):
+			etfile = self.etFile.replace("/","\\")
+		else:
+			etfile = "C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Melbourne Monthly Areal PET.txt"
 		for line in infile:
 			linearr = line.strip("\n").split(",")
 			if (linearr[0] == "MeteorologicalTemplate"):
 				outfile.write("RainfallFile," + csvf +"\n") #todo check if pathes are correct for music
-				outfile.write("PETFile,C:\Program Files (x86)\hydro-IT\P8-WSC\et.txt\n")
+				outfile.write("PETFile," + str(etfile) + "\n")
 				outfile.write("StartDate," + startdate + "\n")
 				outfile.write("EndDate," + enddate + "\n")
 				outfile.write("Timestep," + str(timestep) + "\n")

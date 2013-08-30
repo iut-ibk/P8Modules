@@ -243,7 +243,6 @@ def writeMUSICcatchmentnode3(f, ID, nodepart, ncount, x, y, area, imp, parameter
     f.write("Total Nitrogen - Storm Flow Concentration - Serial Correlation (R squared),0,{R squared}\n")
     f.write("------------------------------------------------------------------------------------\n")
     return True
-
 def writeMUSICnodeWSUR(f, ID, nodepart, ncount, x, y, parameter_list):
     #parameter_list = [50, 1, 50, 0, 200]                #[Asurface, EDD, Perm. Pool Vol, Exfil Rate, Pipe Diameter]
     f.write("Node Type,WetlandNode,{Node Type}\n")

@@ -21,7 +21,11 @@ class EnviromentalBenefitsResultsModule(Module):
 
 		#Views
 		self.simulation = View("SimulationData",COMPONENT,READ)
-		self.simulation.addAttribute("MusicFileNo")	
+		self.simulation.addAttribute("MusicFileNo")
+		self.simulation.addAttribute("SEIurb")
+		self.simulation.addAttribute("SEIwsud")	
+		self.simulation.addAttribute("NoY")
+		self.simulation.addAttribute("alpha")
 
 		self.PastureY = [169.46, 192.602, 223.436, 246.61, 269.752, 292.894, 323.761, 339.21, 370.077, 393.219, 416.393, 439.535, 462.677, 485.851, 508.993, 532.168, 555.31, 578.451, 601.626, 624.768, 655.602, 678.776, 701.918, 725.06, 748.234, 779.069, 802.211, 825.353, 856.187, 879.361, 902.503, 933.305, 956.447, 987.314, 1010.46, 1041.29, 1064.43, 1087.57, 1118.41, 1141.55, 1172.38, 1195.53, 1226.36, 1249.47, 1280.31, 1311.14, 1334.28, 1365.08, 1388.23, 1419.03, 1442.14, 1472.97, 1503.77, 1534.61, 1557.72, 1588.52, 1619.35, 1650.16, 1673.27, 1704.07, 1734.87, 1758.01, 1788.81, 1819.62, 1842.73, 1873.53, 1896.64, 1927.44, 1958.24, 1989.08, 2019.85, 2042.95, 2073.76, 2104.56, 2135.36, 2166.13, 2196.93, 2220.04, 2250.88, 2281.65, 2304.76, 2335.56, 2366.36, 2397.16, 2420.27, 2451.04, 2481.84, 2512.65, 2543.45, 2574.25, 2597.36, 2628.13, 2658.93, 2689.73, 2720.54, 2751.34, 2774.41, 2805.22, 2836.02, 2866.79, 2897.59, 2928.36, 2951.44, 2982.27, 3013.04, 3036.15, 3066.92, 3097.72, 3128.49, 3159.26, 3190.06, 3220.83, 3251.64, 3282.41, 3305.52, 3336.29, 3359.36, 3390.16, 3420.93, 3444.04, 3474.85, 3497.92, 3528.69]
 		self.PastureX = [0.0297678, 0.0382198, 0.0466879, 0.0593416, 0.0677936, 0.0762456, 0.0889155, 0.0973513, 0.110021, 0.118473, 0.131127, 0.139579, 0.148031, 0.160685, 0.169137, 0.18179, 0.190242, 0.198694, 0.211348, 0.2198, 0.228268, 0.240922, 0.249374, 0.257826, 0.270479, 0.278948, 0.2874, 0.295852, 0.30432, 0.316973, 0.325425, 0.329692, 0.338144, 0.350814, 0.359266, 0.367734, 0.376186, 0.384638, 0.393106, 0.401558, 0.410026, 0.418478, 0.426946, 0.431196, 0.439665, 0.448133, 0.456585, 0.460851, 0.469303, 0.473569, 0.47782, 0.486288, 0.490554, 0.499022, 0.503273, 0.507539, 0.516007, 0.520273, 0.524524, 0.52879, 0.533056, 0.541508, 0.545775, 0.550041, 0.554291, 0.558558, 0.562808, 0.567074, 0.571341, 0.579809, 0.579874, 0.584124, 0.58839, 0.592657, 0.596923, 0.596988, 0.601254, 0.605504, 0.613972, 0.614037, 0.618287, 0.622554, 0.62682, 0.631086, 0.635337, 0.635401, 0.639668, 0.643934, 0.648201, 0.652467, 0.656717, 0.656782, 0.661048, 0.665315, 0.669581, 0.673847, 0.673896, 0.678162, 0.682429, 0.682493, 0.68676, 0.686824, 0.686873, 0.695341, 0.695406, 0.699656, 0.69972, 0.703987, 0.704051, 0.704116, 0.708382, 0.708447, 0.712714, 0.712778, 0.717028, 0.717093, 0.717142, 0.721408, 0.721473, 0.725723, 0.729989, 0.730038, 0.730102]
@@ -51,11 +55,16 @@ class EnviromentalBenefitsResultsModule(Module):
 				realstring = stringname
 		self.writeBatFileFromFile(realstring)
 		self.writeMusicConfigFileSecondaryFromFile(realstring)
-		self.convertToSecondaryMusic(realstring)
+		areas = self.convertToSecondaryMusic(realstring)
+		imparea = areas[0] 		#total impervious area
+		totalarea = areas[1] 	#total area
 		print "Music is running ... "
 		if(platform.system() != "Linux"):
 			call(["RunMusicSecondary.bat", ""])
 		print "Music Done."
+		print "imparea: " + str(imparea)
+		EIF = imparea / totalarea
+		print "EIF: " + str(EIF)
 		self.FF = []
 		self.VR = [] 
 		self.WQ = [] 
@@ -146,22 +155,26 @@ class EnviromentalBenefitsResultsModule(Module):
 		FreqUntreated = freqVec[1]
 		vec8 = sorted(vec8)
 		cin = 3 * float(vec8[len(vec8)/2])
+
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i])<cin):
+			if (float(list3[i]) * EIF <cin):
 				continue
 			if i%2==1:
 				vec3.append(list3[i])
+
 		FreqTreated = len(vec3)
+		print "FreqTreated: " + str
 		ETsum = self.SumAllValues(vec4)
-		VolumeET = ETsum * 60*60*24*1000/1000000
+		VolumeET = ETsum * EIF * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
 		VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
 		preTotalsum = self.SumAllValues(vec5)
 		VolumePredev = preTotalsum * 60*60*24*1000/1000000
 		exfilSum = self.SumAllValues(vec6)
-		FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
+		FVg = EIF * (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
+		print "FVg: " +str(FVg)
 
 
 		#FvForest = self.find_nearest(self.ForestX,FVg)
@@ -325,8 +338,12 @@ class EnviromentalBenefitsResultsModule(Module):
 		tank = False
 		calc = False
 		notread = True
+		foundDetention = False
+		detIds = []
+		deten = False
 		area = 0.0
 		tmparea = 0.0
+		totalarea = 0.0
 		imp = 0.0
 		EtFlux_list = []
 		fluxinfl_list = []
@@ -358,6 +375,7 @@ class EnviromentalBenefitsResultsModule(Module):
 			if(urbansourcenode):
 				if(linearr[0] == "Areas - Total Area (ha)"):
 					tmparea = float(linearr[1])
+					totalarea = totalarea + float(linearr[1])
 				if(linearr[0] == "Areas - Impervious (%)"):
 					imp = float(linearr[1])
 					urbansourcenode = False
@@ -388,6 +406,12 @@ class EnviromentalBenefitsResultsModule(Module):
 				SW = True
 			if(linearr[0] == "Node Type" and linearr[1] == "RainWaterTankNode"):
 				tank = True
+			if(linearr[0] == "Node Type" and linearr[1] == "DetentionBasinNode"):
+				foundDetention = True
+				deten = True
+			if(deten and linearr[0] == "Node ID"):
+				detIds.append(int(linearr[1]))
+				deten = False
 			if ( tank and linearr[0] == "Node ID"):
 				tanklist.append(linearr[1])
 				tank = False
@@ -420,13 +444,15 @@ class EnviromentalBenefitsResultsModule(Module):
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID,areaSumID+2)
 		umusic.writeMUSICjunction2(fileOut, "Reuse and ET fluxes",areaSumID+3,0,0)
 		umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0)
-
-
 		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, area,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Ignore", areaSumID+6, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
 		umusic.writeMUSICjunction2(fileOut, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID+5,areaSumID+7)
+		if(foundDetention):
+			for nodeid in detIds:
+				umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
+				umusic.writeMUSIClinkToFlux(fileOut,nodeid,areaSumID+3)
 
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
@@ -439,3 +465,7 @@ class EnviromentalBenefitsResultsModule(Module):
 			umusic.writeTankLinkReuse(fileOut,l,areaSumID + 3)
 		umusic.writeMUSICfooter(fileOut)
 		fileOut.close()
+		retvals = []
+		retvals.append(area)
+		retvals.append(totalarea)
+		return retvals

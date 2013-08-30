@@ -112,6 +112,8 @@ class StreamErosionIndex(Module):
                 sumFlowWSUD = sumFlowWSUD + line[1]
         SEIurb = sumFlowUrb / sumFlowPre
         SEIwsud = sumFlowWSUD / sumFlowPre
+        print "SEIurb: " + str(SEIurb)
+        print "SEIwsud: " + str(SEIwsud)
 
         simu = Component()
         simu.addAttribute("SEIurb", SEIurb)
@@ -290,7 +292,7 @@ class StreamErosionIndex(Module):
                 if(linearr[1] >= ID):
                     ID = int(linearr[1]) + 1
             if (linearr[0] == "MeteorologicalTemplate"):
-                outfile.write("RainfallFile," + files[0] +"\n") #todo check if pathes are correct for music
+                outfile.write("RainfallFile," + files[0] +"\n")
                 outfile.write("PETFile," + files[1] + "\n")
                 outfile.write("StartDate," + startdate + "\n")
                 outfile.write("EndDate," + enddate + "\n")
