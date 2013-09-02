@@ -31,6 +31,7 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
     ui->le_map->setText(p8microclimate->mapPic.c_str());
     ui->le_shape->setText(p8microclimate->shapefile.c_str());
     ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
+
 }
 
 p8microclimate_gui::~p8microclimate_gui()
@@ -92,4 +93,3 @@ void p8microclimate_gui::on_bBox_accepted()
         this->p8microclimate->setParameterValue("Percentile","80");
     }
 }
-

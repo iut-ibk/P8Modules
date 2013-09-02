@@ -35,7 +35,7 @@
      <x>9</x>
      <y>9</y>
      <width>441</width>
-     <height>221</height>
+     <height>227</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -107,6 +107,23 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="1">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Wsud Tech File</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QLineEdit" name="le_WSUDtech"/>
+    </item>
+    <item row="3" column="3">
+     <widget class="QPushButton" name="pb_wsud">
+      <property name="text">
+       <string>Load</string>
+      </property>
+     </widget>
+    </item>
     <item row="4" column="2">
      <widget class="QComboBox" name="cmb_perc">
       <item>
@@ -124,23 +141,6 @@
         <string>Median + Stdev (i.e. 80%)</string>
        </property>
       </item>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Wsud Tech File</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="2">
-     <widget class="QLineEdit" name="le_WSUDtech"/>
-    </item>
-    <item row="3" column="3">
-     <widget class="QPushButton" name="pb_wsud">
-      <property name="text">
-       <string>Load</string>
-      </property>
      </widget>
     </item>
    </layout>

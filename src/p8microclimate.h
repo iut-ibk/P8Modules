@@ -19,6 +19,7 @@ public:
     std::string landuse;
     std::string wsudTech;
 
+
     Microclimate();
     void init();
     void run();
@@ -30,11 +31,13 @@ public:
     void fillZeros(DM::RasterData * r);
     double chooseTab(double perc);
     double calcLST(QList<QList<double> > t);
+
     QList<QList<double> > readWsud(QString filename);
     QList<double> getTechAreasForCell(int x, int y,double width, QList<QList<double> >table);
     double calcDeltaLst(QList<double> t, double frac);
     void exportRasterData(DM::RasterData * r, QString filename);
     bool isleft(DM::Node a,DM::Node b,DM::Node c);
+
 };
 
 #endif // P8MICROCLIMATE_H

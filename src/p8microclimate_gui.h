@@ -13,12 +13,12 @@ class p8microclimate_gui;
 class p8microclimate_gui : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit p8microclimate_gui(Microclimate * p8,QWidget *parent = 0);
 
     ~p8microclimate_gui();
-    
+
 private slots:
     void on_pb_map_released();
     void on_pb_shape_released();
@@ -27,6 +27,7 @@ private slots:
     void on_bBox_accepted();
 
     void on_pb_wsud_released();
+
 
 private:
     Ui::p8microclimate_gui *ui;

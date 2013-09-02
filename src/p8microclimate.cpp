@@ -22,6 +22,7 @@ Microclimate::Microclimate()
     landuse = "";
     wsudTech = "";
 
+
     this->addParameter("Gridsize", DM::INT, &this->gridsize);
     this->addParameter("MapPic", DM::STRING, &this->mapPic);
     this->addParameter("Shapefile",DM::STRING,&this->shapefile);
@@ -44,6 +45,7 @@ void Microclimate::init()
 void Microclimate::run()
 {
 
+
     //DM::View topo("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);
     DM::System * data = this->getData("City");
@@ -58,10 +60,35 @@ void Microclimate::run()
 
     //topology map data
     /*
-    double topoXoffset = 0;
-    double topoYoffset = 0;
-    double topototalheight = fabs(Xmin - Xmax);
-    double topototalwidth = fabs(Ymin - Ymax);
+    for(map<std::string,DM::Node*>::iterator ii=cmp.begin(); ii!=cmp.end(); ++ii)
+    {
+        std::cout << (*ii).first << endl;
+        DM::Node * n = (*ii).second;
+        if(first)
+        {
+            Xmax = n->getX();
+            Xmin = n->getX();
+            Ymax = n->getY();
+            Ymin = n->getY();
+            first = false;
+        }
+        std::cout <<"max XY " << Xmax << " " << Ymax << endl;
+        std::cout <<"min XY " << Xmin << " " << Ymin << endl;
+        if(Xmax < x)
+            Xmax = x;
+        if(Xmin > x)
+            Xmin = x;
+        if(Ymax < y)
+            Ymax = y;
+        if(Ymin > y)
+            Ymin = y;
+        std::cout <<"nodeXY "<< n->getX() << " " << n->getY() << endl;
+
+
+    }
+    std::cout <<"max XY " << Xmax << " " << Ymax << endl;
+    std::cout <<"min XY " << Xmin << " " << Ymin << endl;
+    //topology map data
     */
 
 
@@ -88,15 +115,6 @@ void Microclimate::run()
 
     DM::RasterData * newgrid = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newgrid);
-
-
-
-    std::cout << "new Topo:" << endl;
-    std::cout << "width: " << width << endl;
-    std::cout << "height: " << height << endl;
-    std::cout << "gridsize: " << gridsize << endl;
-
-
 
 
 
@@ -128,6 +146,7 @@ void Microclimate::run()
 
     QList<QList<double> >WsudTech = readWsud(QString(this->wsudTech.c_str()));
 
+
     double percent;
     int impervcounter;
     int pervcounter;
@@ -139,6 +158,7 @@ void Microclimate::run()
     double realx;
     double realy;
     bool first = true;
+
     QList<double> wsudline;
     QList<QList<double> >wsudlines;
     // two for loops over the rasterdata array
@@ -175,6 +195,7 @@ void Microclimate::run()
 
             }
             */
+
             delta = 0;
             wsudlines.clear();
             impervcounter = 0;
@@ -381,6 +402,7 @@ double Microclimate::calcLST(QList<QList<double> > t)
     for(int i = 0;i<t[1].size();i++)
     {
         if(this->percentile < t[1][i])
+
         {
             pointer = i;
             break;
