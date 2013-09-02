@@ -6,7 +6,6 @@
 #include "p8microclimate.h"
 #include "ui_p8microclimate_gui.h"
 
-
 namespace Ui {
 class p8microclimate_gui;
 }
@@ -20,6 +19,15 @@ public:
 
     ~p8microclimate_gui();
     
+private slots:
+    void on_pb_map_released();
+    void on_pb_shape_released();
+    void on_pb_landuse_released();
+
+    void on_bBox_accepted();
+
+    void on_pb_wsud_released();
+
 private:
     Ui::p8microclimate_gui *ui;
     Microclimate *p8microclimate;
