@@ -17,6 +17,8 @@ public:
     std::string mapPic;
     std::string shapefile;
     std::string landuse;
+    std::string wsudTech;
+
 
     Microclimate();
     void init();
@@ -28,11 +30,14 @@ public:
     std::vector<QPointF>  getCoveringCells(double x,double y,double g1,double g2);
     void fillZeros(DM::RasterData * r);
     double chooseTab(double perc);
-    double calcLST(double perc, QList<QList<double> > t);
+    double calcLST(QList<QList<double> > t);
+
     QList<QList<double> > readWsud(QString filename);
     QList<double> getTechAreasForCell(int x, int y,double width, QList<QList<double> >table);
     double calcDeltaLst(QList<double> t, double frac);
     void exportRasterData(DM::RasterData * r, QString filename);
+    bool isleft(DM::Node a,DM::Node b,DM::Node c);
+
 };
 
 #endif // P8MICROCLIMATE_H

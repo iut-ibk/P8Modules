@@ -26,6 +26,9 @@ private slots:
 
     void on_bBox_accepted();
 
+    void on_pb_wsud_released();
+
+
 private:
     Ui::p8microclimate_gui *ui;
     Microclimate *p8microclimate;

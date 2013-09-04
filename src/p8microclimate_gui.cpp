@@ -12,7 +12,26 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
     ui->setupUi(this);
     this->p8microclimate = p8;
 
-    ui->cmb_perc->setCurrentIndex(this->p8microclimate->percentile);
+    if(p8microclimate->percentile == 20)
+    {
+        ui->cmb_perc->setCurrentIndex(0);
+    }
+    if(p8microclimate->percentile == 50)
+    {
+        ui->cmb_perc->setCurrentIndex(1);
+    }
+    if(p8microclimate->percentile == 80)
+    {
+        ui->cmb_perc->setCurrentIndex(2);
+    }
+    ostringstream tmp;
+    tmp << p8microclimate->gridsize;
+    ui->le_gridsize->setText(tmp.str().c_str());
+    ui->le_landuse->setText(p8microclimate->landuse.c_str());
+    ui->le_map->setText(p8microclimate->mapPic.c_str());
+    ui->le_shape->setText(p8microclimate->shapefile.c_str());
+    ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
+
 }
 
 p8microclimate_gui::~p8microclimate_gui()
@@ -48,11 +67,29 @@ void p8microclimate_gui::on_pb_landuse_released()
     this->p8microclimate->setParameterValue("Landuse",fname.toStdString());
 }
 
+void p8microclimate_gui::on_pb_wsud_released()
+{
+    QString fname = QFileDialog::getOpenFileName(this,"WSUD Tech File",QDir::currentPath(),"*.csv");
+    if(fname == "")
+        return;
+    ui->le_WSUDtech->setText(fname);
+    this->p8microclimate->setParameterValue("WSUDtech",fname.toStdString());
+}
+
 void p8microclimate_gui::on_bBox_accepted()
 {
-    std::ostringstream tmp;
     int index = ui->cmb_perc->currentIndex();
-    tmp << index;
     this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
-    this->p8microclimate->setParameterValue("Percentile",tmp.str());
+    if(index == 0)
+    {
+        this->p8microclimate->setParameterValue("Percentile","20");
+    }
+    if(index == 1)
+    {
+        this->p8microclimate->setParameterValue("Percentile","50");
+    }
+    if(index == 2)
+    {
+        this->p8microclimate->setParameterValue("Percentile","80");
+    }
 }

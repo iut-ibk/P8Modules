@@ -38,6 +38,7 @@
 #include "p8realisations.h"
 #include "p8realisation2.h"
 #include "p8microclimate.h"
+//#include "p8shapemicro.h"
 using namespace std;
 using namespace DM;
 
@@ -55,6 +56,7 @@ extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
     registry->addNodeFactory(new NodeFactory<Current_Realisation>());
     registry->addNodeFactory(new NodeFactory<Current_RealisationModule>());
-    registry->addNodeFactory((new NodeFactory<Microclimate>()));
+    registry->addNodeFactory(new NodeFactory<Microclimate>());
+    //registry->addNodeFactory(new NodeFactory<p8shapemicro>());
 }
 

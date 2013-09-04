@@ -15,23 +15,26 @@ DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
 
 Microclimate::Microclimate()
 {
-    gridsize = 2;
-    percentile = 20;
+    gridsize = 30;
+    percentile = 80;
     mapPic = "";
     shapefile = "";
     landuse = "";
+    wsudTech = "";
+
 
     this->addParameter("Gridsize", DM::INT, &this->gridsize);
     this->addParameter("MapPic", DM::STRING, &this->mapPic);
     this->addParameter("Shapefile",DM::STRING,&this->shapefile);
     this->addParameter("Landuse",DM::STRING, &this->landuse);
     this->addParameter("Percentile",DM::INT, &this->percentile);
+    this->addParameter("WSUDtech",DM::STRING, &this->wsudTech);
 
 }
 
 void Microclimate::init()
 {
-    DM::View shape("Topology", DM::FACE, DM::READ);
+    //DM::View shape("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);
     std::vector<DM::View> vdata;
     //vdata.push_back(shape);
@@ -42,24 +45,21 @@ void Microclimate::init()
 void Microclimate::run()
 {
 
-    double Xmax = 0;
-    double Xmin = 0;
-    double Ymax = 0;
-    double Ymin = 0;
-    double topogridsize = 0;
-    bool first = true;
-    double x;
-    double y;
+
     //DM::View topo("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);
     DM::System * data = this->getData("City");
     DM::RasterData * imp = this->getRasterData("City",raster);
 
-    /*
+
     //getting x and y edges of the shapefile
     //with that information and the cellsize we can build the grid
     std::map<std::string,DM::Node*> cmp = data->getAllNodes();
     std::cout << "size: " << cmp.size() << endl;
+
+
+    //topology map data
+    /*
     for(map<std::string,DM::Node*>::iterator ii=cmp.begin(); ii!=cmp.end(); ++ii)
     {
         std::cout << (*ii).first << endl;
@@ -89,11 +89,7 @@ void Microclimate::run()
     std::cout <<"max XY " << Xmax << " " << Ymax << endl;
     std::cout <<"min XY " << Xmin << " " << Ymin << endl;
     //topology map data
-    double topoXoffset = 0;
-    double topoYoffset = 0;
-    double topototalheight = fabs(Xmin - Xmax);
-    double topototalwidth = fabs(Ymin - Ymax);
-*/
+    */
 
 
     // getting rasterdata values
@@ -120,10 +116,8 @@ void Microclimate::run()
     DM::RasterData * newgrid = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newgrid);
 
-    std::cout << "new Topo:" << endl;
-    std::cout << "width: " << width << endl;
-    std::cout << "height: " << height << endl;
-    std::cout << "gridsize: " << gridsize << endl;
+
+
     DM::RasterData * lst = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(lst);
     DM::RasterData * newlst = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
@@ -146,10 +140,11 @@ void Microclimate::run()
     fillZeros(newImpPervArea);
     DM::RasterData * newImpPervFrac = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newImpPervFrac);
+    DM::RasterData * testgrid = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    fillZeros(testgrid);
 
 
-    QList<QList<double> >WsudTech = readWsud(QString("WSUDtech.csv"));
-    //std::cout << WsudTech << endl;
+    QList<QList<double> >WsudTech = readWsud(QString(this->wsudTech.c_str()));
 
 
     double percent;
@@ -160,6 +155,10 @@ void Microclimate::run()
     double techarea;
     double pervareafrac;
     double delta;
+    double realx;
+    double realy;
+    bool first = true;
+
     QList<double> wsudline;
     QList<QList<double> >wsudlines;
     // two for loops over the rasterdata array
@@ -167,6 +166,36 @@ void Microclimate::run()
     {
         for(int j =0; j<height; j++)
         {
+            /*
+            realx = imp->getXOffset() + i * imp->getCellSizeX();
+            realy = imp->getYOffset() + j * imp->getCellSizeY();
+            DM::Node * a;
+            DM::Node * b;
+            DM::Node c = DM::Node(realx,realy,0);
+            //std::cout << "x coord: " << realx << endl;
+            //std::cout << "y coord: " << realy << endl;
+            for(map<std::string,DM::Node*>::iterator ii=cmp.begin(); ii!=cmp.end(); ++ii)
+            {
+                a = (*ii).second;
+                //std::cout << "nodeXY: " << a->getX() << " " << a->getY() << endl;
+                if(a->getX() == 0 || a->getY() == 0)
+                    continue;
+                if(first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    if(isleft(*b,*a,c))
+                    {
+                        testgrid->setCell(i,j,1);
+                    }
+                }
+                b = a;
+
+            }
+            */
+
             delta = 0;
             wsudlines.clear();
             impervcounter = 0;
@@ -202,17 +231,15 @@ void Microclimate::run()
 
             totalcounter = impervcounter + pervcounter;
             impPercentage = (double)impervcounter/(double)totalcounter*100;
-            newgrid->setCell(i,j,impPercentage);
+            newgrid->setCell(i,j,impPercentage);          
             lst->setCell(i,j,chooseTab(impPercentage));
 
             impAreabeforeWSUD->setCell(i,j,(impPercentage/100)*(gridsize*gridsize));
             perAreabeforeWSUD->setCell(i,j,(gridsize*gridsize) - ((impPercentage/100)*(gridsize*gridsize)));
             newPervArea->setCell(i,j, perAreabeforeWSUD->getCell(i,j) + perAreabeforeWSUD->getCell(i,j) * techarea / 100);
-            std::cout << newPervArea->getCell(i,j) << endl;
             pervareafrac = newPervArea->getCell(i,j) / (gridsize * gridsize);
             if (pervareafrac > 100)
                 pervareafrac = 100;
-            std::cout << pervareafrac << endl;
             newPervFrac->setCell(i,j,pervareafrac);
             newImpPervArea->setCell(i,j,(gridsize*gridsize) - newPervArea->getCell(i,j));
             newImpPervFrac->setCell(i,j,newImpPervArea->getCell(i,j) / (gridsize * gridsize));
@@ -225,12 +252,13 @@ void Microclimate::run()
                 }
                 delta += calcDeltaLst(wsudlines[k],newPervFrac->getCell(i,j));
             }
-            std::cout << "delta: " << delta << endl;
             lstAfterWsud->setCell(i,j,newlst->getCell(i,j)+delta);
             lstReduction->setCell(i,j,lstAfterWsud->getCell(i,j) - lst->getCell(i,j));
             lstReductionAir->setCell(i,j,lstReduction->getCell(i,j) * (-0.1));
+
         }
     }
+
     std::cout << "NEWGRID:" << endl;
     printRaster(newgrid);
     std::cout << "LST" << endl;
@@ -245,7 +273,8 @@ void Microclimate::run()
     exportRasterData(lst,"LST before WSUD.txt");
     exportRasterData(lstAfterWsud,"LST after WSUD.txt");
     exportRasterData(lstReduction,"Reduction in LST.txt");
-    exportRasterData(lstReductionAir,"Reuction in Air Temperature.txt");
+    exportRasterData(lstReductionAir,"Reduction in Air Temperature.txt");
+
 }
 void Microclimate::printRaster(DM::RasterData * r)
 {
@@ -328,51 +357,52 @@ double Microclimate::chooseTab(double perc)
 
     if(perc < 20)
     {
-        return calcLST(perc,tif02);
+        return calcLST(tif02);
     }
     else if(perc < 30)
     {
-        return calcLST(perc,tif03);
+        return calcLST(tif03);
     }
     else if(perc < 40)
     {
-        return calcLST(perc,tif04);
+        return calcLST(tif04);
     }
     else if(perc < 50)
     {
-        return calcLST(perc,tif05);
+        return calcLST(tif05);
     }
     else if(perc < 60)
     {
-        return calcLST(perc,tif06);
+        return calcLST(tif06);
     }
     else if(perc < 70)
     {
-        return calcLST(perc,tif07);
+        return calcLST(tif07);
     }
     else if(perc < 80)
     {
-        return calcLST(perc,tif08);
+        return calcLST(tif08);
     }
     else if(perc < 90)
     {
-        return calcLST(perc,tif09);
+        return calcLST(tif09);
     }
     else
     {
-        return calcLST(perc,tif1);
+        return calcLST(tif1);
     }
 
 
 }
 
-double Microclimate::calcLST(double perc, QList<QList<double> > t)
+double Microclimate::calcLST(QList<QList<double> > t)
 {
     int pointer;
     double res;
     for(int i = 0;i<t[1].size();i++)
     {
-        if(perc < t[1][i])
+        if(this->percentile < t[1][i])
+
         {
             pointer = i;
             break;
@@ -484,6 +514,11 @@ void Microclimate::exportRasterData(DM::RasterData *r, QString filename)
             outstream << endl;
         }
     }
+}
+
+bool Microclimate::isleft(DM::Node a, DM::Node b, DM::Node c)
+{
+    return ((b.getX() - a.getX()) * (c.getY() - a.getY()) - (b.getY() - a.getY()) * (c.getX() - a.getX())) > 0;
 }
 
 
