@@ -248,6 +248,8 @@ class StreamErosionIndex(Module):
         urbansourcenode = False
         calcarea = False
         readcatchmentlist = False
+        link = False
+        routed = False
         impArea = 0.0
         perArea = 0.0
         area = 0.0
@@ -257,6 +259,13 @@ class StreamErosionIndex(Module):
         catchment_paramter_list = []#[1,120,30,20,200,1,10,25,5,0] old static parameter list
         for line in infile:
             linearr = line.strip("\n").split(",")
+            if(linearr[0] == "Link Name"):
+                link = True
+            if(link):
+                if(linearr[0] == "Routing"):
+                    if(linearr[1] == "Routed"):
+                        routed = True
+                    link = False
             if(linearr[0] == "Node Type"):
                 if (linearr[1] == "UrbanSourceNode"):
                     urbansourcenode = True
@@ -301,6 +310,12 @@ class StreamErosionIndex(Module):
                 outfile.write(line)
         umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID,perArea,False,catchment_paramter_list) #pervious
         umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 1,impArea,True,catchment_paramter_list) #impervious
+        if(routed):
+            umusic.writeMUSICjunction2(outfile,"PreJunction",ID + 2,0,0)
+            umusic.writeMUSICjunction2(outfile,"UrbJunction",ID + 3,0,0)
+            umusic.writeMUSIClinkSEI(outfile,ID,ID+2,round(math.sqrt(perArea*10000)/60))
+            umusic.writeMUSIClinkSEI(outfile,ID+1,ID+3,round(math.sqrt(impArea*10000)/60))
+
         infile.close()
         outfile.close()
         print "Impervious Area: " + str(impArea)
@@ -315,20 +330,20 @@ class StreamErosionIndex(Module):
         #return an array with the path of rainfile and the ET file in it
         files = []
         if(self.Csvfile == ""):
-            files.append("C:/Program Files (x86)/hydro-IT/P8-WSC/Data2Store4ErosionIndex/Melbourne Rainfall 1985_1995 6min.csv")
+            files.append("C:/Program Files (x86)/hydro-IT/P8-WSC/ClimateDataTemplates/Melbourne Rainfall 1985_1995 6min.csv")
         else:
             files.append(self.Csvfile)
         if(self.ETfile == ""):
             if(self.SimulationCity == 0):
-                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Adelaide Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Adelaide Monthly Areal PET.txt")
             elif(self.SimulationCity == 1):
-                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Brisbane Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Brisbane Monthly Areal PET.txt")
             elif(self.SimulationCity == 2):
-                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Melbourne Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Melbourne Monthly Areal PET.txt")
             elif(self.SimulationCity == 3):
-                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Perth Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Perth Monthly Areal PET.txt")
             elif(self.SimulationCity == 4):
-                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Sydney Monthly Areal PET.txt")
+                files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Sydney Monthly Areal PET.txt")
         else:
             files.append(self.ETfile)
         if (platform.system() != "Linux"): #dynamics path slashes depeding on os
