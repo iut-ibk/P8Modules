@@ -1,3 +1,4 @@
+ # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 from pydynamind import *
 from Ui_Analyser2_Dialog import Ui_Analyser2_GUI
@@ -27,7 +28,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
 		QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
 		QtCore.QObject.connect(self.ui.pb_plotSEI, QtCore.SIGNAL("released()"),self.plotSEI)
-		self.colorarr = ['#0b09ae','#b01717','#37c855','#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']
+		self.colorarr = ['#1f99d0','#8fcce7','#abcd8','#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']
 	def delete(self):
 		if os.path.exists(self.TPRFile):
 			os.remove(self.TPRFile)
@@ -397,13 +398,13 @@ class Analyser2_Gui(QtGui.QDialog):
 		plt.plot(f,e,"b.",label = "Post WSUD")
 		plt.yscale("log")
 		plt.xscale("log")
-		plt.plot([0.3, 0.3], ax.get_ylim(), 'b-', lw=2, label = "~1 in 3 months >> Stormwater quality improvement")
-		plt.plot([0.6, 0.6], ax.get_ylim(), 'y-', lw=2, label = "~1 in 6 months >> Managing stormwater as a resource")
-		plt.plot([1, 1], ax.get_ylim(), color = 'brown',linestyle = '-', lw=2, label = "~1 in 12 months >> Reducing hydrological disturbance in urban waterway")
-		plt.plot([2, 2], ax.get_ylim(), 'k-', lw=2 , label = "~1 in 24 months >> Waterway geomorphic protection")
+		plt.plot([0.25, 0.25], [mini, maxi], 'b-', lw=2, label = "~1 in 3 months >> Stormwater\nquality improvement")
+		plt.plot([0.5, 0.5], [mini, maxi], 'y-', lw=2, label = "~1 in 6 months >> Managing \nstormwater as a resource")
+		plt.plot([1, 1], [mini, maxi], color = 'brown',linestyle = '-', lw=2, label = "~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway")
+		plt.plot([2, 2], [mini, maxi], 'k-', lw=2 , label = "~1 in 24 months >> Waterway geomorphic\nprotection")
 		plt.title(" ")
 		fig.canvas.set_window_title('SEI Plot')
-		plt.ylabel("Flow m^3/s")
+		plt.ylabel(u"Flow m³/s")
 		plt.xlabel("Plotting Position (ARI)")
 		plt.text(0.01,ax.get_ylim()[1]/5,"SEI Urbanised = " + str(round(self.module.SEIurb,2)) + "\nSEI WSUD = " + str(round(self.module.SEIwsud,2)), backgroundcolor = "white")
 		#plt.text(0.3,maxi,"~1 in 3 months >> Stormwater quality improvement",size = "small")#,backgroundcolor = "b",color = "white", picker = True)
@@ -411,7 +412,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		#plt.text(1,maxi/100,"~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway",size = "small")#,backgroundcolor = "brown", picker = True)
 		#plt.text(2,maxi/1000,"~1 in 24 months >> Waterway geomorphic\nprotection",size = "small")#, backgroundcolor = "k", color = "white", picker = True)
 		plt.legend(loc = "best",prop={"size":8})
-		plt.grid(True, which="both",ls="-")
+		plt.grid(True, which="both",ls="-",color="#939393")
 		xlim = ax.get_xlim()
 		plt.xlim([0.01,xlim[1]])
 		plt.show()
