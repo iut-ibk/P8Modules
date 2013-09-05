@@ -28,7 +28,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
 		QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
 		QtCore.QObject.connect(self.ui.pb_plotSEI, QtCore.SIGNAL("released()"),self.plotSEI)
-		self.colorarr = ['#1f99d0','#8fcce7','#abcd8','#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']
+		self.colorarr = ['#1f99d0','#8fcce7','#abcd88', '#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']#'#1f99d0','#8fcce7','#abcd8',
 	def delete(self):
 		if os.path.exists(self.TPRFile):
 			os.remove(self.TPRFile)
