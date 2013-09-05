@@ -165,7 +165,6 @@ class EnviromentalBenefitsResultsModule(Module):
 				vec3.append(list3[i])
 
 		FreqTreated = len(vec3)
-		print "FreqTreated: " + str
 		ETsum = self.SumAllValues(vec4)
 		VolumeET = ETsum * EIF * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
