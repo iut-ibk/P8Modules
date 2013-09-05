@@ -170,7 +170,7 @@ class RainModule(Module):
 		if(self.etFile != ""):
 			etfile = self.etFile.replace("/","\\")
 		else:
-			etfile = "C:\Program Files (x86)\hydro-IT\P8-WSC\Data2Store4ErosionIndex\Melbourne Monthly Areal PET.txt"
+			etfile = "C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Melbourne Monthly Areal PET.txt"
 		for line in infile:
 			linearr = line.strip("\n").split(",")
 			if (linearr[0] == "MeteorologicalTemplate"):
