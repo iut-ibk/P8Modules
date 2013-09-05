@@ -209,17 +209,20 @@ class StreamErosionIndex(Module):
         filearr = file.split(".")
         f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \".\musicConfigFileSEI.mcf\" -light -silent\n")
         f.close()
-    def writeMusicConfigFile(self):
+    def writeMusicConfigFile(self,routed):
         f = open("musicConfigFileSEI.mcf", 'w')
         f.write("Version = 100\n")
         f.write("Delimiter = #44\n")
-        f.write("Export_TS (Pre-developed Catchment, Outflow, \"Pre-developedCatchment.csv\")\n")
-        f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment.csv\")\n")
+        if(routed):
+            f.write("Export_TS (PreJunction, Inflow, \"Pre-developedCatchment.csv\")\n")
+            f.write("Export_TS (UrbJunction, Inflow, \"UrbanisedCatchment.csv\")\n")
+        else:
+            f.write("Export_TS (Pre-developed Catchment, Outflow, \"Pre-developedCatchment.csv\")\n")
+            f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment.csv\")\n")  
         f.write("Export_TS (Receiving Node, Inflow, \"PostWSUD.csv\")\n")
         f.close()
     def changeMusicFile(self,filename):
         self.writeBatFileFromFile(filename)
-        self.writeMusicConfigFile()
 
         #read start- , enddate and timestep from csv
         startdate = ""
@@ -298,8 +301,8 @@ class StreamErosionIndex(Module):
                 UrbanSourceNode = False
 
             if(linearr[0] == "Node ID"):
-                if(linearr[1] >= ID):
-                    ID = int(linearr[1]) + 1
+                if(int(linearr[1]) > int(ID)):
+                    ID = int(linearr[1])
             if (linearr[0] == "MeteorologicalTemplate"):
                 outfile.write("RainfallFile," + files[0] +"\n")
                 outfile.write("PETFile," + files[1] + "\n")
@@ -308,13 +311,14 @@ class StreamErosionIndex(Module):
                 outfile.write("Timestep," + str(timestep) + "\n")
             else:
                 outfile.write(line)
-        umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID,perArea,False,catchment_paramter_list) #pervious
-        umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 1,impArea,True,catchment_paramter_list) #impervious
+        umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID+1,perArea,False,catchment_paramter_list) #pervious
+        umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 2,impArea,True,catchment_paramter_list) #impervious
+        self.writeMusicConfigFile(routed)
         if(routed):
-            umusic.writeMUSICjunction2(outfile,"PreJunction",ID + 2,0,0)
-            umusic.writeMUSICjunction2(outfile,"UrbJunction",ID + 3,0,0)
-            umusic.writeMUSIClinkSEI(outfile,ID,ID+2,round(math.sqrt(perArea*10000)/60))
-            umusic.writeMUSIClinkSEI(outfile,ID+1,ID+3,round(math.sqrt(impArea*10000)/60))
+            umusic.writeMUSICjunction2(outfile,"PreJunction",ID + 3,0,0)
+            umusic.writeMUSICjunction2(outfile,"UrbJunction",ID + 4,0,0)
+            umusic.writeMUSIClinkSEI(outfile,ID+1,ID+3,round(math.sqrt(perArea*10000)/60))
+            umusic.writeMUSIClinkSEI(outfile,ID+2,ID+4,round(math.sqrt(impArea*10000)/60))
 
         infile.close()
         outfile.close()
