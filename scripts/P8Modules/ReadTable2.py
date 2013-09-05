@@ -65,15 +65,17 @@ class TreatmentPerformanceResultsModule(Module):
 		print "Music Done."
 
 	def writeBatFile(self,file):
+		settings = QSettings()
 		f = open("RunMusicTP.bat",'w')
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
-		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \"" + file + "\" \".\musicConfigFileTP.mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \"" + file + "\" \".\musicConfigFileTP.mcf\" -light -silent\n")
 		f.close()
 
 	def writeBatFileFromNr(self,nr):
+		settings = QSettings()
 		f = open("RunMusicTP.bat",'w')
-		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \".\musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \".\musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
 	def writeMusicConfigFile(self,file):
 		f = open("musicConfigFileTP.mcf", 'w')

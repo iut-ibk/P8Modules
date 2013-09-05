@@ -204,10 +204,12 @@ class StreamErosionIndex(Module):
             return idx
         else:
             return idx -1
+            
     def writeBatFileFromFile(self,file):
+        settings = QSettings()
         f = open("RunMusicSEI.bat",'w')
         filearr = file.split(".")
-        f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \".\musicConfigFileSEI.mcf\" -light -silent\n")
+        f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \".\musicConfigFileSEI.mcf\" -light -silent\n")
         f.close()
     def writeMusicConfigFile(self,routed):
         f = open("musicConfigFileSEI.mcf", 'w')

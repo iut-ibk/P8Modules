@@ -284,15 +284,17 @@ class EnviromentalBenefitsResultsModule(Module):
 		idx=(np.abs(tmp)).argmin()
 		return idx
 	def writeBatFileFromFile(self,file):
+		settings = QSettings()
 		f = open("RunMusicSecondary.bat",'w')
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
 		filearr = file.split(".")
-		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \".\musicConfigFileSecondary.mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \".\musicConfigFileSecondary.mcf\" -light -silent\n")
 		f.close()
 	def writeBatFileFromNr(self,nr):
+		settings = QSettings()
 		f = open("RunMusicSecondary.bat",'w')
-		f.write("\"C:\Program Files (x86)\eWater\MUSIC 5 5.1.18.172 SL\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \".\musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \".\musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromFile(self,file):
 		f = open("musicConfigFileSecondary.mcf", 'w')
