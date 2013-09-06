@@ -49,7 +49,16 @@ void Microclimate::run()
     //DM::View topo("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);
     DM::System * data = this->getData("City");
-    DM::RasterData * imp = this->getRasterData("City",raster);
+    DM::RasterData * tmpimp = this->getRasterData("City",raster);
+    DM::RasterData * imp = new DM::RasterData(tmpimp->getWidth(),tmpimp->getHeight(),0,0,tmpimp->getXOffset(),tmpimp->getYOffset());
+    imp->setSize(tmpimp->getWidth(),tmpimp->getHeight(),tmpimp->getCellSizeX(),tmpimp->getCellSizeY(),tmpimp->getXOffset(),tmpimp->getYOffset());
+    for(int i = 0;i<imp->getHeight();i++)
+    {
+        for(int j = 0;j<imp->getWidth();j++)
+        {
+            imp->setCell(j,i,tmpimp->getCell(j,imp->getHeight()-1-i));
+        }
+    }
 
 
     //getting x and y edges of the shapefile
@@ -112,35 +121,46 @@ void Microclimate::run()
     {
         width = (int)width + 1;
     }
-
+    std::cout << "width " << width << endl;
+    std::cout << "height " << height << endl;
     DM::RasterData * newgrid = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    newgrid->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newgrid);
-
-
-
     DM::RasterData * lst = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    lst->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(lst);
     DM::RasterData * newlst = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    newlst->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newlst);
     DM::RasterData * lstReduction = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    lstReduction->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(lstReduction);
     DM::RasterData * lstReductionAir = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    lstReductionAir->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(lstReductionAir);
     DM::RasterData * lstAfterWsud = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    lstAfterWsud->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(lstAfterWsud);
     DM::RasterData * impAreabeforeWSUD = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    impAreabeforeWSUD->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(impAreabeforeWSUD);
     DM::RasterData * perAreabeforeWSUD = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    perAreabeforeWSUD->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(perAreabeforeWSUD);
     DM::RasterData * newPervArea = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    newPervArea->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newPervArea);
     DM::RasterData * newPervFrac = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    newPervFrac->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newPervFrac);
     DM::RasterData * newImpPervArea = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    newImpPervArea->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newImpPervArea);
     DM::RasterData * newImpPervFrac = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    newImpPervFrac->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(newImpPervFrac);
     DM::RasterData * testgrid = new DM::RasterData(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
+    testgrid->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(testgrid);
 
 
@@ -162,9 +182,9 @@ void Microclimate::run()
     QList<double> wsudline;
     QList<QList<double> >wsudlines;
     // two for loops over the rasterdata array
-    for(int i = 0;i<width;i++)
+    for(int i = 0;i<height;i++)
     {
-        for(int j =0; j<height; j++)
+        for(int j =0; j<width; j++)
         {
             /*
             realx = imp->getXOffset() + i * imp->getCellSizeX();
@@ -201,7 +221,7 @@ void Microclimate::run()
             impervcounter = 0;
             pervcounter = 0;
             techarea = 0;
-            vector<QPointF> cells = getCoveringCells(i*gridsize,j*gridsize,gridsize,imp->getCellSizeX());
+            vector<QPointF> cells = getCoveringCells(j*gridsize,i*gridsize,gridsize,imp->getCellSizeX());
             while(!cells.empty())
             {
                 QPointF p = cells.back();
@@ -212,13 +232,7 @@ void Microclimate::run()
                 // change calculation here -> dont add up values anymore
                 // ->count "17s" and/or "1s" and then determen percentage of impervious
                 //newgrid->setCell(i,j,newgrid->getCell(i,j)+(imp->getCell(p.x(),p.y())*(percent/100)));        old code
-                wsudline = getTechAreasForCell(p.x(),p.y(),imp->getWidth(),WsudTech);
-                wsudlines.append(wsudline);
-                for (int k = 1;k<wsudline.size();k++)
-                {
-                    techarea += wsudline[k];
-                }
-                if(imp->getCell(p.x(),p.y()) == 1)  //if cell has value 1 in raster data it means its impervious
+                if(imp->getCell(p.x(),p.y()) != 1)  //if cell has value 1 in raster data it means its impervious
                 {                                   //this value can and most porbably will change
                     impervcounter ++;
                 }
@@ -228,41 +242,52 @@ void Microclimate::run()
                 }
                 cells.pop_back();
             }
-
+            wsudline = getTechAreasForCell(i,j,width,WsudTech);
+            for (int k = 1;k<wsudline.size();k++)
+            {
+                techarea += wsudline[k];
+            }
             totalcounter = impervcounter + pervcounter;
             impPercentage = (double)impervcounter/(double)totalcounter*100;
-            newgrid->setCell(i,j,impPercentage);          
-            lst->setCell(i,j,chooseTab(impPercentage));
+            newgrid->setCell(j,i,impPercentage);
+            lst->setCell(j,i,chooseTab(impPercentage));
 
-            impAreabeforeWSUD->setCell(i,j,(impPercentage/100)*(gridsize*gridsize));
-            perAreabeforeWSUD->setCell(i,j,(gridsize*gridsize) - ((impPercentage/100)*(gridsize*gridsize)));
-            newPervArea->setCell(i,j, perAreabeforeWSUD->getCell(i,j) + perAreabeforeWSUD->getCell(i,j) * techarea / 100);
-            pervareafrac = newPervArea->getCell(i,j) / (gridsize * gridsize);
+            impAreabeforeWSUD->setCell(j,i,(impPercentage/100)*(gridsize*gridsize));
+            perAreabeforeWSUD->setCell(j,i,(gridsize*gridsize) - ((impPercentage/100)*(gridsize*gridsize)));
+            //newPervArea->setCell(j,i, perAreabeforeWSUD->getCell(j,i) + perAreabeforeWSUD->getCell(j,i) * techarea / 100);
+            newPervArea->setCell(j,i, perAreabeforeWSUD->getCell(j,i) + (gridsize*gridsize) * techarea / 100);
+            pervareafrac = (newPervArea->getCell(j,i) / (gridsize * gridsize))*100;
             if (pervareafrac > 100)
                 pervareafrac = 100;
-            newPervFrac->setCell(i,j,pervareafrac);
-            newImpPervArea->setCell(i,j,(gridsize*gridsize) - newPervArea->getCell(i,j));
-            newImpPervFrac->setCell(i,j,newImpPervArea->getCell(i,j) / (gridsize * gridsize));
-            newlst->setCell(i,j,chooseTab(newImpPervFrac->getCell(i,j)*100));
-            for(int k = 0;k<wsudlines.size();k++)
+            newPervFrac->setCell(j,i,pervareafrac);
+            newImpPervArea->setCell(j,i,(gridsize*gridsize) - newPervArea->getCell(j,i));
+            newImpPervFrac->setCell(j,i,newImpPervArea->getCell(j,i) / (gridsize * gridsize));
+            newlst->setCell(j,i,chooseTab(newImpPervFrac->getCell(j,i)*100));
+            if(newPervFrac->getCell(j,i) >= 20)
             {
-                if(newPervFrac->getCell(i,j) < 20)
-                {
-                    break;
-                }
-                delta += calcDeltaLst(wsudlines[k],newPervFrac->getCell(i,j));
+                delta += calcDeltaLst(wsudline,newPervFrac->getCell(j,i));
             }
-            lstAfterWsud->setCell(i,j,newlst->getCell(i,j)+delta);
-            lstReduction->setCell(i,j,lstAfterWsud->getCell(i,j) - lst->getCell(i,j));
-            lstReductionAir->setCell(i,j,lstReduction->getCell(i,j) * (-0.1));
+            else
+            {
+                delta = 0;
+            }
+            lstAfterWsud->setCell(j,i,newlst->getCell(j,i)-delta);
+            lstReduction->setCell(j,i,lst->getCell(j,i)-lstAfterWsud->getCell(j,i));
+            lstReductionAir->setCell(j,i,lstReduction->getCell(j,i) * (-0.1));
 
         }
     }
-
+    lstReductionAir = calcReductionAirTemp(lstReductionAir);
     std::cout << "NEWGRID:" << endl;
     printRaster(newgrid);
     std::cout << "LST" << endl;
     printRaster(lst);
+    std::cout << "imp area before wsud" << endl;
+    printRaster(impAreabeforeWSUD);
+    std::cout << "new perv Frac" << endl;
+    printRaster(newPervFrac);
+    std::cout << "new LST" << endl;
+    printRaster(newlst);
     std::cout << "lstAFTER" << endl;
     printRaster(lstAfterWsud);
     std::cout << "lstReduction" << endl;
@@ -275,14 +300,16 @@ void Microclimate::run()
     exportRasterData(lstReduction,"Reduction in LST.txt");
     exportRasterData(lstReductionAir,"Reduction in Air Temperature.txt");
 
+
 }
 void Microclimate::printRaster(DM::RasterData * r)
 {
-    for(int i = 0;i<r->getWidth();i++)
+
+    for(int i = 0;i<r->getHeight();i++)
     {
-        for(int j = 0; j<r->getHeight();j++)
+        for(int j = 0; j<r->getWidth();j++)
         {
-            std::cout<<r->getCell(i,j)<< "\t\t";
+            std::cout<<r->getCell(j,i)<< "\t\t";
         }
         std::cout<<endl;
     }
@@ -455,35 +482,35 @@ double Microclimate::calcDeltaLst(QList<double> t, double frac)
 {
     int counter = 0;
     double res = 0;
-    if(t[1] != 0)
+    if(t[1] >= 20)
     {
         counter++;
-        res += frac /100;
+        res += t[1] /100;
     }
-    if(t[2] != 0)
+    if(t[2] >= 20)
     {
         counter++;
-        res += frac /100 -(0.2*0.5);
+        res += ((t[2] /100) -0.2)*0.5;
     }
-    if(t[3] != 0)
+    if(t[3] >= 20)
     {
         counter++;
-        res += frac /100 -(0.2*0.5);
+        res += ((t[3] /100) -0.2)*0.5;
     }
-    if(t[4] != 0)
+    if(t[4] >= 20)
     {
         counter++;
-        res += frac /100 - 0.2;
+        res += t[4] /100 - 0.2;
     }
-    if(t[5] != 0)
+    if(t[5] >= 20)
     {
         counter++;
-        res += frac /100 - 0.2;
+        res += t[5] /100 - 0.2;
     }
-    if(t[6] != 0)
+    if(t[6] >= 20)
     {
         counter++;
-        res += frac /100 - (0.2 * 2.75);
+        res += ((t[6] /100) - 0.2) * 2.75;
     }
     if(res != 0)
     {
@@ -505,11 +532,11 @@ void Microclimate::exportRasterData(DM::RasterData *r, QString filename)
         outstream << "cellsize" << "\t" << r->getCellSizeX() << endl;
         outstream << "NODATA_value" << "\t" << r->getNoValue() << endl;
 
-        for(int i = 0; i<r->getWidth();i++)
+        for(int i = 0; i<r->getHeight();i++)
         {
-            for(int j = 0; j< r->getHeight(); j++)
+            for(int j = 0; j< r->getWidth(); j++)
             {
-                outstream << r->getCell(i,j) << " ";
+                outstream << r->getCell(j,i) << " ";
             }
             outstream << endl;
         }
@@ -519,6 +546,54 @@ void Microclimate::exportRasterData(DM::RasterData *r, QString filename)
 bool Microclimate::isleft(DM::Node a, DM::Node b, DM::Node c)
 {
     return ((b.getX() - a.getX()) * (c.getY() - a.getY()) - (b.getY() - a.getY()) * (c.getX() - a.getX())) > 0;
+}
+
+DM::RasterData * Microclimate::calcReductionAirTemp(DM::RasterData *r)
+{
+    int counter;
+    double value;
+    DM::RasterData * res = new DM::RasterData(r->getWidth(),r->getHeight(),r->getCellSizeX(),r->getCellSizeY(),r->getXOffset(),r->getYOffset());
+    res->setSize(r->getWidth(),r->getHeight(),r->getCellSizeX(),r->getCellSizeY(),r->getXOffset(),r->getYOffset());
+    for(int i = 0; i<res->getHeight();i++)
+    {
+        for(int j = 0; j< res->getWidth(); j++)
+        {
+            counter = 0;
+            value = 0;
+            if(j == 0)  //top row
+            {
+                value += r->getCell(j+1,i);
+                counter++;
+            }else if(j == res->getWidth()-1) //bot row
+            {
+                value += r->getCell(j-1,i);
+                counter++;
+            }
+            else
+            {
+                value +=  r->getCell(j+1,i) + r->getCell(j-1,i);
+                counter++;
+                counter++;
+            }
+            if(i == 0)  //first column
+            {
+                value += r->getCell(j,i+1);
+                counter++;
+            }else if(i == res->getHeight()-1) // last column
+            {
+                value += r->getCell(j,i-1);
+                counter++;
+            }
+            else
+            {
+                value +=  r->getCell(j,i+1) + r->getCell(j,i-1);
+                counter++;
+                counter++;
+            }
+            res->setCell(j,i,value/(double)counter);
+        }
+    }
+    return res;
 }
 
 

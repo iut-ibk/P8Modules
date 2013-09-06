@@ -37,6 +37,7 @@ public:
     double calcDeltaLst(QList<double> t, double frac);
     void exportRasterData(DM::RasterData * r, QString filename);
     bool isleft(DM::Node a,DM::Node b,DM::Node c);
+    DM::RasterData * calcReductionAirTemp(DM::RasterData * r);
 
 };
 
