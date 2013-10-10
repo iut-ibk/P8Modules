@@ -30,9 +30,9 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
     tmp << p8microclimate->gridsize;
     ui->le_gridsize->setText(tmp.str().c_str());
     ui->le_landuse->setText(p8microclimate->landuse.c_str());
-    ui->le_map->setText(p8microclimate->mapPic.c_str());
+    //ui->le_map->setText(p8microclimate->mapPic.c_str());
     ui->le_shape->setText(p8microclimate->shapefile.c_str());
-    ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
+    //ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
 
 }
 
@@ -46,7 +46,7 @@ void p8microclimate_gui::on_pb_map_released()
     QString fname = QFileDialog::getOpenFileName(this,"Map jpeg",QDir::currentPath(),"*.jpeg");
     if (fname == "")
         return;
-    ui->le_map->setText(fname);
+    //ui->le_map->setText(fname);
     this->p8microclimate->setParameterValue("MapPic",fname.toStdString());
     //todo set jpeg to background of at the moment not existing gui :-P
 }
@@ -74,7 +74,7 @@ void p8microclimate_gui::on_pb_wsud_released()
     QString fname = QFileDialog::getOpenFileName(this,"WSUD Tech File",QDir::currentPath(),"*.csv");
     if(fname == "")
         return;
-    ui->le_WSUDtech->setText(fname);
+    //ui->le_WSUDtech->setText(fname);
     this->p8microclimate->setParameterValue("WSUDtech",fname.toStdString());
 }
 
@@ -98,6 +98,6 @@ void p8microclimate_gui::on_bBox_accepted()
 
 void p8microclimate_gui::on_pb_placeTech_released()
 {
-    edit=new mcedit(NULL,QDir::currentPath(),30,30,30,30);
+    edit=new mcedit(NULL,QDir::currentPath(),ui->sb_column->value(),ui->sb_row->value(),30,30);
     edit->show();
 }
