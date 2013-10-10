@@ -8,6 +8,7 @@ import os.path
 from subprocess import call
 import ubeats_music_interface as umusic
 import platform
+import ntpath
 
 
 class EnviromentalBenefitsResultsModule(Module):
@@ -21,6 +22,7 @@ class EnviromentalBenefitsResultsModule(Module):
 
 		#Views
 		self.simulation = View("SimulationData",COMPONENT,READ)
+		self.simulation.getAttribute("msfFilename")
 		self.simulation.addAttribute("MusicFileNo")
 		self.simulation.addAttribute("SEIurb")
 		self.simulation.addAttribute("SEIwsud")	
@@ -38,12 +40,18 @@ class EnviromentalBenefitsResultsModule(Module):
 	def run(self):
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
-		''' version with musicnr
+		''' version with musicnr'''
 		for value in strvec:
 			simuData = city.getComponent(value)
+			stringname = simuData.getAttribute("msfFilename").getString()
+			if (stringname != ""):
+				realstring = stringname
+			'''
 			musicNo = int(simuData.getAttribute("MusicFileNo").getDouble())
 			if (musicNo != 0):
 				musicnr = musicNo
+			'''
+		'''
 		self.writeBatFileFromNr(musicnr)
 		self.writeMusicConfigFileSecondaryFromNr(musicnr)
 		'''
@@ -233,12 +241,12 @@ class EnviromentalBenefitsResultsModule(Module):
 				linearr = line.strip("\n").split(",")
 				if(nr < linearr[0]):
 					nr = linearr[0]
-			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")		
+			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "\n")		
 			f.close()
 		else:
 			f = open(self.tmpFile,'w')
 			#f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
-			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
+			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "\n")
 			f.close()
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
@@ -328,8 +336,14 @@ class EnviromentalBenefitsResultsModule(Module):
 		fileIn = open(filename,"r")
 		filearr = filename.split(".")
 		fileOut = open(filearr[0] + "Secondary." + filearr[1] ,"w")
+		urbfirst = ""
+		urbsec = ""
+		urbsplit1 = ""
+		urbsplit2 = ""
 		recvcounter = 0
 		sumID = 0
+		tmpID = 0
+		printing = False
 		urbansourcenode = False
 		WSUR = False
 		PB = False
@@ -346,17 +360,18 @@ class EnviromentalBenefitsResultsModule(Module):
 		tmparea = 0.0
 		totalarea = 0.0
 		imp = 0.0
+		per = 0.0
 		EtFlux_list = []
 		fluxinfl_list = []
 		fluxinfl_list2 = []
 		tanklist = []
 		readcatchmentlist = False
-
+		writetop = True
+		writebot = False
 		catchment_paramter_list = [] #[1,120,30,20,200,1,10,25,5,0]
 
 		i = 0
 		for line in fileIn:
-			fileOut.write(line)
 			i = i + 1
 			linearr = line.strip("\n").split(",")
 			if (recvcounter == 2):
@@ -364,6 +379,19 @@ class EnviromentalBenefitsResultsModule(Module):
 				recvcounter = 0
 			if (recvcounter == 1):
 				recvcounter = 2
+			if(printing):
+				print "URBFIRST1\n" + str(urbfirst) + str(tmpID)
+				fileOut.write(urbfirst)
+				fileOut.write(urbsplit1)
+				fileOut.write(urbsec)
+				urbfirst = urbfirst.replace("Node ID,"+ str(tmpID),"Node ID," + str(tmpID) + "a")
+				print "URBFIRST2\n" + str(urbfirst)
+				fileOut.write(urbfirst)
+				fileOut.write(urbsplit2)
+				fileOut.write(urbsec)
+				urbfirst = ""
+				urbsec = ""
+				printing = False
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
@@ -372,16 +400,40 @@ class EnviromentalBenefitsResultsModule(Module):
 					sumID = int(linearr[1])
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "UrbanSourceNode"):
+					writetop = True
 					urbansourcenode = True
 			if(urbansourcenode):
+				if(line.find("-----") != -1):
+					printing = True
+					urbansourcenode = False
+				if(linearr[0] == "Node ID"):
+					tmpID = linearr[1]
 				if(linearr[0] == "Areas - Total Area (ha)"):
+					writetop = False
 					tmparea = float(linearr[1])
 					totalarea = totalarea + float(linearr[1])
 				if(linearr[0] == "Areas - Impervious (%)"):
 					imp = float(linearr[1])
-					urbansourcenode = False
+					if(imp == 100):
+						EtFlux_list.append(tmpID)
+				if(writetop):
+					urbfirst += line
+				if(writebot):
+					urbsec += line
+				if(linearr[0] == "Areas - Pervious (%)"):
+					per = float(linearr[1])
 					calc = True
+					writebot = True
+			else:
+				fileOut.write(line)
 			if(calc):
+				if(imp < 100 and per < 100):
+					urbsplit1 = "Areas - Total Area (ha)," + str(float(tmparea * imp /100)) + ",{ha}\n"
+					urbsplit1 += "Areas - Impervious (%),100,{%}\n"
+					urbsplit1 += "Areas - Pervious (%),0,{%}\n"
+					urbsplit2 = "Areas - Total Area (ha)," + str(float(tmparea * per /100)) + ",{ha}\n"
+					urbsplit2 += "Areas - Impervious (%),0,{%}\n"
+					urbsplit2 += "Areas - Pervious (%),100,{%}\n"
 				area =  area + tmparea * (imp/100)
 				print "AREA: " + str(area)
 				calc = False
@@ -420,7 +472,7 @@ class EnviromentalBenefitsResultsModule(Module):
 				IS = False
 				EtFlux_list.append(linearr[1])
 				fluxinfl_list2.append(linearr[1])
-			if (linearr[0] == "Node ID" and (WSUR or PB or BF or SW or urbansourcenode)):
+			if (linearr[0] == "Node ID" and (WSUR or PB or BF or SW)):
 				WSUR = False
 				PB = False
 				BF = False
