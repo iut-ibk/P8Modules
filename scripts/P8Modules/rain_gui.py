@@ -15,6 +15,8 @@ class RainGui(QtGui.QDialog):
         self.ui.le_r.setText(self.module.getParameterAsString("Netfile"))
         self.ui.le_csv.setText(self.module.getParameterAsString("csvFile"))
         self.ui.le_ET.setText(self.module.getParameterAsString("etFile"))
+        self.ui.le_CoordX.setText(self.module.getParameterAsString("Xcoord"))
+        self.ui.le_CoordY.setText(self.module.getParameterAsString("Ycoord"))
         QtCore.QObject.connect(self.ui.pb_preview, QtCore.SIGNAL("released()"), self.preview)
         QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
         QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
@@ -66,6 +68,8 @@ class RainGui(QtGui.QDialog):
     def save_values(self):
         Net = False
         Csv = False
+        self.module.setParameterValue("Xcoord",str(self.ui.le_CoordX.text()))
+        self.module.setParameterValue("Ycoord",str(self.ui.le_CoordY.text()))
         filename = str(self.ui.le_ET.text())
         if(filename != ""):
             self.module.setParameterValue("etFile", filename)

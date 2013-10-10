@@ -19,12 +19,16 @@ class RainModule(Module):
 		Module.__init__(self)
 		self.createParameter("Netfile", STRING, "")
 		self.Netfile = ""
-		self.createParameter("csvFile",STRING,"")
+		self.createParameter("csvFile", STRING,"")
 		self.csvFile = ""
 		self.createParameter("UserCsv", STRING, "")
 		self.UserCsv = ""
 		self.createParameter("etFile", STRING, "")
 		self.etFile = ""
+		self.createParameter("Xcoord", DOUBLE , "")
+		self.Xcoord = 151.25
+		self.createParameter("Ycoord", DOUBLE ,"")
+		self.Ycoord = -34.05
 		self.simulation = View("SimulationData",COMPONENT,WRITE)
 		self.simulation.addAttribute("UserCsv")
 		self.simulation.getAttribute("msfFilename")
@@ -55,10 +59,11 @@ class RainModule(Module):
 			tmp = realstring.split(".")
 			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
 		elif(self.UserCsv == "net"):
+			
 			print "NET"
 			data = netCDF4.Dataset(self.Netfile)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
-			datas = self.getRainData(151.25,-34.05,data)
+			datas = self.getRainData(self.Xcoord,self.Ycoord,data)
 			f = open("RainData.csv",'w')
 			f.write("Date,Rainfall\n")
 			print "Start writing Rain Data"
@@ -75,7 +80,8 @@ class RainModule(Module):
 				i = i +1
 			f.close()
 			print "Done"
-			self.changeMusicFile(realstring,".\RainData.csv")
+
+			self.changeMusicFile(realstring,"RainData.csv")
 			tmp = realstring.split(".")
 			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
 		else:
