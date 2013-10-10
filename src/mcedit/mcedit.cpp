@@ -27,7 +27,6 @@ mcedit::mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, dou
 
     this->workpath=workpath;
 
-    resLoad(workpath+"/Reduction in Air Temperature.mcd");
 
     teccol.append(new QColor(4,224,23,255));
     teccol.append(new QColor(179,209,56,255));
@@ -62,6 +61,8 @@ mcedit::mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, dou
 
     mode=0;
     viewmode=0;
+    resLoad(workpath+"/Reduction in Air Temperature.mcd");
+
 }
 
 mcedit::~mcedit()
@@ -220,6 +221,7 @@ void mcedit::resLoad(QString tfilename)
 
         if (linecount==sortlist.size())
         {
+            stream.seek(0);
             foreach (Cell *cell, sortlist)
             {
                 QStringList linelist=stream.readLine().split(",");
