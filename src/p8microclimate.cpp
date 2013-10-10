@@ -164,7 +164,7 @@ void Microclimate::run()
     fillZeros(testgrid);
 
 
-    QList<QList<double> >WsudTech = readWsud(QString(this->wsudTech.c_str()));
+    QList<QList<double> >WsudTech = readWsud(QString("WSUDtech.mcd"));
 
 
     double percent;
@@ -299,7 +299,7 @@ void Microclimate::run()
     exportRasterData(lstAfterWsud,"LST after WSUD.txt");
     exportRasterData(lstReduction,"Reduction in LST.txt");
     exportRasterData(lstReductionAir,"Reduction in Air Temperature.txt");
-
+    exportMCtemp(lstReductionAir);
 
 }
 void Microclimate::printRaster(DM::RasterData * r)
@@ -542,7 +542,23 @@ void Microclimate::exportRasterData(DM::RasterData *r, QString filename)
         }
     }
 }
-
+void Microclimate::exportMCtemp(DM::RasterData *r)
+{
+    int counter = 0;
+    QFile file ("Reduction in Air Temperature.mcd");
+    if(file.open(QIODevice::WriteOnly))
+    {
+        QTextStream outstream(&file);
+        for(int i = 0; i<r->getHeight(); i++)
+        {
+            for(int j = 0; j<r->getWidth();j++)
+            {
+                outstream << counter << "," << r->getCell(j,i) << endl;
+                counter ++;
+            }
+        }
+    }
+}
 bool Microclimate::isleft(DM::Node a, DM::Node b, DM::Node c)
 {
     return ((b.getX() - a.getX()) * (c.getY() - a.getY()) - (b.getY() - a.getY()) * (c.getX() - a.getX())) > 0;
@@ -595,6 +611,8 @@ DM::RasterData * Microclimate::calcReductionAirTemp(DM::RasterData *r)
     }
     return res;
 }
+
+
 
 
 double Microclimate::calcOverlay(double x1,double y1,double g1,double x2,double y2, double g2)
