@@ -16,6 +16,7 @@ public:
     QGraphicsRectItem *getRect();
     void update(int mode,int viewmode);
     double getRes(int p);
+    void setRes(int p, double v_);
     double getV(int p);
     void setV(int p, double v_);
     double getPx();

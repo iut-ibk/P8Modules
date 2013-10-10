@@ -18,11 +18,16 @@
 
 #include "celldialog.h"
 
-mcedit::mcedit(QWidget *parent, int cx, int cy, double sx, double sy) :
+mcedit::mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, double sy) :
     QDialog(parent),
     ui(new Ui::mcedit)
 {
     ui->setupUi(this);
+
+
+    this->workpath=workpath;
+
+    resLoad(workpath+"/Reduction in Air Temperature.mcd");
 
     teccol.append(new QColor(4,224,23,255));
     teccol.append(new QColor(179,209,56,255));
@@ -167,7 +172,7 @@ int cellComp (Cell* a,  Cell* b)
 
 void mcedit::tecLoad()
 {
-    QString tfilename=QFileDialog::getOpenFileName(this,"Load mcd",QDir::currentPath(),"*.mcd");
+    QString tfilename=QFileDialog::getOpenFileName(this,"Load mcd",workpath,"*.mcd");
     if (!tfilename.isEmpty())
     {
         filename=tfilename;
@@ -178,6 +183,7 @@ void mcedit::tecLoad()
         stream.setDevice(&file);
         QList<Cell*> sortlist=cellmap.values();
         qSort(sortlist.begin(),sortlist.end(),cellComp);
+
         foreach (Cell *cell, sortlist)
         {
             QStringList linelist=stream.readLine().split(",");
@@ -191,7 +197,45 @@ void mcedit::tecLoad()
         }
         file.close();
     }
+}
 
+
+void mcedit::resLoad(QString tfilename)
+{
+    if (!tfilename.isEmpty())
+    {
+        QFile file;
+        file.setFileName(tfilename);
+        file.open(QIODevice::ReadOnly|QIODevice::Text);
+        QTextStream stream;
+        stream.setDevice(&file);
+        QList<Cell*> sortlist=cellmap.values();
+        qSort(sortlist.begin(),sortlist.end(),cellComp);
+        int linecount=0;
+        while (!stream.atEnd())
+        {
+            stream.readLine();
+            linecount++;
+        }
+
+        if (linecount==sortlist.size())
+        {
+            foreach (Cell *cell, sortlist)
+            {
+                QStringList linelist=stream.readLine().split(",");
+                cell->setRes(0,linelist[1].toDouble());
+            }
+        }
+        else
+        {
+            foreach (Cell *cell, sortlist)
+            {
+                cell->setRes(0,0);
+            }
+        }
+        file.close();
+
+    }
 }
 
 void mcedit::tecSave()
@@ -200,19 +244,18 @@ void mcedit::tecSave()
         tecSave(filename);
     else
     {
-        QString tfilename=QFileDialog::getSaveFileName(this,"Save mcd",QDir::currentPath(),"*.mcd");
+        QString tfilename=QFileDialog::getSaveFileName(this,"Save mcd",workpath,"*.mcd");
         if (!tfilename.isEmpty())
         {
             filename=tfilename;
             tecSave(filename);
-
         }
     }
 }
 
 void mcedit::tecSaveAs()
 {
-    QString tfilename=QFileDialog::getSaveFileName(this,"Save mcd",QDir::currentPath(),"*.mcd");
+    QString tfilename=QFileDialog::getSaveFileName(this,"Save mcd",workpath,"*.mcd");
     if (!tfilename.isEmpty())
     {
         filename=tfilename;
@@ -332,4 +375,9 @@ void mcedit::on_comboBox_currentIndexChanged(int index)
 {
     viewmode=index;
     cellupdate();
+}
+
+void mcedit::on_buttonBox_accepted()
+{
+    tecSave(workpath+"/WSUDtech.mcd");
 }

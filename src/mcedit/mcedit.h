@@ -22,7 +22,7 @@ class mcedit : public QDialog
     Q_OBJECT
     
 public:
-    explicit mcedit(QWidget *parent, int cx, int cy, double sx, double sy);
+    explicit mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, double sy);
     ~mcedit();
     void mousemove(QGraphicsSceneMouseEvent* event);
     void mousepress(QGraphicsSceneMouseEvent* event);
@@ -33,29 +33,22 @@ public:
     void tecSave(QString filename);
     void cellupdate();
     void changebgcont(int c);
+    void resLoad(QString tfilename);
+
 
 private slots:
     void on_pb_zoomin_clicked();
     void on_pb_zoomout_clicked();
     void on_pushButton_clicked();
-
     void on_pb_load_clicked();
-
     void on_pb_saveas_clicked();
-
     void on_pb_save_clicked();
-
-
-
     void on_pb_clear_clicked();
-
     void on_pb_edit_clicked();
-
     void on_cb_mode_currentIndexChanged(int index);
-
     void on_horizontalSlider_valueChanged(int value);
-
-    void on_comboBox_currentIndexChanged(int index);
+    void on_comboBox_currentIndexChanged(int index);    
+    void on_buttonBox_accepted();
 
 private:
     QString filename;
@@ -71,6 +64,7 @@ private:
     int viewmode;
     QList<QColor*> teccol;
     QGraphicsRectItem *bgrect;
+    QString workpath;
 };
 
 #endif // MCEDIT_H

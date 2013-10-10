@@ -98,6 +98,6 @@ void p8microclimate_gui::on_bBox_accepted()
 
 void p8microclimate_gui::on_pb_placeTech_released()
 {
-    edit=new mcedit(NULL,30,30,30,30);
+    edit=new mcedit(NULL,QDir::currentPath(),30,30,30,30);
     edit->show();
 }

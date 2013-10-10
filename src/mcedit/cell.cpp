@@ -123,6 +123,12 @@ double Cell::getRes(int p)
     return res[p];
 }
 
+void Cell::setRes(int p, double v_)
+{
+    res[p]=v_;
+}
+
+
 double Cell::getV(int p)
 {
     return v[p];
