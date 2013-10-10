@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>globe_small.png</file>
+        <file>logo_small.png</file>
+        <file>v0.png</file>
+        <file>v1.png</file>
+        <file>v2.png</file>
+        <file>v3.png</file>
+        <file>v4.png</file>
+        <file>v5.png</file>
+        <file>temp.png</file>
+    </qresource>
+</RCC>
