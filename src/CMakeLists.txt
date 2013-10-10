@@ -1,23 +1,19 @@
-FILE(GLOB MODULE_CPPS *.cpp)
-FILE(GLOB MODULE_UI_FILES *.ui)
-FILE(GLOB MODULE_MCEDIT_CPPS mcedit/*.cpp)
+FILE(GLOB MODULE_CPPS *.cpp mcedit/*.cpp)
+FILE(GLOB MODULE_UI_FILES *.ui mcedit/*.ui)
 
-
-SET(MOC_MODULE_FILES p8baseline_gui.h p8rain_gui.h p8scenario_gui.h p8realisation_gui.h p8realisation2_gui.h p8microclimate_gui.h)
+SET(MOC_MODULE_FILES p8baseline_gui.h p8rain_gui.h p8scenario_gui.h p8realisation_gui.h p8realisation2_gui.h p8microclimate_gui.h mcedit/celldialog.h mcedit/mcedit.h mcedit/mcgraphicscene.h)
 
 QT4_WRAP_UI(MODULE_CPPS ${MODULE_UI_FILES})
 QT4_WRAP_CPP(MODULE_CPPS ${MOC_MODULE_FILES})
-QT4_ADD_RESOURCES(MODULE_MCEDIT_CPPS images.qrc)
+QT4_ADD_RESOURCES(MODULE_CPPS mcedit/images.qrc)
 INCLUDE_DIRECTORIES(.)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE_DIRECTORIES(mcedit)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
-ADD_LIBRARY(p8modules SHARED ${MODULE_CPPS} ${MODULE_MCEDIT_CPPS})
+ADD_LIBRARY(p8modules SHARED ${MODULE_CPPS})
 
 TARGET_LINK_LIBRARIES(p8modules  ${DYNAMIND_TOOLBOX_LIBRARY}  ${DYNAMIND_CORE_LIBRARY} ${QT_LIBRARIES})
 
 INSTALL(TARGETS p8modules
         DESTINATION "lib/DynaMind"
         PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-

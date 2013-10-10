@@ -17,7 +17,7 @@ public:
     void update(int mode,int viewmode);
     double getRes(int p);
     double getV(int p);
-    double setV(int p, double v_);
+    void setV(int p, double v_);
     double getPx();
     double getPy();
     bool getSelected();

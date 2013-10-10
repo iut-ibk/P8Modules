@@ -128,7 +128,7 @@ double Cell::getV(int p)
     return v[p];
 }
 
-double Cell::setV(int p, double v_)
+void Cell::setV(int p, double v_)
 {
     v[p]=v_;
 }

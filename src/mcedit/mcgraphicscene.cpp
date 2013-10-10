@@ -1,5 +1,7 @@
 #include "mcgraphicscene.h"
 
+#include <QGraphicsSceneMouseEvent>
+
 #include "mcedit.h"
 
 McGraphicsScene::McGraphicsScene(mcedit *parent) :
