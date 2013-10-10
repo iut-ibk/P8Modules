@@ -5,7 +5,7 @@
 
 #include "p8microclimate.h"
 #include "ui_p8microclimate_gui.h"
-
+class mcedit;
 namespace Ui {
 class p8microclimate_gui;
 }
@@ -29,9 +29,12 @@ private slots:
     void on_pb_wsud_released();
 
 
+    void on_pb_placeTech_released();
+
 private:
     Ui::p8microclimate_gui *ui;
     Microclimate *p8microclimate;
+    mcedit * edit;
 };
 
 #endif // P8MICROCLIMATE_GUI_H

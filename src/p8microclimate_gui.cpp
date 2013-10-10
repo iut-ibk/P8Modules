@@ -4,6 +4,8 @@
 #include "ui_p8microclimate_gui.h"
 #include "string"
 #include "sstream"
+#include "mcedit/mcedit.h"
+
 
 p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
     QDialog(parent),
@@ -92,4 +94,10 @@ void p8microclimate_gui::on_bBox_accepted()
     {
         this->p8microclimate->setParameterValue("Percentile","80");
     }
+}
+
+void p8microclimate_gui::on_pb_placeTech_released()
+{
+    edit=new mcedit(NULL,30,30,30,30);
+    edit->show();
 }

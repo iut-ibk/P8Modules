@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>463</width>
-    <height>273</height>
+    <height>294</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="bBox">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>230</y>
+     <x>230</x>
+     <y>250</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -39,13 +39,6 @@
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="3">
-     <widget class="QPushButton" name="pb_landuse">
-      <property name="text">
-       <string>Load</string>
-      </property>
-     </widget>
-    </item>
     <item row="4" column="1">
      <widget class="QLabel" name="label_5">
       <property name="text">
@@ -65,6 +58,13 @@
     </item>
     <item row="1" column="3">
      <widget class="QPushButton" name="pb_shape">
+      <property name="text">
+       <string>Load</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3">
+     <widget class="QPushButton" name="pb_landuse">
       <property name="text">
        <string>Load</string>
       </property>
@@ -141,6 +141,13 @@
         <string>Median + Stdev (i.e. 80%)</string>
        </property>
       </item>
+     </widget>
+    </item>
+    <item row="6" column="2">
+     <widget class="QPushButton" name="pb_placeTech">
+      <property name="text">
+       <string>Place Technologies</string>
+      </property>
      </widget>
     </item>
    </layout>
