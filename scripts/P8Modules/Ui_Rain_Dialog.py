@@ -66,6 +66,22 @@ class Ui_P8Rain_GUI(object):
         self.pb_ET.setObjectName(_fromUtf8("pb_Et"))
         self.gridLayout.addWidget(self.pb_ET, 3, 2, 1, 1)
 
+        self.labelCoordX = QtGui.QLabel(self.groupBox)
+        self.labelCoordX.setText(QtGui.QApplication.translate("P8Rain_GUI", "X Coordinate", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelCoordX.setObjectName(_fromUtf8("labelCoordX"))
+        self.gridLayout.addWidget(self.labelCoordX, 4, 0, 1, 1)
+        self.le_CoordX = QtGui.QLineEdit(self.groupBox)
+        self.le_CoordX.setObjectName(_fromUtf8("le_CoordX"))
+        self.gridLayout.addWidget(self.le_CoordX, 4, 1, 1, 1)
+
+        self.labelCoordY = QtGui.QLabel(self.groupBox)
+        self.labelCoordY.setText(QtGui.QApplication.translate("P8Rain_GUI", "Y Coordinate", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelCoordY.setObjectName(_fromUtf8("labelCoordY"))
+        self.gridLayout.addWidget(self.labelCoordY, 5, 0, 1, 1)
+        self.le_CoordY = QtGui.QLineEdit(self.groupBox)
+        self.le_CoordY.setObjectName(_fromUtf8("le_CoordY"))
+        self.gridLayout.addWidget(self.le_CoordY, 5, 1, 1, 1)
+
         self.verticalLayout.addWidget(self.groupBox)
         self.buttonBox = QtGui.QDialogButtonBox(P8Rain_GUI)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
