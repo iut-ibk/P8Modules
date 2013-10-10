@@ -45,8 +45,8 @@ mcedit::mcedit(QWidget *parent, int cx, int cy, double sx, double sy) :
     changebgcont(0);
     cellmap.clear();
     int pos=0;
-    for (int x=0;x<cx;x++)
-        for (int y=0;y<cy;y++)
+    for (int y=0;y<cy;y++)
+        for (int x=0;x<cx;x++)
         {
             Cell *cell=new Cell(x*sx,y*sy,sx,sy,scene,pos,&teccol);
             cellmap.insert(cell->getRect(),cell);
