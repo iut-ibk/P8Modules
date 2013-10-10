@@ -46,9 +46,11 @@ class Analyser2_Gui(QtGui.QDialog):
 		show3 = False
 		i = 0
 		bars = []
+		names = []
 		for line in f:
 			linearr = line.strip('\n').split(',')
 			tmpbar = (round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])))
+			names.append(linearr[5])
 			arr2 = [tmpbar,linearr[0]]
 			bars.append(arr2)
 			'''
@@ -79,7 +81,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		#tmpaxes = []
 		for bar in bars:
 			tmp = ax.bar(ind + width * j,bar[0],width,color = self.colorarr[j])
-			tmp.set_label('Realisation ' + str(bar[1]))
+			tmp.set_label(names[j])#'Realisation ' + str(bar[1]))
 			j = j + 1
 			#tmpaxes.append(ax)
 		'''
@@ -93,6 +95,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			rects3 = ax.bar(ind+width*2,bars3,width,color='#abcd8f')
 			rects3.set_label('Realisation 3')
 		'''
+		print "1"
 		ax.set_ylabel('Enviromental Benefit(%)')
 		ax.set_title('Stream Health Outcomes')
 		ax.set_xticks(ind+(width*i)*0.75)
@@ -122,7 +125,6 @@ class Analyser2_Gui(QtGui.QDialog):
 		number = filename[len(filename)-5]
 		bars = []
 		bars1 = (round(float(liste[7])),round(float(liste[11])),round(float(liste[15])),round(float(liste[19])))
-		bars.append([bars1,number])
 		f.close
 		if os.path.exists(self.TPRFile):
 			f = open(self.TPRFile,'r')
@@ -140,7 +142,7 @@ class Analyser2_Gui(QtGui.QDialog):
 				'''
 				i = i + 1
 			f.close()
-
+		bars.append([bars1,number])
 		n = 4
 		ind = np.arange(n)
 		space = 0.25
