@@ -177,8 +177,8 @@ class EnviromentalBenefitsResultsModule(Module):
 		VolumeET = ETsum * EIF * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
 		VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
-		preTotalsum = self.SumAllValues(vec5)
-		VolumePredev = preTotalsum * 60*60*24*1000/1000000
+		preRunoffsum = self.SumAllValues(vec1)
+		VolumePredev = preRunoffsum * 60*60*24*1000/1000000
 		exfilSum = self.SumAllValues(vec6)
 		FVg = EIF * (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
 		print "FVg: " +str(FVg)
@@ -224,7 +224,7 @@ class EnviromentalBenefitsResultsModule(Module):
 
 		print "tmpFV: " + str(tmpFV)
 		tmpFF = 1 - max((float(FreqTreated)-float(FreqPredev))/(float(FreqUntreated)-float(FreqPredev)),0)
-		tmpVR = 1-(VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev)
+		tmpVR = 1-((VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev))
 		tmpWQ = (tss+tn+tp)/3
 
 
