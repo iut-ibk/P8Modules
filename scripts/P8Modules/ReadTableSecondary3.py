@@ -340,9 +340,11 @@ class EnviromentalBenefitsResultsModule(Module):
 		urbsec = ""
 		urbsplit1 = ""
 		urbsplit2 = ""
+		urbtmp = ""
 		recvcounter = 0
 		sumID = 0
 		tmpID = 0
+		idfound = False
 		printing = False
 		urbansourcenode = False
 		WSUR = False
@@ -354,6 +356,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		calc = False
 		notread = True
 		foundDetention = False
+		split = False
 		detIds = []
 		deten = False
 		area = 0.0
@@ -361,6 +364,8 @@ class EnviromentalBenefitsResultsModule(Module):
 		totalarea = 0.0
 		imp = 0.0
 		per = 0.0
+		splitlist = []
+		splitlist2 = []
 		EtFlux_list = []
 		fluxinfl_list = []
 		fluxinfl_list2 = []
@@ -369,7 +374,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		writetop = True
 		writebot = False
 		catchment_paramter_list = [] #[1,120,30,20,200,1,10,25,5,0]
-
+		j = -1
 		i = 0
 		for line in fileIn:
 			i = i + 1
@@ -380,18 +385,29 @@ class EnviromentalBenefitsResultsModule(Module):
 			if (recvcounter == 1):
 				recvcounter = 2
 			if(printing):
-				print "URBFIRST1\n" + str(urbfirst) + str(tmpID)
-				fileOut.write(urbfirst)
-				fileOut.write(urbsplit1)
-				fileOut.write(urbsec)
-				urbfirst = urbfirst.replace("Node ID,"+ str(tmpID),"Node ID," + str(tmpID) + "a")
-				print "URBFIRST2\n" + str(urbfirst)
-				fileOut.write(urbfirst)
-				fileOut.write(urbsplit2)
-				fileOut.write(urbsec)
-				urbfirst = ""
-				urbsec = ""
-				printing = False
+				if(split):
+					splitlist.append(str(tmpID))
+					splitlist2.append([str(tmpID) + "a","0"])
+					fileOut.write(urbfirst)
+					fileOut.write(urbsplit1)
+					fileOut.write(urbsec)
+					urbfirst = urbfirst.replace("Node ID,"+ str(tmpID),"Node ID," + str(tmpID) + "a")
+					fileOut.write(urbfirst)
+					fileOut.write(urbsplit2)
+					fileOut.write(urbsec)
+					urbfirst = ""
+					urbsec = ""
+					urbtmp = ""
+					printing = False
+					split = False
+				else:
+					fileOut.write(urbfirst)
+					fileOut.write(urbtmp)
+					fileOut.write(urbsec)
+					urbfirst = ""
+					urbtmp = ""
+					urbsec = ""
+					printing = False
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
@@ -406,13 +422,17 @@ class EnviromentalBenefitsResultsModule(Module):
 				if(line.find("-----") != -1):
 					printing = True
 					urbansourcenode = False
+					writebot = False
+					urbsec += line
 				if(linearr[0] == "Node ID"):
 					tmpID = linearr[1]
 				if(linearr[0] == "Areas - Total Area (ha)"):
+					urbtmp += line
 					writetop = False
 					tmparea = float(linearr[1])
 					totalarea = totalarea + float(linearr[1])
 				if(linearr[0] == "Areas - Impervious (%)"):
+					urbtmp += line
 					imp = float(linearr[1])
 					if(imp == 100):
 						EtFlux_list.append(tmpID)
@@ -421,11 +441,29 @@ class EnviromentalBenefitsResultsModule(Module):
 				if(writebot):
 					urbsec += line
 				if(linearr[0] == "Areas - Pervious (%)"):
+					urbtmp += line
 					per = float(linearr[1])
+					if (per < 100 and per > 0):
+						split = True
 					calc = True
 					writebot = True
 			else:
 				fileOut.write(line)
+			if(idfound):
+				if(linearr[0] == "Target Node ID"):
+					print "j = " + str(j)
+					splitlist2[j][1] = str(linearr[1])
+			if(linearr[0] == "Source Node ID"):
+				j = -1
+				print len(splitlist)
+				print splitlist
+				print len(splitlist2)
+				print splitlist2
+				for ID in splitlist:
+					j = j + 1
+					if(linearr[1] == ID):
+						idfound = True
+						break
 			if(calc):
 				if(imp < 100 and per < 100):
 					urbsplit1 = "Areas - Total Area (ha)," + str(float(tmparea * imp /100)) + ",{ha}\n"
@@ -435,7 +473,6 @@ class EnviromentalBenefitsResultsModule(Module):
 					urbsplit2 += "Areas - Impervious (%),0,{%}\n"
 					urbsplit2 += "Areas - Pervious (%),100,{%}\n"
 				area =  area + tmparea * (imp/100)
-				print "AREA: " + str(area)
 				calc = False
 			#first line of parameter list
 			if(linearr[0] == "Rainfall-Runoff - Impervious Area - Rainfall Threshold (mm/day)" and notread):
@@ -480,6 +517,7 @@ class EnviromentalBenefitsResultsModule(Module):
 				EtFlux_list.append(linearr[1])
 				fluxinfl_list.append(linearr[1])
 		fileIn.close()
+		print splitlist2
 		print "Summary:"
 		print "sumID: " + str(sumID)
 		print "Area sum: " + str(area)
@@ -506,14 +544,17 @@ class EnviromentalBenefitsResultsModule(Module):
 			for nodeid in detIds:
 				umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
 				umusic.writeMUSIClinkToFlux(fileOut,nodeid,areaSumID+3)
-
+		i = 0
+		for IDs in splitlist:
+			umusic.writeMUSIClink(fileOut,str(splitlist2[i][0]),splitlist2[i][1])
+			i = i + 1
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
 		for j in fluxinfl_list:
 		    umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
 		for k in fluxinfl_list2:
 		    umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
-		umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))#
+		umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
 		for l in tanklist:
 			umusic.writeTankLinkReuse(fileOut,l,areaSumID + 3)
 		umusic.writeMUSICfooter(fileOut)
