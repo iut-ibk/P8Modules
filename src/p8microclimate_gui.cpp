@@ -31,7 +31,7 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
     tmp << p8microclimate->gridsize;
     ui->le_gridsize->setText(tmp.str().c_str());
     ui->le_landuse->setText(p8microclimate->landuse.c_str());
-    //ui->le_map->setText(p8microclimate->mapPic.c_str());
+    ui->le_map->setText(p8microclimate->mapPic.c_str());
     ui->le_shape->setText(p8microclimate->shapefile.c_str());
     //ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
 
@@ -81,6 +81,7 @@ void p8microclimate_gui::on_pb_wsud_released()
 
 void p8microclimate_gui::on_bBox_accepted()
 {
+    this->p8microclimate->setParameterValue("mapPic",ui->le_map->text().toStdString());
     int index = ui->cmb_perc->currentIndex();
     this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
     if(index == 0)
