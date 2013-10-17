@@ -462,6 +462,7 @@ QList<QList<double> > Microclimate::readWsud(QString filename)
         res.append(line);
         line.clear();
     }
+    file.close();
     return res;
 }
 
