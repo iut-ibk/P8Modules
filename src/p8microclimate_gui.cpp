@@ -5,6 +5,7 @@
 #include "string"
 #include "sstream"
 #include <QTextStream>
+#include <QMessageBox>
 #include "mcedit/mcedit.h"
 
 
@@ -44,12 +45,11 @@ p8microclimate_gui::~p8microclimate_gui()
 
 void p8microclimate_gui::on_pb_map_released()
 {
-    QString fname = QFileDialog::getOpenFileName(this,"Map jpeg",QDir::currentPath(),"*.png");
+    QString fname = QFileDialog::getOpenFileName(this,"Map png",QDir::currentPath(),"*.png");
     if (fname == "")
         return;
     ui->le_map->setText(fname);
     this->p8microclimate->setParameterValue("MapPic",fname.toStdString());
-    //todo set jpeg to background of at the moment not existing gui :-P
 }
 
 void p8microclimate_gui::on_pb_shape_released()
@@ -105,7 +105,9 @@ void p8microclimate_gui::on_pb_placeTech_released()
     double cellsize,newcols,newrows;
     QString input;
     QFile file(QString(QDir::currentPath()+"/impfile.txt"));
-    file.open(QIODevice::Text|QIODevice::ReadOnly);
+
+    if (file.open(QIODevice::Text|QIODevice::ReadOnly))
+    {
     QTextStream stream;
     stream.setDevice(&file);
     input = stream.readLine();
@@ -137,4 +139,7 @@ void p8microclimate_gui::on_pb_placeTech_released()
 
     edit=new mcedit(this,ui->le_map->text(),QString(this->p8microclimate->workingDir.c_str()),newcols,newrows,30,30);
     edit->show();
+    }
+    else
+        QMessageBox::critical(this,"Error","Internal Error 354235");
 }

@@ -64,7 +64,7 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
         }
 
     QList<QRect> coverlist;
-    coverlist << QRect(-100000,ly,lx+2*100000,100000) << QRect(-100000,0,lx+2*100000,-100000) << QRect(0,-100000,-100000,ly+2*100000) << QRect(lx,-100000,100000,ly+2*100000);
+    coverlist << QRect(-100000,ly+2,lx+2*100000,100000) << QRect(-100000,-2,lx+2*100000,-100000) << QRect(-2,-100000,-100000,ly+2*100000) << QRect(lx+2,-100000,100000,ly+2*100000);
     foreach (QRect rect, coverlist)
     {
         QBrush brush;
@@ -81,7 +81,11 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
 
     mode=0;
     viewmode=0;
-    resLoad(workpath+"/Reduction in Air Temperature.mcd");
+    if (QFile::exists(workpath+"/Reduction in Air Temperature.mcd"))
+    {
+        resLoad(workpath+"/Reduction in Air Temperature.mcd");
+        ui->cb_mode->setCurrentIndex(1);
+    }
     if (!bgimage.isEmpty())
         loadbackground(bgimage);
 }
@@ -389,25 +393,25 @@ void mcedit::on_pb_edit_clicked()
 
     if (!selectedCells.isEmpty())
     {
-    double v1=0;
-    double v2=0;
-    double v3=0;
-    double v4=0;
-    double v5=0;
-    double v6=0;
-    CellDialog *dia=new CellDialog(NULL,&v1,&v2,&v3,&v4,&v5,&v6);
-    dia->exec();
-    foreach (Cell *cell, selectedCells)
-    {
-        dia->getValues(&v1,&v2,&v3,&v4,&v5,&v6);
-        cell->setV(0,v1);
-        cell->setV(1,v2);
-        cell->setV(2,v3);
-        cell->setV(3,v4);
-        cell->setV(4,v5);
-        cell->setV(5,v6);
-    }
-    cellupdate();
+        double v1=0;
+        double v2=0;
+        double v3=0;
+        double v4=0;
+        double v5=0;
+        double v6=0;
+        CellDialog *dia=new CellDialog(NULL,&v1,&v2,&v3,&v4,&v5,&v6);
+        dia->exec();
+        foreach (Cell *cell, selectedCells)
+        {
+            dia->getValues(&v1,&v2,&v3,&v4,&v5,&v6);
+            cell->setV(0,v1);
+            cell->setV(1,v2);
+            cell->setV(2,v3);
+            cell->setV(3,v4);
+            cell->setV(4,v5);
+            cell->setV(5,v6);
+        }
+        cellupdate();
     }
     else
         QMessageBox::warning(this,"Warning","No cells selected.");
@@ -433,6 +437,6 @@ void mcedit::on_comboBox_currentIndexChanged(int index)
 void mcedit::on_buttonBox_accepted()
 {
     tecSave(workpath+"/WSUDtech.mcd");
-//    tecFill(doublecelllist);
+    //    tecFill(doublecelllist);
 }
 
