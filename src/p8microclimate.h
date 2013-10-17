@@ -18,7 +18,7 @@ public:
     std::string shapefile;
     std::string landuse;
     std::string wsudTech;
-
+    std::string workingDir;
 
     Microclimate();
     void init();

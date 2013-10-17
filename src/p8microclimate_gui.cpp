@@ -98,6 +98,6 @@ void p8microclimate_gui::on_bBox_accepted()
 
 void p8microclimate_gui::on_pb_placeTech_released()
 {
-    edit=new mcedit(this,ui->le_map->text(),QDir::currentPath(),ui->sb_column->value()/30,ui->sb_row->value()/30,30,30);
+    edit=new mcedit(this,ui->le_map->text(),QString(this->p8microclimate->workingDir.c_str()),30,30,30,30);
     edit->show();
 }

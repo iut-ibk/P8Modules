@@ -46,29 +46,8 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Percentile</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLineEdit" name="le_shape"/>
-    </item>
-    <item row="1" column="3">
-     <widget class="QPushButton" name="pb_shape">
-      <property name="text">
-       <string>Load</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="3">
-     <widget class="QPushButton" name="pb_landuse">
-      <property name="text">
-       <string>Load</string>
-      </property>
-     </widget>
+    <item row="2" column="2">
+     <widget class="QLineEdit" name="le_landuse"/>
     </item>
     <item row="1" column="1">
      <widget class="QLabel" name="label_2">
@@ -84,11 +63,26 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="2">
-     <widget class="QLineEdit" name="le_landuse"/>
+    <item row="0" column="3">
+     <widget class="QPushButton" name="pb_map">
+      <property name="text">
+       <string>Load</string>
+      </property>
+     </widget>
     </item>
-    <item row="4" column="2">
-     <widget class="QLineEdit" name="le_gridsize"/>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="pb_shape">
+      <property name="text">
+       <string>Load</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Percentile</string>
+      </property>
+     </widget>
     </item>
     <item row="3" column="2">
      <widget class="QComboBox" name="cmb_perc">
@@ -109,41 +103,23 @@
       </item>
      </widget>
     </item>
-    <item row="6" column="2">
-     <widget class="QPushButton" name="pb_placeTech">
+    <item row="1" column="2">
+     <widget class="QLineEdit" name="le_shape"/>
+    </item>
+    <item row="2" column="3">
+     <widget class="QPushButton" name="pb_landuse">
       <property name="text">
-       <string>Place Technologies</string>
+       <string>Load</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="2">
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="sb_row">
-        <property name="maximum">
-         <number>99999</number>
-        </property>
-        <property name="value">
-         <number>4450</number>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QSpinBox" name="sb_column">
-        <property name="maximum">
-         <number>99999</number>
-        </property>
-        <property name="value">
-         <number>4000</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <item row="4" column="2">
+     <widget class="QLineEdit" name="le_gridsize"/>
     </item>
-    <item row="5" column="1">
-     <widget class="QLabel" name="label_7">
+    <item row="5" column="2">
+     <widget class="QPushButton" name="pb_placeTech">
       <property name="text">
-       <string>Area size [m]</string>
+       <string>Place Technologies</string>
       </property>
      </widget>
     </item>
@@ -154,13 +130,6 @@
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Map Picture</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QPushButton" name="pb_map">
-      <property name="text">
-       <string>Load</string>
       </property>
      </widget>
     </item>

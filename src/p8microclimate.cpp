@@ -9,20 +9,23 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
+#include <QFileDialog>
 
 
 DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
 
 Microclimate::Microclimate()
 {
+
     gridsize = 30;
     percentile = 80;
     mapPic = "";
     shapefile = "";
     landuse = "";
     wsudTech = "";
-
-
+    workingDir = QDir::currentPath().toStdString();
+    if(QFile::exists(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd")))
+        QFile::remove(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
     this->addParameter("Gridsize", DM::INT, &this->gridsize);
     this->addParameter("MapPic", DM::STRING, &this->mapPic);
     this->addParameter("Shapefile",DM::STRING,&this->shapefile);
@@ -164,7 +167,7 @@ void Microclimate::run()
     fillZeros(testgrid);
 
 
-    QList<QList<double> >WsudTech = readWsud(QString("WSUDtech.mcd"));
+    QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
 
 
     double percent;
@@ -541,6 +544,7 @@ void Microclimate::exportRasterData(DM::RasterData *r, QString filename)
             outstream << endl;
         }
     }
+    file.close();
 }
 void Microclimate::exportMCtemp(DM::RasterData *r)
 {
