@@ -376,6 +376,13 @@ class EnviromentalBenefitsResultsModule(Module):
 		catchment_paramter_list = [] #[1,120,30,20,200,1,10,25,5,0]
 		j = -1
 		i = 0
+		IDoffset = 9
+		for line in fileIn:
+			linearr = line.strip("\n").split(",")
+			if(linearr[0] == "Node ID"):
+				if(int(linearr[1]) > sumID):
+					sumID = int(linearr[1])
+		fileIn.seek(0)
 		for line in fileIn:
 			i = i + 1
 			linearr = line.strip("\n").split(",")
@@ -387,11 +394,11 @@ class EnviromentalBenefitsResultsModule(Module):
 			if(printing):
 				if(split):
 					splitlist.append(str(tmpID))
-					splitlist2.append([str(tmpID) + "a","0"])
+					splitlist2.append([str(sumID+IDoffset),"0"])
 					fileOut.write(urbfirst)
 					fileOut.write(urbsplit1)
 					fileOut.write(urbsec)
-					urbfirst = urbfirst.replace("Node ID,"+ str(tmpID),"Node ID," + str(tmpID) + "a")
+					urbfirst = urbfirst.replace("Node ID,"+ str(tmpID),"Node ID," + str(sumID+IDoffset))
 					fileOut.write(urbfirst)
 					fileOut.write(urbsplit2)
 					fileOut.write(urbsec)
@@ -400,6 +407,7 @@ class EnviromentalBenefitsResultsModule(Module):
 					urbtmp = ""
 					printing = False
 					split = False
+					IDoffset = IDoffset + 1
 				else:
 					fileOut.write(urbfirst)
 					fileOut.write(urbtmp)
@@ -411,19 +419,14 @@ class EnviromentalBenefitsResultsModule(Module):
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
-			if(linearr[0] == "Node ID"):
-				if(int(linearr[1]) > sumID):
-					sumID = int(linearr[1])
 			if(linearr[0] == "Node Type"):
+				printing = True
+				urbansourcenode = False
+				writebot = False
 				if(linearr[1] == "UrbanSourceNode"):
 					writetop = True
 					urbansourcenode = True
 			if(urbansourcenode):
-				if(line.find("-----") != -1):
-					printing = True
-					urbansourcenode = False
-					writebot = False
-					urbsec += line
 				if(linearr[0] == "Node ID"):
 					tmpID = linearr[1]
 				if(linearr[0] == "Areas - Total Area (ha)"):
@@ -445,6 +448,7 @@ class EnviromentalBenefitsResultsModule(Module):
 					per = float(linearr[1])
 					if (per < 100 and per > 0):
 						split = True
+						EtFlux_list.append(tmpID)
 					calc = True
 					writebot = True
 			else:
@@ -455,10 +459,6 @@ class EnviromentalBenefitsResultsModule(Module):
 					splitlist2[j][1] = str(linearr[1])
 			if(linearr[0] == "Source Node ID"):
 				j = -1
-				print len(splitlist)
-				print splitlist
-				print len(splitlist2)
-				print splitlist2
 				for ID in splitlist:
 					j = j + 1
 					if(linearr[1] == ID):
@@ -517,6 +517,7 @@ class EnviromentalBenefitsResultsModule(Module):
 				EtFlux_list.append(linearr[1])
 				fluxinfl_list.append(linearr[1])
 		fileIn.close()
+		fileOut.write("\n")
 		print splitlist2
 		print "Summary:"
 		print "sumID: " + str(sumID)
