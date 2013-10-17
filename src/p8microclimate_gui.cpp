@@ -43,7 +43,7 @@ p8microclimate_gui::~p8microclimate_gui()
 
 void p8microclimate_gui::on_pb_map_released()
 {
-    QString fname = QFileDialog::getOpenFileName(this,"Map jpeg",QDir::currentPath(),"*.jpeg");
+    QString fname = QFileDialog::getOpenFileName(this,"Map jpeg",QDir::currentPath(),"*.png");
     if (fname == "")
         return;
     ui->le_map->setText(fname);
@@ -98,6 +98,6 @@ void p8microclimate_gui::on_bBox_accepted()
 
 void p8microclimate_gui::on_pb_placeTech_released()
 {
-    edit=new mcedit(NULL,QDir::currentPath(),ui->sb_column->value(),ui->sb_row->value(),30,30);
+    edit=new mcedit(this,ui->le_map->text(),QDir::currentPath(),ui->sb_column->value()/30,ui->sb_row->value()/30,30,30);
     edit->show();
 }

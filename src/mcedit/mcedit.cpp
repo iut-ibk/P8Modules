@@ -15,16 +15,19 @@
 #include <QFile>
 #include <QTextStream>
 #include <QColor>
+#include <QRect>
+#include <QMessageBox>
+#include "../p8microclimate_gui.h"
 
 #include "celldialog.h"
 
-mcedit::mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, double sy) :
+mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, int cx, int cy, double sx, double sy) :
     QDialog(parent),
     ui(new Ui::mcedit)
 {
     ui->setupUi(this);
 
-
+    this->parent=parent;
     this->workpath=workpath;
 
 
@@ -44,8 +47,11 @@ mcedit::mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, dou
     scene=new McGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
-    scene->setSceneRect(0,0,cx*sx,cy*sy);
-    bgrect=scene->addRect(0,0,cx*sx,cy*sy);
+
+    double lx=cx*sx;
+    double ly=cy*sy;
+    scene->setSceneRect(0,0,lx,ly);
+    bgrect=scene->addRect(0,0,lx,ly);
     changebgcont(0);
     cellmap.clear();
     int pos=0;
@@ -56,13 +62,28 @@ mcedit::mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, dou
             cellmap.insert(cell->getRect(),cell);
             pos++;
         }
+
+    QList<QRect> coverlist;
+    coverlist << QRect(-100000,ly,lx+2*100000,100000) << QRect(-100000,0,lx+2*100000,-100000) << QRect(0,-100000,-100000,ly+2*100000) << QRect(lx,-100000,100000,ly+2*100000);
+    foreach (QRect rect, coverlist)
+    {
+        QBrush brush;
+        brush.setStyle(Qt::SolidPattern);
+        brush.setColor(QColor(255,255,255,255));
+        QPen pen;
+        pen.setColor(QColor(255,255,255,255));
+        QGraphicsRectItem *cover=scene->addRect(rect);
+        cover->setBrush(brush);
+        cover->setPen(pen);
+    }
     ui->graphicsView->show();
     ui->graphicsView->setMouseTracking(true);
 
     mode=0;
     viewmode=0;
     resLoad(workpath+"/Reduction in Air Temperature.mcd");
-
+    if (!bgimage.isEmpty())
+        loadbackground(bgimage);
 }
 
 mcedit::~mcedit()
@@ -148,23 +169,47 @@ void mcedit::mouserelease(QGraphicsSceneMouseEvent *event)
 
 void mcedit::on_pb_zoomin_clicked()
 {
-    ui->graphicsView->scale(1.1,1.1);
+    zoomin();
 }
 
 void mcedit::on_pb_zoomout_clicked()
 {
-    ui->graphicsView->scale(1.0/1.1,1.0/1.1);
+    zoomout();
 }
 
-void mcedit::on_pushButton_clicked()
+
+void mcedit::zoomin()
 {
-    QString filename=QFileDialog::getOpenFileName(this,"Select background imgage",QDir::currentPath(),"*.png");
-    if (!filename.isEmpty())
+    ui->graphicsView->scale(1.1,1.1);
+    //    ui->pb_load->setText(QString("zoom %1").arg(ui->graphicsView->transform().m11()));
+}
+
+void mcedit::zoomout()
+{
+    if (ui->graphicsView->transform().m11()>=0.05)
+        ui->graphicsView->scale(1.0/1.1,1.0/1.1);
+    //    ui->pb_load->setText(QString("zoom %1").arg(ui->graphicsView->transform().m11()));
+}
+
+void mcedit::loadbackground(QString bgfilename)
+{
+    if (!bgfilename.isEmpty())
     {
-        pixmap=QPixmap(filename).scaled(cx*sx,cy*sy,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+        pixmap=QPixmap(bgfilename).scaled(cx*sx,cy*sy,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
         scene->setBackgroundBrush(pixmap);
     }
 }
+
+
+
+void mcedit::on_pushButton_clicked()
+{
+    QString bgfilename=QFileDialog::getOpenFileName(this,"Select background imgage",QDir::currentPath(),"*.png");
+    loadbackground(bgfilename);
+}
+
+
+
 
 int cellComp (Cell* a,  Cell* b)
 {
@@ -239,6 +284,7 @@ void mcedit::resLoad(QString tfilename)
 
     }
 }
+
 
 void mcedit::tecSave()
 {
@@ -341,6 +387,8 @@ void mcedit::on_pb_edit_clicked()
         }
     }
 
+    if (!selectedCells.isEmpty())
+    {
     double v1=0;
     double v2=0;
     double v3=0;
@@ -360,6 +408,9 @@ void mcedit::on_pb_edit_clicked()
         cell->setV(5,v6);
     }
     cellupdate();
+    }
+    else
+        QMessageBox::warning(this,"Warning","No cells selected.");
 }
 
 void mcedit::on_cb_mode_currentIndexChanged(int index)
@@ -382,4 +433,6 @@ void mcedit::on_comboBox_currentIndexChanged(int index)
 void mcedit::on_buttonBox_accepted()
 {
     tecSave(workpath+"/WSUDtech.mcd");
+//    tecFill(doublecelllist);
 }
+

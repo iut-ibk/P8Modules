@@ -14,7 +14,8 @@ Cell::Cell(double px, double py, double sx, double sy, QGraphicsScene *scene, in
     this->teccol=teccol;
     circ=scene->addEllipse(QRectF(px, py, sx, sy));
     rect=scene->addRect(QRectF(px, py, sx, sy));
-    int techcountrand=rand()%100;
+    /*
+int techcountrand=rand()%100;
     int techcount=0;
     if (techcountrand>50)
         techcount=1;
@@ -33,6 +34,12 @@ Cell::Cell(double px, double py, double sx, double sy, QGraphicsScene *scene, in
             res[i]=double(rand()%51-25)/10.0;
         else
             res[i]=0;
+    */
+    for (int i=0;i<6;i++)
+        v[i]=0;
+    for (int i=0;i<1;i++)
+        res[i]=0;
+
     this->no=no;
     this->px=px;
     this->py=py;
@@ -68,13 +75,11 @@ void Cell::update(int mode,int viewmode)
     circbrush.setStyle(Qt::SolidPattern);
     circbrush.setColor(QColor(0,0,0,0));
 
+
     if (mode==0)
     {
         if (selected)
-            brush.setColor(QColor(0,255,0,96));
-    }
-    if (mode==1)
-    {
+            brush.setColor(QColor(200,200,200,96));
 
         double r=0;
         double g=0;
@@ -105,9 +110,9 @@ void Cell::update(int mode,int viewmode)
         else
             brush.setColor(QColor(255.0*r,255.0*g,255.0*b,techcover));
     }
-    if (mode==2)
+    if (mode==1)
     {
-        double maxdt=3.0;
+        double maxdt=0.5;
         int col=255.0*fabs(res[0]/maxdt);
         if (res[0]>0)
             brush.setColor(QColor(255,255-col,255-col,127));

@@ -651,11 +651,6 @@
         <widget class="QComboBox" name="cb_mode">
          <item>
           <property name="text">
-           <string>Edit mode</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Tech mode</string>
           </property>
          </item>

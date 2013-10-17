@@ -12,7 +12,7 @@ class Cell;
 class QGraphicsItem;
 class QGraphicsSceneMouseEvent;
 class QColor;
-
+class p8microclimate_gui;
 namespace Ui {
 class mcedit;
 }
@@ -22,7 +22,7 @@ class mcedit : public QDialog
     Q_OBJECT
     
 public:
-    explicit mcedit(QWidget *parent, QString workpath, int cx, int cy, double sx, double sy);
+    explicit mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, int cx, int cy, double sx, double sy);
     ~mcedit();
     void mousemove(QGraphicsSceneMouseEvent* event);
     void mousepress(QGraphicsSceneMouseEvent* event);
@@ -34,7 +34,9 @@ public:
     void cellupdate();
     void changebgcont(int c);
     void resLoad(QString tfilename);
-
+    void zoomin();
+    void zoomout();
+    void loadbackground(QString bgfilename);
 
 private slots:
     void on_pb_zoomin_clicked();
@@ -51,6 +53,7 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
+    p8microclimate_gui *parent;
     QString filename;
     Ui::mcedit *ui;
     McGraphicsScene *scene;
