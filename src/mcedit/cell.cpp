@@ -1,5 +1,6 @@
 #include "cell.h"
 #include <QGraphicsScene>
+#include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QGraphicsEllipseItem>
 #include <cmath>
@@ -8,9 +9,10 @@
 #include "celldialog.h"
 
 
-Cell::Cell(double px, double py, double sx, double sy, QGraphicsScene *scene, int no,QList<QColor*>* teccol)
+Cell::Cell(double px, double py, double sx, double sy, QGraphicsScene *scene, QGraphicsView *view, int no,QList<QColor*>* teccol)
 {
     this->scene=scene;
+    this->view=view;
     this->teccol=teccol;
     circ=scene->addEllipse(QRectF(px, py, sx, sy));
     rect=scene->addRect(QRectF(px, py, sx, sy));
@@ -67,6 +69,9 @@ QGraphicsRectItem *Cell::getRect()
 
 void Cell::update(int mode,int viewmode)
 {   
+    QPen pen;
+    pen.setColor(QColor(0,0,0,255));
+
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(QColor(0,0,0,0));
@@ -109,16 +114,21 @@ void Cell::update(int mode,int viewmode)
             circbrush.setColor(QColor(255.0*r,255.0*g,255.0*b,127));
         else
             brush.setColor(QColor(255.0*r,255.0*g,255.0*b,techcover));
+        if (view->transform().m11()<0.25)
+            pen.setColor(QColor(0,0,0,0));
     }
     if (mode==1)
     {
-        double maxdt=0.5;
-        int col=255.0*fabs(res[0]/maxdt);
+        double maxdt=5;
+        int col=255.0*fabs((res[0])/maxdt);
         if (res[0]>0)
             brush.setColor(QColor(255,255-col,255-col,127));
         if (res[0]<0)
             brush.setColor(QColor(255-col,255-col,255,127));
+        if (view->transform().m11()<0.25)
+            pen.setColor(QColor(0,0,0,0));
     }
+    rect->setPen(pen);
     rect->setBrush(brush);
     circ->setBrush(circbrush);
 }

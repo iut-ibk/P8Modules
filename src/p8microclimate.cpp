@@ -26,6 +26,9 @@ Microclimate::Microclimate()
     workingDir = QDir::currentPath().toStdString();
     if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd")))
         QFile::remove(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd"));
+    if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in LST.mcd")))
+        QFile::remove(QString(this->workingDir.c_str()) + QString("/Reduction in LST.mcd"));
+
     this->addParameter("Gridsize", DM::INT, &this->gridsize);
     this->addParameter("MapPic", DM::STRING, &this->mapPic);
     this->addParameter("Shapefile",DM::STRING,&this->shapefile);
@@ -301,10 +304,11 @@ void Microclimate::run()
     exportRasterData(lst,"LST before WSUD.txt");
     exportRasterData(lstAfterWsud,"LST after WSUD.txt");
     exportRasterData(lstReduction,"Reduction in LST.txt");
+    exportMCtemp(lstReduction,"Reduction in LST.mcd",-1);
     exportRasterData(lstReductionAir,"Reduction in Air Temperature.txt");
-    exportMCtemp(lstReductionAir);
-
+    exportMCtemp(lstReductionAir,"Reduction in Air Temperature.mcd",1);
 }
+
 void Microclimate::printRaster(DM::RasterData * r)
 {
 
@@ -547,10 +551,10 @@ void Microclimate::exportRasterData(DM::RasterData *r, QString filename)
     }
     file.close();
 }
-void Microclimate::exportMCtemp(DM::RasterData *r)
+void Microclimate::exportMCtemp(DM::RasterData *r, QString filename, double scale)
 {
     int counter = 0;
-    QFile file ("Reduction in Air Temperature.mcd");
+    QFile file (filename);
     if(file.open(QIODevice::WriteOnly))
     {
         QTextStream outstream(&file);
@@ -558,7 +562,7 @@ void Microclimate::exportMCtemp(DM::RasterData *r)
         {
             for(int j = 0; j<r->getWidth();j++)
             {
-                outstream << counter << "," << r->getCell(j,i) << endl;
+                outstream << counter << "," << r->getCell(j,i)*scale << endl;
                 counter ++;
             }
         }

@@ -17,6 +17,7 @@
 #include <QColor>
 #include <QRect>
 #include <QMessageBox>
+#include <QTransform>
 #include "../p8microclimate_gui.h"
 
 #include "celldialog.h"
@@ -58,7 +59,7 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
     for (int y=0;y<cy;y++)
         for (int x=0;x<cx;x++)
         {
-            Cell *cell=new Cell(x*sx,y*sy,sx,sy,scene,pos,&teccol);
+            Cell *cell=new Cell(x*sx,y*sy,sx,sy,scene,ui->graphicsView,pos,&teccol);
             cellmap.insert(cell->getRect(),cell);
             pos++;
         }
@@ -81,13 +82,14 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
 
     mode=0;
     viewmode=0;
-    if (QFile::exists(workpath+"/Reduction in Air Temperature.mcd"))
+    if (QFile::exists(workpath+"/Reduction in LST.mcd"))
     {
-        resLoad(workpath+"/Reduction in Air Temperature.mcd");
+        resLoad(workpath+"/Reduction in LST.mcd");
         ui->cb_mode->setCurrentIndex(1);
     }
     if (!bgimage.isEmpty())
         loadbackground(bgimage);
+    cellupdate();
 }
 
 mcedit::~mcedit()
@@ -174,11 +176,13 @@ void mcedit::mouserelease(QGraphicsSceneMouseEvent *event)
 void mcedit::on_pb_zoomin_clicked()
 {
     zoomin();
+    cellupdate();
 }
 
 void mcedit::on_pb_zoomout_clicked()
 {
     zoomout();
+    cellupdate();
 }
 
 
@@ -205,13 +209,13 @@ void mcedit::loadbackground(QString bgfilename)
 }
 
 
-
+/*
 void mcedit::on_pushButton_clicked()
 {
     QString bgfilename=QFileDialog::getOpenFileName(this,"Select background imgage",QDir::currentPath(),"*.png");
     loadbackground(bgfilename);
 }
-
+*/
 
 
 
@@ -440,3 +444,23 @@ void mcedit::on_buttonBox_accepted()
     //    tecFill(doublecelllist);
 }
 
+
+void mcedit::on_rb_edit_toggled(bool checked)
+{
+    if (checked)
+    {
+        ui->pb_edit->setEnabled(false);
+        ui->pb_clear->setEnabled(false);
+    }
+    else
+    {
+        ui->pb_edit->setEnabled(true);
+        ui->pb_clear->setEnabled(true);
+    }
+}
+
+void mcedit::on_pb_zoomout_2_clicked()
+{
+    while (ui->graphicsView->transform().m11()>=0.05)
+        ui->graphicsView->scale(1.0/1.1,1.0/1.1);
+}

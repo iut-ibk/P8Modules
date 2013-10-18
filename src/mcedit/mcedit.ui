@@ -21,13 +21,46 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QLabel" name="label_21">
        <property name="text">
-        <string>Import background image</string>
+        <string>Map zoom:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pb_zoomout_2">
+       <property name="text">
+        <string/>
        </property>
        <property name="icon">
         <iconset resource="images.qrc">
          <normaloff>:/images/globe_small.png</normaloff>:/images/globe_small.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pb_zoomin">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pb_zoomout">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
        </property>
       </widget>
      </item>
@@ -43,6 +76,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_22">
+       <property name="text">
+        <string>Technology file:</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pb_load">
@@ -77,48 +117,16 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QPushButton" name="pb_zoomin">
-           <property name="maximumSize">
-            <size>
-             <width>32</width>
-             <height>16777215</height>
-            </size>
-           </property>
+          <widget class="QLabel" name="label_20">
            <property name="text">
-            <string>+</string>
+            <string>Edit mode:</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pb_zoomout">
-           <property name="maximumSize">
-            <size>
-             <width>32</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item>
           <widget class="QPushButton" name="pb_edit">
            <property name="text">
-            <string>Edit cells</string>
+            <string>Edit selected cells</string>
            </property>
           </widget>
          </item>
@@ -130,19 +138,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="rb_toggle">
-           <property name="text">
-            <string>Toggle cell</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QRadioButton" name="rb_select">
            <property name="text">
-            <string>Select cell</string>
+            <string>Select cells</string>
            </property>
            <property name="checked">
             <bool>false</bool>
@@ -150,9 +148,19 @@
           </widget>
          </item>
          <item>
+          <widget class="QRadioButton" name="rb_toggle">
+           <property name="text">
+            <string>Toggle cells</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QRadioButton" name="rb_deselect">
            <property name="text">
-            <string>Deselect cell</string>
+            <string>Deselect cells</string>
            </property>
           </widget>
          </item>
@@ -172,7 +180,7 @@
          <item>
           <widget class="QRadioButton" name="rb_edit">
            <property name="text">
-            <string>Edit cell</string>
+            <string>Edit single cell</string>
            </property>
           </widget>
          </item>
@@ -585,7 +593,7 @@
          <item row="0" column="1">
           <widget class="QLabel" name="label_17">
            <property name="text">
-            <string>Temp change</string>
+            <string>LST change</string>
            </property>
           </widget>
          </item>
@@ -651,12 +659,12 @@
         <widget class="QComboBox" name="cb_mode">
          <item>
           <property name="text">
-           <string>Tech mode</string>
+           <string>Edit technologies</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Temp mode</string>
+           <string>View results</string>
           </property>
          </item>
         </widget>

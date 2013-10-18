@@ -3,6 +3,7 @@
 
 class QGraphicsRectItem;
 class QGraphicsScene;
+class QGraphicsView;
 class QColor;
 class QGraphicsEllipseItem;
 
@@ -11,7 +12,7 @@ class QGraphicsEllipseItem;
 class Cell
 {
 public:
-    Cell(double px, double py, double sx, double sy, QGraphicsScene *scene,int no, QList<QColor*>* teccol);
+    Cell(double px, double py, double sx, double sy, QGraphicsScene *scene, QGraphicsView *view, int no, QList<QColor*>* teccol);
     void editVals();
     QGraphicsRectItem *getRect();
     void update(int mode,int viewmode);
@@ -38,6 +39,7 @@ protected:
     int sy;
 
     QGraphicsScene *scene;
+    QGraphicsView *view;
     QGraphicsEllipseItem *circ;
     QGraphicsRectItem *rect;
     QList<QColor*> *teccol;
