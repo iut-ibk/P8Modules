@@ -127,7 +127,6 @@ class EnviromentalBenefitsResultsModule(Module):
 			vec1.append(list1[i])
 			vec2.append(list2[i])
 			vec5.append(list5[i])
-			vec6.append(list6[i])
 			vec8.append(list8[i])
 
 		for i in range(len(list4)):
@@ -163,6 +162,7 @@ class EnviromentalBenefitsResultsModule(Module):
 		FreqUntreated = freqVec[1]
 		vec8 = sorted(vec8)
 		cin = 3 * float(vec8[len(vec8)/2])
+		print "cin: " +str(cin)
 
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
@@ -174,15 +174,26 @@ class EnviromentalBenefitsResultsModule(Module):
 
 		FreqTreated = len(vec3)
 		ETsum = self.SumAllValues(vec4)
-		VolumeET = ETsum * EIF * 60*60*24*1000/1000000
+		VolumeET = ETsum * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
 		VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
-		preRunoffsum = self.SumAllValues(vec1)
+		preRunoffsum = self.SumAllValues(vec5)
 		VolumePredev = preRunoffsum * 60*60*24*1000/1000000
-		exfilSum = self.SumAllValues(vec6)
-		FVg = EIF * (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
-		print "FVg: " +str(FVg)
 
+		for i in range(len(list6)):
+			if i<2 or ((i)%2==0):
+				continue
+			if (float(list6[i]) * EIF >cin):
+				continue
+			if i%2==1:
+				vec6.append(list6[i])
+
+
+		exfilSum = self.SumAllValues(vec6)
+		FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
+		print "exfilSum: " +str(exfilSum)
+		print "VolumeUntreated: " +str(VolumeUntreated)
+		print "FVg: " +str(FVg)
 
 		#FvForest = self.find_nearest(self.ForestX,FVg)
 		#FvPasture = self.find_nearest(self.PastureX,FVg)
@@ -376,13 +387,13 @@ class EnviromentalBenefitsResultsModule(Module):
 		catchment_paramter_list = [] #[1,120,30,20,200,1,10,25,5,0]
 		j = -1
 		i = 0
-		IDoffset = 9
-		for line in fileIn:
-			linearr = line.strip("\n").split(",")
-			if(linearr[0] == "Node ID"):
-				if(int(linearr[1]) > sumID):
-					sumID = int(linearr[1])
-		fileIn.seek(0)
+		
+		NodeIDToType = {}
+		StartNodeConnectionsPrimary = {}
+		currentNodeType = ""
+		is_primary_connection = True
+		
+		source_id = ""
 		for line in fileIn:
 			i = i + 1
 			linearr = line.strip("\n").split(",")
@@ -391,38 +402,33 @@ class EnviromentalBenefitsResultsModule(Module):
 				recvcounter = 0
 			if (recvcounter == 1):
 				recvcounter = 2
-			if(printing):
-				if(split):
-					splitlist.append(str(tmpID))
-					splitlist2.append([str(sumID+IDoffset),"0"])
-					fileOut.write(urbfirst)
-					fileOut.write(urbsplit1)
-					fileOut.write(urbsec)
-					urbfirst = urbfirst.replace("Node ID,"+ str(tmpID),"Node ID," + str(sumID+IDoffset))
-					fileOut.write(urbfirst)
-					fileOut.write(urbsplit2)
-					fileOut.write(urbsec)
-					urbfirst = ""
-					urbsec = ""
-					urbtmp = ""
-					printing = False
-					split = False
-					IDoffset = IDoffset + 1
-				else:
-					fileOut.write(urbfirst)
-					fileOut.write(urbtmp)
-					fileOut.write(urbsec)
-					urbfirst = ""
-					urbtmp = ""
-					urbsec = ""
-					printing = False
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
+			if(linearr[0] == "Node ID"):
+				NodeIDToType[str(linearr[1])] = currentNodeType
+				if(int(linearr[1]) > sumID):
+					sumID = int(linearr[1])
+
 			if(linearr[0] == "Node Type"):
-				printing = True
+				self.printsplitNodes(split,tmpID,urbfirst,urbsec,urbsplit1,urbsplit2,urbtmp,fileOut)
+				currentNodeType = linearr[1]
+				if(split):
+					print "split!!!"
+					splitlist.append(str(tmpID))
+					splitlist2.append([str(tmpID) + "99","0"])
+					NodeIDToType[str(tmpID) + "99"] = NodeIDToType[str(tmpID)]
+					
+					print splitlist2
+				urbfirst = ""
+				urbsec = ""
+				urbtmp = ""
+				split = False
+				urbsplit1 = ""
+				urbsplit2 = ""
 				urbansourcenode = False
 				writebot = False
+				writetop = False
 				if(linearr[1] == "UrbanSourceNode"):
 					writetop = True
 					urbansourcenode = True
@@ -455,10 +461,26 @@ class EnviromentalBenefitsResultsModule(Module):
 				fileOut.write(line)
 			if(idfound):
 				if(linearr[0] == "Target Node ID"):
+					if is_primary_connection:
+						StartNodeConnectionsPrimary[source_id] = str(linearr[1])
 					print "j = " + str(j)
 					splitlist2[j][1] = str(linearr[1])
+					idfound = False
+			if(linearr[0] == "Link Name"):
+				is_primary_connection = False
+				if linearr[1] == "Drainage Link":
+					is_primary_connection = True
+			if(linearr[0] == "Target Node ID"):
+				if is_primary_connection:
+					StartNodeConnectionsPrimary[source_id] = str(linearr[1])
 			if(linearr[0] == "Source Node ID"):
+				source_id = str(linearr[1])
 				j = -1
+				print len(splitlist)
+				print "splitlist"
+				print splitlist
+				print len(splitlist2)
+				print splitlist2
 				for ID in splitlist:
 					j = j + 1
 					if(linearr[1] == ID):
@@ -525,6 +547,10 @@ class EnviromentalBenefitsResultsModule(Module):
 		print "ReceivingNode: " + str(receivingnodeid)
 		print "Lists: " 
 		print catchment_paramter_list
+
+		print "Node Types List: " 
+		print NodeIDToType
+		print StartNodeConnectionsPrimary
 		print EtFlux_list
 		print fluxinfl_list
 		print fluxinfl_list2
@@ -546,13 +572,39 @@ class EnviromentalBenefitsResultsModule(Module):
 				umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
 				umusic.writeMUSIClinkToFlux(fileOut,nodeid,areaSumID+3)
 		i = 0
+
 		for IDs in splitlist:
 			umusic.writeMUSIClink(fileOut,str(splitlist2[i][0]),splitlist2[i][1])
 			i = i + 1
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
+		#Link to Infiltration
 		for j in fluxinfl_list:
-		    umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
+			#CechkIfConnectedToPound
+			print str(j)
+			start_node = str(j)
+			end_node = StartNodeConnectionsPrimary[str(j)]
+			print NodeIDToType[end_node]
+			print NodeIDToType[start_node]
+			if NodeIDToType[end_node] == "PondNode":
+				print "PondNode Found"
+				continue
+			if NodeIDToType[end_node] == "WetlandNode":
+				print "Wetland Found"
+				continue
+			if NodeIDToType[end_node] == "DetentionBasinNode":
+				print "DetentionBasinNode Found"
+				continue
+			if NodeIDToType[end_node] == "InfiltrationSystemNodeV4":
+				print "InfiltrationSystemNode Found"
+				continue				
+			if NodeIDToType[end_node] == "BioRetentionNodeV4":
+				print "BioRetentionNode Found"
+				continue
+			if NodeIDToType[end_node] == "SwaleNode":
+				print "SwaleNode Found"
+				continue				
+			umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
 		for k in fluxinfl_list2:
 		    umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
 		umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
@@ -564,3 +616,16 @@ class EnviromentalBenefitsResultsModule(Module):
 		retvals.append(area)
 		retvals.append(totalarea)
 		return retvals
+	def printsplitNodes(self,split,tmpID,urbfirst,urbsec,urbsplit1,urbsplit2,urbtmp,fileOut):
+		if(split):
+			fileOut.write(urbfirst)
+			fileOut.write(urbsplit1)
+			fileOut.write(urbsec)
+			urbfirst = urbfirst.replace("Node ID,"+ str(tmpID),"Node ID," + str(tmpID) + "99")
+			fileOut.write(urbfirst)
+			fileOut.write(urbsplit2)
+			fileOut.write(urbsec)
+		else:
+			fileOut.write(urbfirst)
+			fileOut.write(urbtmp)
+			fileOut.write(urbsec)
