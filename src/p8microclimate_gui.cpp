@@ -16,10 +16,9 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QSettings settings;
-
     this->p8microclimate = p8;
 
+    QSettings settings;
     this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
 
     if(p8microclimate->percentile == 20)

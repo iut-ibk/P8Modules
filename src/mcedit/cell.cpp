@@ -83,9 +83,6 @@ void Cell::update(int mode,int viewmode)
 
     if (mode==0)
     {
-        if (selected)
-            brush.setColor(QColor(200,200,200,96));
-
         double r=0;
         double g=0;
         double b=0;
@@ -116,6 +113,9 @@ void Cell::update(int mode,int viewmode)
             brush.setColor(QColor(255.0*r,255.0*g,255.0*b,techcover));
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
+        if (selected)
+            brush.setColor(QColor(200,200,200,96));
+
     }
     if (mode==1)
     {

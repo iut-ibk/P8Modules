@@ -81,7 +81,7 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
     ui->graphicsView->setMouseTracking(true);
 
     mode=0;
-    viewmode=0;
+    viewmode=1;
     if (QFile::exists(workpath+"/Reduction in LST.mcd"))
     {
         resLoad(workpath+"/Reduction in LST.mcd");
@@ -217,8 +217,6 @@ void mcedit::on_pushButton_clicked()
 }
 */
 
-
-
 int cellComp (Cell* a,  Cell* b)
 {
     return (a->getNo()) < (b->getNo());
@@ -289,10 +287,8 @@ void mcedit::resLoad(QString tfilename)
             }
         }
         file.close();
-
     }
 }
-
 
 void mcedit::tecSave()
 {
@@ -316,10 +312,8 @@ void mcedit::tecSaveAs()
     {
         filename=tfilename;
         tecSave(filename);
-
     }
 }
-
 
 void mcedit::tecSave(QString filename)
 {
