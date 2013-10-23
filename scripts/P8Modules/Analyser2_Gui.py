@@ -100,8 +100,8 @@ class Analyser2_Gui(QtGui.QDialog):
 		ax.set_ylabel('Enviromental Benefit(%)')
 		ax.set_title('Stream Health Outcomes')
 		ax.set_xticks(ind+(width*i)*0.75)
-		ax.set_xticklabels( ('FF' , 'VR' , 'FVg' , 'WQ') )
-
+		ax.set_xticklabels( ('Flow Frequenzy' , 'Volume Reduction' , 'Filtered Flow Volume' , 'Water Quality') )
+		ax.tick_params(axis='x', labelsize=10)
 		ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
 		ax.legend(loc='best')#,prop={'size':8})
 		fig.canvas.set_window_title(' ') 
