@@ -39,6 +39,8 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotEBR(self):
 		random.seed()
 		mpl.rcParams['toolbar'] = 'None'
+		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
+		mpl.rcParams.update(params)
 		f = open(self.EBRFile,'r')
 		#print f.readlines().strip('\n').split(',')
 		show1 = False
@@ -95,14 +97,13 @@ class Analyser2_Gui(QtGui.QDialog):
 			rects3 = ax.bar(ind+width*2,bars3,width,color='#abcd8f')
 			rects3.set_label('Realisation 3')
 		'''
-		print "1"
 		ax.set_ylabel('Enviromental Benefit(%)')
 		ax.set_title('Stream Health Outcomes')
 		ax.set_xticks(ind+(width*i)*0.75)
 		ax.set_xticklabels( ('FF' , 'VR' , 'FVg' , 'WQ') )
 
 		ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
-		ax.legend(loc='best')
+		ax.legend(loc='best')#,prop={'size':8})
 		fig.canvas.set_window_title(' ') 
 		#plt.xlim([0,100])
 		#fig.autofmt_xdate()
