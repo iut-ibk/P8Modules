@@ -113,9 +113,6 @@ void Cell::update(int mode,int viewmode)
             brush.setColor(QColor(255.0*r,255.0*g,255.0*b,techcover));
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
-        if (selected)
-            brush.setColor(QColor(200,200,200,96));
-
     }
     if (mode==1)
     {
@@ -128,6 +125,10 @@ void Cell::update(int mode,int viewmode)
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
     }
+
+    if (selected)
+        brush.setColor(QColor(200,200,200,96));
+
     rect->setPen(pen);
     rect->setBrush(brush);
     circ->setBrush(circbrush);
