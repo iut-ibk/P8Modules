@@ -10,7 +10,7 @@
 #include <QTextStream>
 #include <QStringList>
 #include <QFileDialog>
-
+#include <QSettings>
 
 DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
 
@@ -23,7 +23,8 @@ Microclimate::Microclimate()
     shapefile = "";
     landuse = "";
     wsudTech = "";
-    workingDir = QDir::currentPath().toStdString();
+    QSettings settings;
+    workingDir = settings.value("workPath").toString().toStdString();
     if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd")))
         QFile::remove(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd"));
     if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in LST.mcd")))
@@ -50,7 +51,8 @@ void Microclimate::init()
 
 void Microclimate::run()
 {
-
+    QSettings settings;
+    workingDir = settings.value("workPath").toString().toStdString();
 
     //DM::View topo("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);
