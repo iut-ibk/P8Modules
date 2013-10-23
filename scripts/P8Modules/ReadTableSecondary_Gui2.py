@@ -27,7 +27,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	pass
 	
     def Load(self):
-	widget = QtGui.QLineEdit(str("Enviromental Benefit"))
+	widget = QtGui.QLineEdit(str("Stream Hydrology and Water quality"))
 	font = QtGui.QFont()
 	font.setBold(True)
 	widget.setFont(font)
@@ -50,7 +50,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 
     def export(self):
 	f = open('EnvironmentalBenefit.csv','w')
-	f.write("Enviromental Benefit,%\n")
+	f.write("Stream Hydrology and Water quality,%\n")
 	f.write("Flow-Frequency Index," + str(self.module.FF) + "\n")
 	f.write("Volume Reduction Index," + str(self.module.VR) + "\n")
 	f.write("Filtered Flow Volume Index," +str(self.module.FV) + "\n")
@@ -112,7 +112,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	r = Tk()
 	r.withdraw()
 	r.clipboard_clear()
-	r.clipboard_append("Enviromental Benefit\t%\nFlow-Frequency Index\t" + str(self.module.FF) + 
+	r.clipboard_append("Stream Hydrology and Water quality\t%\nFlow-Frequency Index\t" + str(self.module.FF) + 
 	"\nVolume Reduction Index\t" + str(self.module.VR) + 
 	"\nFiltered Flow Volume Index\t" +str(self.module.FV) + 
 	"\nWater Quality Index\t" + str(self.module.WQ) + "\n")

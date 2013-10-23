@@ -11,7 +11,7 @@ import platform
 import ntpath
 
 
-class EnviromentalBenefitsResultsModule(Module):
+class StreamHydrologyandWaterquality(Module):
 	def __init__(self):
 		Module.__init__(self)
 
