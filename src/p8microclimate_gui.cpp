@@ -43,6 +43,18 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
 
 }
 
+QList<QList<double> > p8microclimate_gui::getTec()
+{
+    QList<QList<double> > tec;
+    //tec=
+    return tec;
+}
+
+void p8microclimate_gui::setTec(QList<QList<double> > tec)
+{
+//    p8microclimate->setTec(tec);
+}
+
 p8microclimate_gui::~p8microclimate_gui()
 {
     delete ui;
@@ -123,37 +135,37 @@ void p8microclimate_gui::on_pb_placeTech_released()
 
     if (file.open(QIODevice::Text|QIODevice::ReadOnly))
     {
-    QTextStream stream;
-    stream.setDevice(&file);
-    input = stream.readLine();
-    file.close();
-    file.setFileName(input);
-    file.open(QIODevice::Text|QIODevice::ReadOnly);
-    int i = 0;
+        QTextStream stream;
+        stream.setDevice(&file);
+        input = stream.readLine();
+        file.close();
+        file.setFileName(input);
+        file.open(QIODevice::Text|QIODevice::ReadOnly);
+        int i = 0;
 
-    while(i<5)
-    {
-        QString inputs = stream.readLine();
-        QStringList list = inputs.split(" ",QString::SkipEmptyParts);
-        if(i == 0)
-            cols = list.takeLast().toInt();
-        if(i == 1)
-            rows = list.takeLast().toInt();
-        if(i == 4)
-            cellsize = list.takeLast().toDouble();
-        i++;
-    }
-    file.close();
-    newcols = cols*cellsize/this->p8microclimate->gridsize;
-    newrows = rows*cellsize/this->p8microclimate->gridsize;
-    if(newcols - (int)newcols != 0)
-        newcols = (int)newcols +1;
-    if(newrows - (int)newrows != 0)
-        newrows = (int)newrows + 1;
+        while(i<5)
+        {
+            QString inputs = stream.readLine();
+            QStringList list = inputs.split(" ",QString::SkipEmptyParts);
+            if(i == 0)
+                cols = list.takeLast().toInt();
+            if(i == 1)
+                rows = list.takeLast().toInt();
+            if(i == 4)
+                cellsize = list.takeLast().toDouble();
+            i++;
+        }
+        file.close();
+        newcols = cols*cellsize/this->p8microclimate->gridsize;
+        newrows = rows*cellsize/this->p8microclimate->gridsize;
+        if(newcols - (int)newcols != 0)
+            newcols = (int)newcols +1;
+        if(newrows - (int)newrows != 0)
+            newrows = (int)newrows + 1;
 
 
-    edit=new mcedit(this,ui->le_map->text(),QString(this->p8microclimate->workingDir.c_str()),newcols,newrows,30,30);
-    edit->show();
+        edit=new mcedit(this,ui->le_map->text(),QString(this->p8microclimate->workingDir.c_str()),newcols,newrows,30,30);
+        edit->show();
     }
     else
         QMessageBox::critical(this,"Error","Internal Error 354235");

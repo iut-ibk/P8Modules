@@ -16,7 +16,8 @@ class p8microclimate_gui : public QDialog
 
 public:
     explicit p8microclimate_gui(Microclimate * p8,QWidget *parent = 0);
-
+    QList<QList<double> > getTec();
+    void setTec(QList<QList<double> >);
     ~p8microclimate_gui();
 
 private slots:
