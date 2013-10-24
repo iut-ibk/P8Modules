@@ -1,10 +1,13 @@
 from PyQt4 import QtCore, QtGui
 from pydynamind import *
+from PyQt4.QtCore import QSettings
 from Ui_Rain_Dialog import Ui_P8Rain_GUI
 import netCDF4
 from matplotlib import *
 import matplotlib.pyplot as plt
 import numpy as np
+import platform
+
 class RainGui(QtGui.QDialog):
     def __init__(self, m, parent=None):
         self.module = Module
@@ -24,6 +27,10 @@ class RainGui(QtGui.QDialog):
         QtCore.QObject.connect(self.ui.pb_ET, QtCore.SIGNAL("released()"), self.loadET)
         
     def preview(self):
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath("/","\\")
         vec = []
         dic = {}
         filename = str(self.ui.le_r.text())
@@ -36,7 +43,7 @@ class RainGui(QtGui.QDialog):
         if(self.module.UserCsv == "csv"):
             f = open(self.module.csvFile,"r")
         else:
-            f = open("RainData.csv","r")
+            f = open(workpath + "RainData.csv","r")
         for line in f:
             linearr = line.strip('\n').split(',')
             if (linearr[0] == "Date"):
@@ -89,11 +96,23 @@ class RainGui(QtGui.QDialog):
             self.module.setParameterValue("UserCsv", "net")
 
     def load(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", "Open new file", self.tr("Rain Files (*.nc)"))
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath("/","\\")
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", workpath, self.tr("Rain Files (*.nc)"))
         self.ui.le_r.setText(filename)
     def loadcsv(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", "Open new file", self.tr("CSV Files (*.csv)"))
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath("/","\\")
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", workpath, self.tr("CSV Files (*.csv)"))
         self.ui.le_csv.setText(filename)
     def loadET(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open ET File", "Open new file", self.tr("Text Files (*.txt)"))
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath("/","\\")
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open ET File", workpath, self.tr("Text Files (*.txt)"))
         self.ui.le_ET.setText(filename)

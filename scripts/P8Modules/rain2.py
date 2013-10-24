@@ -43,6 +43,10 @@ class RainModule(Module):
 
 
 	def run(self):
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
 		dataflow = self.getData("City")
 		strvec = dataflow.getUUIDsOfComponentsInView(self.simulation)
 		for value in strvec:
@@ -64,7 +68,7 @@ class RainModule(Module):
 			data = netCDF4.Dataset(self.Netfile)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
 			datas = self.getRainData(self.Xcoord,self.Ycoord,data)
-			f = open("RainData.csv",'w')
+			f = open(workpath + "RainData.csv",'w')
 			f.write("Date,Rainfall\n")
 			print "Start writing Rain Data"
 			size = float(data.variables['time'].size)
@@ -81,7 +85,7 @@ class RainModule(Module):
 			f.close()
 			print "Done"
 
-			self.changeMusicFile(realstring,"RainData.csv")
+			self.changeMusicFile(realstring,workpath + "RainData.csv")
 			tmp = realstring.split(".")
 			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
 		else:

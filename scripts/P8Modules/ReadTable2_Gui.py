@@ -22,7 +22,12 @@ class ReadTable_Gui(QtGui.QDialog):
 	if os.path.exists(self.tmpFile):
 	    os.remove(self.tmpFile)
     def load(self):
-	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", "Open New File",self.tr("Text Files (*.txt)"))
+	settings = QSettings()
+	workpath = settings.value("workPath").toString()
+	workpath += "/RunMusicSecondary.bat"
+	if (platform.system() != "Linux"):
+		workpath = workpath("/","\\")
+	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
 	self.loadTable(filename)
 	
     def loadTable(self,filename):

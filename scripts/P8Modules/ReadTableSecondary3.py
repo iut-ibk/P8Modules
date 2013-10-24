@@ -38,6 +38,11 @@ class StreamHydrologyandWaterquality(Module):
 		self.addData("City",datastream)
 
 	def run(self):
+		settings = QSettings()
+		workpath = settings.value("workPath").toString()
+		workpath += "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
 		''' version with musicnr'''
@@ -77,7 +82,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.VR = [] 
 		self.WQ = [] 
 		self.FV = []
-		self.tmpFile = "EBRtable.txt"
+		self.tmpFile = workpath + "EBRtable.txt"
 
 		if self.SimulationCity == 0:
 			AnnualRain = 520
@@ -304,19 +309,31 @@ class StreamHydrologyandWaterquality(Module):
 		return idx
 	def writeBatFileFromFile(self,file):
 		settings = QSettings()
-		f = open("RunMusicSecondary.bat",'w')
+		workpath = settings.value("workPath").toString()
+		workpath += "/RunMusicSecondary.bat"
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
+			workpath = workpath("/","\\")
+		f = open(workpath,'w')
 		filearr = file.split(".")
-		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \".\musicConfigFileSecondary.mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \"" + workpath + "musicConfigFileSecondary.mcf\" -light -silent\n")
 		f.close()
 	def writeBatFileFromNr(self,nr):
 		settings = QSettings()
-		f = open("RunMusicSecondary.bat",'w')
-		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \".\musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
+		workpath = settings.value("workPath").toString()
+		workpath += "/RunMusicSecondary.bat"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		f = open(workpath,'w')
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \"" + workpath + "musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromFile(self,file):
-		f = open("musicConfigFileSecondary.mcf", 'w')
+		settings = QSettings()
+		workpath = settings.value("workPath").toString()
+		workpath += "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		f = open(workpath + "musicConfigFileSecondary.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		f.write("Export_TS (Reuse and ET fluxes, Inflow, \"ETandRe-useFluxes.TXT\",1d)\n")
@@ -330,7 +347,12 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ.TXT\",1d)\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromNr(self,nr):
-		f = open("musicConfigFileSecondary"+str(nr)+".mcf", 'w')
+		settings = QSettings()
+		workpath = settings.value("workPath").toString()
+		workpath += "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		f = open(workpath + "musicConfigFileSecondary"+str(nr)+".mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		f.write("Export_TS (Reuse and ET fluxes, Inflow, \"ETandRe-useFluxes"+str(nr)+".TXT\",1d)\n")

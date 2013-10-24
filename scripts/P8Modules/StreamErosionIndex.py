@@ -42,6 +42,10 @@ class StreamErosionIndex(Module):
         self.addData("City", datastream)
 
     def run(self):
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath("/","\\")
         city = self.getData("City")
         strvec = city.getUUIDsOfComponentsInView(self.simulation)
         for value in strvec:
@@ -57,9 +61,9 @@ class StreamErosionIndex(Module):
             PostWSUD = self.readTimeSeries("Pre-developedCatchment.csv")
         else:
         '''
-        Pre = self.readTimeSeries("Pre-developedCatchment.csv")
-        Urb = self.readTimeSeries("UrbanisedCatchment.csv")
-        PostWSUD = self.readTimeSeries("PostWSUD.csv")
+        Pre = self.readTimeSeries(workpath + "Pre-developedCatchment.csv")
+        Urb = self.readTimeSeries(workpath + "UrbanisedCatchment.csv")
+        PostWSUD = self.readTimeSeries(workpath + "PostWSUD.csv")
         idx =  self.findNearest(Pre,2)
         upper = []
         lower = []
@@ -70,23 +74,23 @@ class StreamErosionIndex(Module):
         m = (upper[0] - lower[0]) / (upper[1] - lower[1])
         Q2 = lower[0] + m * (2 -lower[1])
         #write tables for analyzer
-        f = open("pretable.csv","w")
+        f = open(workpath + "pretable.csv","w")
         for line in Pre:
             f.write(str(line[1]) + "," + str(line[3]) + "\n")
         f.close()
-        f = open("urbtable.csv","w")
+        f = open(workpath + "urbtable.csv","w")
         for line in Urb:
             f.write(str(line[1]) + "," + str(line[3]) + "\n")
         f.close()
-        f = open("wsudtable.csv","w")
+        f = open(workpath + "wsudtable.csv","w")
         for line in PostWSUD:
             f.write(str(line[1]) + "," + str(line[3]) + "\n")
         f.close()
 
         #read csv new long time serie
-        Pre = self.readLongTimeSeries("Pre-developedCatchment.csv")
-        Urb = self.readLongTimeSeries("UrbanisedCatchment.csv")
-        PostWSUD = self.readLongTimeSeries("PostWSUD.csv")
+        Pre = self.readLongTimeSeries(workpath + "Pre-developedCatchment.csv")
+        Urb = self.readLongTimeSeries(workpath + "UrbanisedCatchment.csv")
+        PostWSUD = self.readLongTimeSeries(workpath + "PostWSUD.csv")
         #then do the calculation
         print "Q2: " + str(Q2)
         sumFlowPre = 0.0
@@ -207,12 +211,19 @@ class StreamErosionIndex(Module):
             
     def writeBatFileFromFile(self,file):
         settings = QSettings()
-        f = open("RunMusicSEI.bat",'w')
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath("/","\\")
+        f = open(workpath + "RunMusicSEI.bat",'w')
         filearr = file.split(".")
         f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \".\musicConfigFileSEI.mcf\" -light -silent\n")
         f.close()
     def writeMusicConfigFile(self,routed):
-        f = open("musicConfigFileSEI.mcf", 'w')
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath("/","\\")
+        f = open(workpath + "musicConfigFileSEI.mcf", 'w')
         f.write("Version = 100\n")
         f.write("Delimiter = #44\n")
         if(routed):

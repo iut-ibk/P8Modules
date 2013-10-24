@@ -1,5 +1,6 @@
  # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QSettings
 from pydynamind import *
 from Ui_Analyser2_Dialog import Ui_Analyser2_GUI
 import shlex
@@ -11,6 +12,8 @@ import os
 import random
 import math
 from operator import itemgetter
+import platform
+
 
 
 class Analyser2_Gui(QtGui.QDialog):
@@ -20,9 +23,13 @@ class Analyser2_Gui(QtGui.QDialog):
 		QtGui.QDialog.__init__(self,parent)
 		self.ui = Ui_Analyser2_GUI()
 		self.ui.setupUi(self)
-		self.TPRFile = "TPRtable.txt"
-		self.EBRFile = "EBRtable.txt"
-		self.UtilFile= "UtilTable.txt"
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		self.TPRFile = workpath + "TPRtable.txt"
+		self.EBRFile = workpath + "EBRtable.txt"
+		self.UtilFile= workpath + "UtilTable.txt"
 		QtCore.QObject.connect(self.ui.pb_plotEBR, QtCore.SIGNAL("released()"),self.plotEBR)
 		QtCore.QObject.connect(self.ui.pb_plotTPR, QtCore.SIGNAL("released()"),self.plotTPR)
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
@@ -109,10 +116,18 @@ class Analyser2_Gui(QtGui.QDialog):
 		#fig.autofmt_xdate()
 		plt.ylim([0,100])
 		plt.show()
-		plt.savefig('EviromentalBenefitsPlot.png')
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		plt.savefig(str(workpath)+"EviromentalBenefitsPlot.png")
 		
 	def plotTPR(self):
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", "Open New File",self.tr("Text Files (*.txt)"))
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
 		mpl.rcParams['toolbar'] = 'None'
 		show2 = False
 		show3 = False
@@ -188,8 +203,12 @@ class Analyser2_Gui(QtGui.QDialog):
 			f.write("2,"+str(bars3[0])+","+str(bars3[1])+","+str(bars3[2])+","+str(bars3[3])+"\n")
 		'''
 		f.close()
-		plt.savefig('TreatmentPerformancePlot.png')
+		plt.savefig(str(workpath) + 'TreatmentPerformancePlot.png')
 	def plotUtil(self):
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
 		ResultVec = []
 		if(os.path.exists(self.UtilFile)):
@@ -197,7 +216,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		print len(ResultVec)
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
-		f = open("UB_BasinStrategy No 1-" + str(self.module.musicnr) + ".csv",'r')
+		f = open(workpath + "UB_BasinStrategy No 1-" + str(self.module.musicnr) + ".csv",'r')
 		j = 0
 		serviceVec = []
 		lines = []
@@ -343,34 +362,36 @@ class Analyser2_Gui(QtGui.QDialog):
 			outtxt += "Swale," + SWstring + "\n"
 		fig.text(0.05,0.01,txt)
 		plt.show()
-		plt.savefig('UtilisationsPlot.png')
-		f = open("util.csv", "w")
+		plt.savefig(str(workath) + 'UtilisationsPlot.png')
+		f = open(workpath + "util.csv", "w")
 		f.write(outtxt)
 		f.close()
 		self.writeUtilFile(ResultVec)
 	def plotSEI(self):
-		print "GO"
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
-		print "GO"
 		a = []
 		b = []
 		c = []
 		d = []
 		e = []
 		f = []
-		fil = open("urbtable.csv","r")
+		fil = open(workpath + "urbtable.csv","r")
 		for line in fil:
 			linearr = line.strip(" \n").split(",")
 			c.append(float(linearr[0]))
 			d.append(linearr[1])
 		fil.close()
-		fil = open("wsudtable.csv","r")
+		fil = open(workpath + "wsudtable.csv","r")
 		for line in fil:
 			linearr = line.strip(" \n").split(",")
 			e.append(float(linearr[0]))
 			f.append(linearr[1])
 		fil.close()
-		fil = open("pretable.csv","r")
+		fil = open(workpath + "pretable.csv","r")
 		for line in fil:
 			linearr = line.strip(" \n").split(",")
 			a.append(float(linearr[0]))
@@ -419,7 +440,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		xlim = ax.get_xlim()
 		plt.xlim([0.01,xlim[1]])
 		plt.show()
-		plt.savefig('SEIplot.png')
+		plt.savefig(str(workpath) + 'SEIplot.png')
 	def loadUtilFile(self):
 		vec = []
 		f = open(self.UtilFile,"r")

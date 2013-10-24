@@ -66,19 +66,29 @@ class TreatmentPerformanceResultsModule(Module):
 
 	def writeBatFile(self,file):
 		settings = QSettings()
-		f = open("RunMusicTP.bat",'w')
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		f = open(workpath + "RunMusicTP.bat",'w')
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
-		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \"" + file + "\" \".\musicConfigFileTP.mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \"" + file + "\" \"" + workpath + "musicConfigFileTP.mcf\" -light -silent\n")
 		f.close()
 
 	def writeBatFileFromNr(self,nr):
 		settings = QSettings()
-		f = open("RunMusicTP.bat",'w')
-		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \".\musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		f = open(workpath + "RunMusicTP.bat",'w')
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \"" + workpath + "musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
 	def writeMusicConfigFile(self,file):
-		f = open("musicConfigFileTP.mcf", 'w')
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		f = open(workpath + "musicConfigFileTP.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		f.write("Export_TTE (Receiving Node,\"Perf_TTE.txt\")\n")

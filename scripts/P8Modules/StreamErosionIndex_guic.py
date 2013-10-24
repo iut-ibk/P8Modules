@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QSettings
 from pydynamind import *
 from StreamErosionIndex_gui import Ui_StreamErosionIndexDialog
+import platform
+
 
 class activateStreamErosionIndexGUI(QtGui.QDialog):
 	def __init__(self, m, parent=None):
@@ -30,8 +33,16 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		city = self.ui.city_combo.currentIndex()
 		self.module.setParameterValue("SimulationCity",str(city))
 	def load(self):
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Csv File", "Open new file", self.tr("Csv Files (*.csv)"))
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Csv File", workpath, self.tr("Csv Files (*.csv)"))
 		self.ui.le_r.setText(filename)
 	def load2(self):
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", "Open new file", self.tr("Text Files (*.txt)"))
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", workpath, self.tr("Text Files (*.txt)"))
 		self.ui.le_r2.setText(filename)

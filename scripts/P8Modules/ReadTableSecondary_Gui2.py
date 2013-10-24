@@ -1,4 +1,5 @@
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QSettings
 from pydynamind import *
 from Ui_ReadTableSecondary_Dialog2 import Ui_ReadTableSecondary_GUI2
 import shlex
@@ -7,6 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import shlex
 import matplotlib as mpl
+import platform
+
 class ReadTableSecondary_Gui2(QtGui.QDialog):
     def __init__(self, m, parent=None):
         self.module = Module
@@ -49,7 +52,11 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	    self.ui.table.setCellWidget(4,i,QtGui.QLineEdit(str(self.module.WQ[i-1])))
 
     def export(self):
-	f = open('EnvironmentalBenefit.csv','w')
+	settings = QSettings()
+	workpath = settings.value("workPath").toString() + "/"
+	if (platform.system() != "Linux"):
+		workpath = workpath("/","\\")
+	f = open(workpath + 'EnvironmentalBenefit.csv','w')
 	f.write("Stream Hydrology and Water quality,%\n")
 	f.write("Flow-Frequency Index," + str(self.module.FF) + "\n")
 	f.write("Volume Reduction Index," + str(self.module.VR) + "\n")
