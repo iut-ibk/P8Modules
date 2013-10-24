@@ -19,6 +19,8 @@ public:
     std::string landuse;
     std::string wsudTech;
     std::string workingDir;
+    QList<QList<double> > tec;
+
 
     Microclimate();
     void init();

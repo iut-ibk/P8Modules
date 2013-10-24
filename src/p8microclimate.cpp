@@ -22,7 +22,6 @@ Microclimate::Microclimate()
     mapPic = "";
     shapefile = "";
     landuse = "";
-    wsudTech = "";
     QSettings settings;
     workingDir = settings.value("workPath").toString().toStdString();
     if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd")))
@@ -35,7 +34,6 @@ Microclimate::Microclimate()
     this->addParameter("Shapefile",DM::STRING,&this->shapefile);
     this->addParameter("Landuse",DM::STRING, &this->landuse);
     this->addParameter("Percentile",DM::INT, &this->percentile);
-    this->addParameter("WSUDtech",DM::STRING, &this->wsudTech);
 
 }
 
@@ -172,7 +170,7 @@ void Microclimate::run()
     fillZeros(testgrid);
 
 
-    QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
+    //QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
 
 
     double percent;
@@ -250,7 +248,7 @@ void Microclimate::run()
                 }
                 cells.pop_back();
             }
-            wsudline = getTechAreasForCell(i,j,width,WsudTech);
+            wsudline = getTechAreasForCell(i,j,width,this->tec);
             for (int k = 1;k<wsudline.size();k++)
             {
                 techarea += wsudline[k];

@@ -45,14 +45,12 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
 
 QList<QList<double> > p8microclimate_gui::getTec()
 {
-    QList<QList<double> > tec;
-    //tec=
-    return tec;
+    return this->p8microclimate->tec;
 }
 
 void p8microclimate_gui::setTec(QList<QList<double> > tec)
 {
-//    p8microclimate->setTec(tec);
+    this->p8microclimate->tec = tec;
 }
 
 p8microclimate_gui::~p8microclimate_gui()
@@ -131,7 +129,7 @@ void p8microclimate_gui::on_pb_placeTech_released()
     int rows;
     double cellsize,newcols,newrows;
     QString input;
-    QFile file(QString(QDir::currentPath()+"/impfile.txt"));
+    QFile file(QString(this->p8microclimate->workingDir.c_str()) + "/impfile.txt");
 
     if (file.open(QIODevice::Text|QIODevice::ReadOnly))
     {
