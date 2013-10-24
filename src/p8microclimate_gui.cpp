@@ -50,7 +50,9 @@ p8microclimate_gui::~p8microclimate_gui()
 
 void p8microclimate_gui::on_pb_map_released()
 {
-    QString fname = QFileDialog::getOpenFileName(this,"Map png",QDir::currentPath(),"*.png");
+    QSettings settings;
+    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+    QString fname = QFileDialog::getOpenFileName(this,"Map png",QString(this->p8microclimate->workingDir.c_str()),"*.png");
     if (fname == "")
         return;
     ui->le_map->setText(fname);
@@ -59,7 +61,9 @@ void p8microclimate_gui::on_pb_map_released()
 
 void p8microclimate_gui::on_pb_shape_released()
 {
-    QString fname = QFileDialog::getOpenFileName(this,"Shape File", QDir::currentPath(), "*.sh");
+    QSettings settings;
+    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+    QString fname = QFileDialog::getOpenFileName(this,"Shape File", QString(this->p8microclimate->workingDir.c_str()), "*.sh");
     if (fname == "")
         return;
     ui->le_shape->setText(fname);
@@ -68,7 +72,9 @@ void p8microclimate_gui::on_pb_shape_released()
 
 void p8microclimate_gui::on_pb_landuse_released()
 {
-    QString fname = QFileDialog::getOpenFileName(this,"Landuse File",QDir::currentPath(),"*.txt");
+    QSettings settings;
+    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+    QString fname = QFileDialog::getOpenFileName(this,"Landuse File",QString(this->p8microclimate->workingDir.c_str()),"*.txt");
     if(fname == "")
         return;
     ui->le_landuse->setText(fname);
@@ -77,7 +83,9 @@ void p8microclimate_gui::on_pb_landuse_released()
 
 void p8microclimate_gui::on_pb_wsud_released()
 {
-    QString fname = QFileDialog::getOpenFileName(this,"WSUD Tech File",QDir::currentPath(),"*.csv");
+    QSettings settings;
+    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+    QString fname = QFileDialog::getOpenFileName(this,"WSUD Tech File",QString(this->p8microclimate->workingDir.c_str()),"*.csv");
     if(fname == "")
         return;
     //ui->le_WSUDtech->setText(fname);
@@ -105,6 +113,8 @@ void p8microclimate_gui::on_bBox_accepted()
 
 void p8microclimate_gui::on_pb_placeTech_released()
 {
+    QSettings settings;
+    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
     int cols;
     int rows;
     double cellsize,newcols,newrows;
