@@ -170,7 +170,7 @@ void Microclimate::run()
     fillZeros(testgrid);
 
 
-    //QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
+    QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
 
 
     double percent;
@@ -248,7 +248,7 @@ void Microclimate::run()
                 }
                 cells.pop_back();
             }
-            wsudline = getTechAreasForCell(i,j,width,this->tec);
+            wsudline = getTechAreasForCell(i,j,width,WsudTech);
             for (int k = 1;k<wsudline.size();k++)
             {
                 techarea += wsudline[k];
