@@ -363,16 +363,32 @@ void mcedit::tecLoad(p8microclimate_gui *parent)
     QList<Cell*> sortlist=cellmap.values();
     qSort(sortlist.begin(),sortlist.end(),cellComp);
     int i=0;
-    foreach (Cell *cell, sortlist)
+    if(qsortlist.isEmpty())
     {
-        cell->setNo(i);
-        cell->setV(0,qsortlist[i][0]);
-        cell->setV(1,qsortlist[i][1]);
-        cell->setV(2,qsortlist[i][2]);
-        cell->setV(3,qsortlist[i][3]);
-        cell->setV(4,qsortlist[i][4]);
-        cell->setV(5,qsortlist[i][5]);
-        i++;
+        foreach (Cell *cell, sortlist)
+        {
+            cell->setNo(i);
+            cell->setV(0,0);
+            cell->setV(1,0);
+            cell->setV(2,0);
+            cell->setV(3,0);
+            cell->setV(4,0);
+            cell->setV(5,0);
+            i++;
+        }
+    }
+    else{
+        foreach (Cell *cell, sortlist)
+        {
+            cell->setNo(i);
+            cell->setV(0,qsortlist[i][0]);
+            cell->setV(1,qsortlist[i][1]);
+            cell->setV(2,qsortlist[i][2]);
+            cell->setV(3,qsortlist[i][3]);
+            cell->setV(4,qsortlist[i][4]);
+            cell->setV(5,qsortlist[i][5]);
+            i++;
+        }
     }
 }
 
