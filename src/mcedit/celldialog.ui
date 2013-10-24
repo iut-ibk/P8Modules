@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>262</width>
-    <height>173</height>
+    <height>199</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="gridLayout" columnstretch="3,2">
      <item row="1" column="1">
       <widget class="QDoubleSpinBox" name="v2">
        <property name="suffix">
@@ -150,6 +150,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>v1</tabstop>
+  <tabstop>v2</tabstop>
+  <tabstop>v3</tabstop>
+  <tabstop>v4</tabstop>
+  <tabstop>v5</tabstop>
+  <tabstop>v6</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -159,8 +168,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>227</x>
-     <y>155</y>
+     <x>236</x>
+     <y>189</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -176,7 +185,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>252</x>
-     <y>161</y>
+     <y>189</y>
     </hint>
     <hint type="destinationlabel">
      <x>261</x>

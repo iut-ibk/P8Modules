@@ -82,6 +82,7 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
 
     mode=0;
     viewmode=1;
+    tecLoad(parent);
     if (QFile::exists(workpath+"/Reduction in LST.mcd"))
     {
         resLoad(workpath+"/Reduction in LST.mcd");
@@ -337,6 +338,44 @@ void mcedit::tecSave(QString filename)
     file.close();
 }
 
+void mcedit::tecSave(p8microclimate_gui *parent)
+{
+    QList<Cell*> sortlist=cellmap.values();
+    qSort(sortlist.begin(),sortlist.end(),cellComp);
+    QList<QList<double> > qsortlist;
+    foreach (Cell *cell, sortlist)
+    {
+        QList<double> line;
+        line << cell->getV(0)
+             << cell->getV(1)
+             << cell->getV(2)
+             << cell->getV(3)
+             << cell->getV(4)
+             << cell->getV(5);
+        qsortlist << line;
+    }
+    parent->setTec(qsortlist);
+}
+
+void mcedit::tecLoad(p8microclimate_gui *parent)
+{
+    QList<QList<double> >qsortlist=parent->getTec();
+    QList<Cell*> sortlist=cellmap.values();
+    qSort(sortlist.begin(),sortlist.end(),cellComp);
+    int i=0;
+    foreach (Cell *cell, sortlist)
+    {
+        cell->setNo(i);
+        cell->setV(0,qsortlist[i][0]);
+        cell->setV(1,qsortlist[i][1]);
+        cell->setV(2,qsortlist[i][2]);
+        cell->setV(3,qsortlist[i][3]);
+        cell->setV(4,qsortlist[i][4]);
+        cell->setV(5,qsortlist[i][5]);
+        i++;
+    }
+}
+
 void mcedit::cellupdate()
 {
     foreach (Cell *cell, cellmap.values())
@@ -435,6 +474,7 @@ void mcedit::on_comboBox_currentIndexChanged(int index)
 void mcedit::on_buttonBox_accepted()
 {
     tecSave(workpath+"/WSUDtech.mcd");
+    tecSave(parent);
     //    tecFill(doublecelllist);
 }
 
