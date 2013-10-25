@@ -104,10 +104,10 @@ class Analyser2_Gui(QtGui.QDialog):
 			rects3 = ax.bar(ind+width*2,bars3,width,color='#abcd8f')
 			rects3.set_label('Realisation 3')
 		'''
-		ax.set_ylabel('Enviromental Benefit(%)')
+		ax.set_ylabel('Stream Health Hydrology and Water Quality(%)')
 		ax.set_title('Stream Health Outcomes')
 		ax.set_xticks(ind+(width*i)*0.75)
-		ax.set_xticklabels( ('Flow Frequenzy' , 'Volume Reduction' , 'Filtered Flow Volume' , 'Water Quality') )
+		ax.set_xticklabels( ('Flow Frequency' , 'Volume Reduction' , 'Filtered Flow Volume' , 'Water Quality') )
 		ax.tick_params(axis='x', labelsize=10)
 		ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
 		ax.legend(loc='best')#,prop={'size':8})
@@ -123,6 +123,8 @@ class Analyser2_Gui(QtGui.QDialog):
 		plt.savefig(str(workpath)+"EviromentalBenefitsPlot.png")
 		
 	def plotTPR(self):
+		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
+		mpl.rcParams.update(params)
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
