@@ -25,6 +25,6 @@ class activateimportMSFGUI(QtGui.QDialog):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Music File",  workpath, self.tr("Text Files (*.msf)"))
 		self.ui.le_r.setText(filename)

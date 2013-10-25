@@ -26,7 +26,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		self.TPRFile = workpath + "TPRtable.txt"
 		self.EBRFile = workpath + "EBRtable.txt"
 		self.UtilFile= workpath + "UtilTable.txt"
@@ -119,14 +119,14 @@ class Analyser2_Gui(QtGui.QDialog):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		plt.savefig(str(workpath)+"EviromentalBenefitsPlot.png")
 		
 	def plotTPR(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
 		mpl.rcParams['toolbar'] = 'None'
 		show2 = False
@@ -208,7 +208,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
 		ResultVec = []
 		if(os.path.exists(self.UtilFile)):
@@ -371,7 +371,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
 		a = []
 		b = []

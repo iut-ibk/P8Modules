@@ -55,7 +55,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	settings = QSettings()
 	workpath = settings.value("workPath").toString() + "/"
 	if (platform.system() != "Linux"):
-		workpath = workpath("/","\\")
+		workpath = workpath.replace("/","\\")
 	f = open(workpath + 'EnvironmentalBenefit.csv','w')
 	f.write("Stream Hydrology and Water quality,%\n")
 	f.write("Flow-Frequency Index," + str(self.module.FF) + "\n")

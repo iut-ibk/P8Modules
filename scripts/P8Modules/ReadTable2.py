@@ -68,7 +68,7 @@ class TreatmentPerformanceResultsModule(Module):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		f = open(workpath + "RunMusicTP.bat",'w')
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
@@ -79,7 +79,7 @@ class TreatmentPerformanceResultsModule(Module):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		f = open(workpath + "RunMusicTP.bat",'w')
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \"" + workpath + "musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
@@ -87,7 +87,7 @@ class TreatmentPerformanceResultsModule(Module):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		f = open(workpath + "musicConfigFileTP.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")

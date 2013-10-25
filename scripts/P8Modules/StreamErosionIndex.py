@@ -45,7 +45,7 @@ class StreamErosionIndex(Module):
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"
         if (platform.system() != "Linux"):
-            workpath = workpath("/","\\")
+            workpath = workpath.replace("/","\\")
         city = self.getData("City")
         strvec = city.getUUIDsOfComponentsInView(self.simulation)
         for value in strvec:
@@ -213,7 +213,7 @@ class StreamErosionIndex(Module):
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"
         if (platform.system() != "Linux"):
-            workpath = workpath("/","\\")
+            workpath = workpath.replace("/","\\")
         f = open(workpath + "RunMusicSEI.bat",'w')
         filearr = file.split(".")
         f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \".\musicConfigFileSEI.mcf\" -light -silent\n")
@@ -222,7 +222,7 @@ class StreamErosionIndex(Module):
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"
         if (platform.system() != "Linux"):
-            workpath = workpath("/","\\")
+            workpath = workpath.replace("/","\\")
         f = open(workpath + "musicConfigFileSEI.mcf", 'w')
         f.write("Version = 100\n")
         f.write("Delimiter = #44\n")

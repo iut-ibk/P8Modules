@@ -46,7 +46,7 @@ class RainModule(Module):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		dataflow = self.getData("City")
 		strvec = dataflow.getUUIDsOfComponentsInView(self.simulation)
 		for value in strvec:

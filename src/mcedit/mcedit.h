@@ -33,6 +33,7 @@ public:
     void tecSave(QString filename);
     void tecSave(p8microclimate_gui *parent);
     void tecLoad(p8microclimate_gui *parent);
+    void tecLoad(QString tfilename);
     void cellupdate();
     void changebgcont(int c);
     void resLoad(QString tfilename);

@@ -45,11 +45,22 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
 
 QList<QList<double> > p8microclimate_gui::getTec()
 {
+    foreach (QList<double> list,this->p8microclimate->tec)
+    {
+        cout << endl;
+        foreach (double val,list)
+        {
+            cout << val << " ";
+        }
+    }
     return this->p8microclimate->tec;
 }
 
 void p8microclimate_gui::setTec(QList<QList<double> > tec)
 {
+    /*
+
+*/
     this->p8microclimate->tec = tec;
 }
 

@@ -36,13 +36,13 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Csv File", workpath, self.tr("Csv Files (*.csv)"))
 		self.ui.le_r.setText(filename)
 	def load2(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", workpath, self.tr("Text Files (*.txt)"))
 		self.ui.le_r2.setText(filename)

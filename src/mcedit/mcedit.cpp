@@ -83,6 +83,7 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
     mode=0;
     viewmode=1;
     tecLoad(parent);
+    tecLoad(workpath+"/WSUDtech.mcd");
     if (QFile::exists(workpath+"/Reduction in LST.mcd"))
     {
         resLoad(workpath+"/Reduction in LST.mcd");
@@ -223,32 +224,40 @@ int cellComp (Cell* a,  Cell* b)
     return (a->getNo()) < (b->getNo());
 }
 
+
 void mcedit::tecLoad()
 {
     QString tfilename=QFileDialog::getOpenFileName(this,"Load mcd",workpath,"*.mcd");
+    tecLoad(tfilename);
+}
+
+void mcedit::tecLoad(QString tfilename)
+{
     if (!tfilename.isEmpty())
     {
         filename=tfilename;
         QFile file;
         file.setFileName(filename);
-        file.open(QIODevice::ReadOnly|QIODevice::Text);
-        QTextStream stream;
-        stream.setDevice(&file);
-        QList<Cell*> sortlist=cellmap.values();
-        qSort(sortlist.begin(),sortlist.end(),cellComp);
-
-        foreach (Cell *cell, sortlist)
+        if (file.open(QIODevice::ReadOnly|QIODevice::Text))
         {
-            QStringList linelist=stream.readLine().split(",");
-            cell->setNo(linelist[0].toInt());
-            cell->setV(0,linelist[1].toDouble());
-            cell->setV(1,linelist[2].toDouble());
-            cell->setV(2,linelist[3].toDouble());
-            cell->setV(3,linelist[4].toDouble());
-            cell->setV(4,linelist[5].toDouble());
-            cell->setV(5,linelist[6].toDouble());
+            QTextStream stream;
+            stream.setDevice(&file);
+            QList<Cell*> sortlist=cellmap.values();
+            qSort(sortlist.begin(),sortlist.end(),cellComp);
+
+            foreach (Cell *cell, sortlist)
+            {
+                QStringList linelist=stream.readLine().split(",");
+                cell->setNo(linelist[0].toInt());
+                cell->setV(0,linelist[1].toDouble());
+                cell->setV(1,linelist[2].toDouble());
+                cell->setV(2,linelist[3].toDouble());
+                cell->setV(3,linelist[4].toDouble());
+                cell->setV(4,linelist[5].toDouble());
+                cell->setV(5,linelist[6].toDouble());
+            }
+            file.close();
         }
-        file.close();
     }
 }
 
@@ -365,6 +374,7 @@ void mcedit::tecLoad(p8microclimate_gui *parent)
     int i=0;
     if(qsortlist.isEmpty())
     {
+        cout << "Map reset!!!!!!!!!!"<<endl;
         foreach (Cell *cell, sortlist)
         {
             cell->setNo(i);
@@ -513,4 +523,5 @@ void mcedit::on_pb_zoomout_2_clicked()
 {
     while (ui->graphicsView->transform().m11()>=0.05)
         ui->graphicsView->scale(1.0/1.1,1.0/1.1);
+    cellupdate();
 }

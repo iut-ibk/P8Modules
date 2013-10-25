@@ -26,7 +26,7 @@ class ReadTable_Gui(QtGui.QDialog):
 	workpath = settings.value("workPath").toString()
 	workpath += "/RunMusicSecondary.bat"
 	if (platform.system() != "Linux"):
-		workpath = workpath("/","\\")
+		workpath = workpath.replace("/","\\")
 	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
 	self.loadTable(filename)
 	

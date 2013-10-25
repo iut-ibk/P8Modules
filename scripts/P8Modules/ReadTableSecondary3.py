@@ -42,7 +42,7 @@ class StreamHydrologyandWaterquality(Module):
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
 		''' version with musicnr'''
@@ -313,7 +313,7 @@ class StreamHydrologyandWaterquality(Module):
 		workpath += "/RunMusicSecondary.bat"
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		f = open(workpath,'w')
 		filearr = file.split(".")
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \"" + workpath + "musicConfigFileSecondary.mcf\" -light -silent\n")
@@ -323,7 +323,7 @@ class StreamHydrologyandWaterquality(Module):
 		workpath = settings.value("workPath").toString()
 		workpath += "/RunMusicSecondary.bat"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		f = open(workpath,'w')
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \"" + workpath + "musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
@@ -332,7 +332,7 @@ class StreamHydrologyandWaterquality(Module):
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		f = open(workpath + "musicConfigFileSecondary.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
@@ -351,7 +351,7 @@ class StreamHydrologyandWaterquality(Module):
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
 		if (platform.system() != "Linux"):
-			workpath = workpath("/","\\")
+			workpath = workpath.replace("/","\\")
 		f = open(workpath + "musicConfigFileSecondary"+str(nr)+".mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
