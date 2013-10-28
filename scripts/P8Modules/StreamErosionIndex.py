@@ -236,7 +236,10 @@ class StreamErosionIndex(Module):
         f.close()
     def changeMusicFile(self,filename):
         self.writeBatFileFromFile(filename)
-
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath.replace("/","\\")
         #read start- , enddate and timestep from csv
         startdate = ""
         enddate = ""
