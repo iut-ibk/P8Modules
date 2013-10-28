@@ -73,7 +73,7 @@ class StreamHydrologyandWaterquality(Module):
 		totalarea = areas[1] 	#total area
 		print "Music is running ... "
 		if(platform.system() != "Linux"):
-			call(["RunMusicSecondary.bat", ""])
+			call([str(workpath) + "RunMusicSecondary.bat", ""])
 		print "Music Done."
 		print "imparea: " + str(imparea)
 		EIF = imparea / totalarea
@@ -106,14 +106,14 @@ class StreamHydrologyandWaterquality(Module):
 		list8 = self.readFileToList("PredevelopBaseflowFrequency"+str(musicnr)+".TXT")
 		'''
 		#version with music file
-		list1 = self.readFileToList("PredevelopRunoffFrequency.TXT")
-		list2 = self.readFileToList("UntreatedRunoffFrequency.TXT")
-		list3 = self.readFileToList("TreatedRunoffFrequency.TXT")
-		list4 = self.readFileToList("ETandRe-useFluxes.TXT")
-		list5 = self.readFileToList("PredevelopTotalRunoff.TXT")
-		list6 = self.readFileToList("Exfiltration.TXT")
-		list7 = self.readFileToList("WQ.TXT")
-		list8 = self.readFileToList("PredevelopBaseflowFrequency.TXT")
+		list1 = self.readFileToList(workpath + "PredevelopRunoffFrequency.TXT")
+		list2 = self.readFileToList(workpath + "UntreatedRunoffFrequency.TXT")
+		list3 = self.readFileToList(workpath + "TreatedRunoffFrequency.TXT")
+		list4 = self.readFileToList(workpath + "ETandRe-useFluxes.TXT")
+		list5 = self.readFileToList(workpath + "PredevelopTotalRunoff.TXT")
+		list6 = self.readFileToList(workpath + "Exfiltration.TXT")
+		list7 = self.readFileToList(workpath + "WQ.TXT")
+		list8 = self.readFileToList(workpath + "PredevelopBaseflowFrequency.TXT")
 
 		vec1 = []
 		vec2 = []
@@ -310,22 +310,22 @@ class StreamHydrologyandWaterquality(Module):
 	def writeBatFileFromFile(self,file):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString()
-		workpath += "/RunMusicSecondary.bat"
+		workpath += "/"#RunMusicSecondary.bat"
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
 			workpath = workpath.replace("/","\\")
-		f = open(workpath,'w')
+		f = open(workpath + "RunMusicSecondary.bat" ,'w')
 		filearr = file.split(".")
-		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \"" + workpath + "musicConfigFileSecondary.mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \"" + workpath + "RunMusicSecondary.bat\" \"" + workpath +  "musicConfigFileSecondary.mcf\" -light -silent\n")
 		f.close()
 	def writeBatFileFromNr(self,nr):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString()
-		workpath += "/RunMusicSecondary.bat"
+		workpath += "/"#RunMusicSecondary.bat"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		f = open(workpath,'w')
-		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \"" + workpath + "musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \"" + workpath + "RunMusicSecondary.bat\" \"" + workpath + "musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromFile(self,file):
 		settings = QSettings()

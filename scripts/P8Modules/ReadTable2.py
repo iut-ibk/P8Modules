@@ -57,11 +57,14 @@ class TreatmentPerformanceResultsModule(Module):
 		shutil.copyfile(realstring,newname)
 		self.writeBatFile(newname)
 		self.writeMusicConfigFile(newname)
-
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
 
 		print "Music running ..."
 		if (platform.system() != "Linux"):
-			call(["RunMusicTP.bat", ""])
+			call([str(workpath) + "RunMusicTP.bat", ""])
 		print "Music Done."
 
 	def writeBatFile(self,file):
