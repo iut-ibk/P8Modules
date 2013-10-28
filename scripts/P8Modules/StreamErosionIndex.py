@@ -216,7 +216,7 @@ class StreamErosionIndex(Module):
             workpath = workpath.replace("/","\\")
         f = open(workpath + "RunMusicSEI.bat",'w')
         filearr = file.split(".")
-        f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \".\musicConfigFileSEI.mcf\" -light -silent\n")
+        f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \"" + workpath + "musicConfigFileSEI.mcf\" -light -silent\n")
         f.close()
     def writeMusicConfigFile(self,routed):
         settings = QSettings()
@@ -340,7 +340,7 @@ class StreamErosionIndex(Module):
         #Run music
         print "Music is running ... "
         if (platform.system() != "Linux"):
-            call(["RunMusicSEI.bat", ""])
+            call([str(workpath) + "RunMusicSEI.bat", ""])
         print "Music Done."
     def getRainEtFile(self):
         #checks wether the user chose a rain file or a city
