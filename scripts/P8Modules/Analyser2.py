@@ -8,6 +8,7 @@ class AnalyserModule(Module):
 		Module.__init__(self)
 
 		self.simulation = View("SimulationData",COMPONENT,READ)
+		self.simulation.getAttribute("msfFilename")
 		self.simulation.getAttribute("SEIurb")
 		self.simulation.getAttribute("SEIwsud")	
 		self.simulation.getAttribute("NoY")
@@ -22,10 +23,14 @@ class AnalyserModule(Module):
 		tmpvec = []
 		self.SEIwsud = 0.0
 		self.SEIurb = 0.0
+		self.musicfile = ""
 		for value in strvec:
 			simuData = city.getComponent(value)
 			urb = simuData.getAttribute("SEIurb").getDouble()
 			wsud = simuData.getAttribute("SEIwsud").getDouble()
+			stringname = simuData.getAttribute("msfFilename").getString()
+			if (stringname != ""):
+				self.musicfile = stringname
 			if (urb != 0):
 				self.SEIurb = urb
 			if(wsud != 0):

@@ -13,6 +13,7 @@ import random
 import math
 from operator import itemgetter
 import platform
+import ntpath
 
 
 
@@ -140,7 +141,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		text.whitespace += '\n'
 		text.whitespace_split = True
 		liste = list(text)
-		number = filename[len(filename)-5]
+		#number = filename[len(filename)-5]
 		bars = []
 		bars1 = (round(float(liste[7])),round(float(liste[11])),round(float(liste[15])),round(float(liste[19])))
 		f.close
@@ -160,7 +161,7 @@ class Analyser2_Gui(QtGui.QDialog):
 				'''
 				i = i + 1
 			f.close()
-		bars.append([bars1,number])
+		bars.append([bars1,ntpath.basename(self.module.musicfile)])
 		n = 4
 		ind = np.arange(n)
 		space = 0.25
