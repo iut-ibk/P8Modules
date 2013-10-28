@@ -316,7 +316,7 @@ class StreamHydrologyandWaterquality(Module):
 			workpath = workpath.replace("/","\\")
 		f = open(workpath + "RunMusicSecondary.bat" ,'w')
 		filearr = file.split(".")
-		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \"" + workpath + "RunMusicSecondary.bat\" \"" + workpath +  "musicConfigFileSecondary.mcf\" -light -silent\n")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "Secondary." + filearr[1] +"\" \"" + workpath +  "musicConfigFileSecondary.mcf\" -light -silent\n")
 		f.close()
 	def writeBatFileFromNr(self,nr):
 		settings = QSettings()
