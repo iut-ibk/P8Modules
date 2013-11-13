@@ -465,8 +465,8 @@ class StreamHydrologyandWaterquality(Module):
 				if(linearr[0] == "Areas - Impervious (%)"):
 					urbtmp += line
 					imp = float(linearr[1])
-					if(imp == 100):
-						EtFlux_list.append(tmpID)
+					#if(imp == 100):
+						#EtFlux_list.append(tmpID)
 				if(writetop):
 					urbfirst += line
 				if(writebot):
@@ -476,7 +476,7 @@ class StreamHydrologyandWaterquality(Module):
 					per = float(linearr[1])
 					if (per < 100 and per > 0):
 						split = True
-						EtFlux_list.append(tmpID)
+						#EtFlux_list.append(tmpID)
 					calc = True
 					writebot = True
 			else:
