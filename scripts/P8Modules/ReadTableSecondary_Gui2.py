@@ -23,10 +23,24 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	QtCore.QObject.connect(self.ui.pb_clipboard, QtCore.SIGNAL("released()"),self.copyToClipboard)
 	#QtCore.QObject.connect(self.ui.pb_plot, QtCore.SIGNAL("released()"),self.plot)
 	self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
+	if(self.module.getParameterAsString("AnnualUserRain") != "0"):
+		self.ui.le_u.setText(str(self.module.getParameterAsString("AnnualUserRain")))
+	self.ui.le_tss.setText(str(self.module.getParameterAsString("TssTarget")))
+	self.ui.le_tp.setText(str(self.module.getParameterAsString("TpTarget")))
+	self.ui.le_tn.setText(str(self.module.getParameterAsString("TnTarget")))
+
 
     def save(self):
 	city = self.ui.city_combo.currentIndex()
+	if(city == 5):
+		self.module.setParameterValue("AnnualUserRain",str(self.ui.le_u.text()))
 	self.module.setParameterValue("SimulationCity",str(city))
+	if(self.ui.chkbox.isChecked() == 1):
+		self.module.setParameterValue("UserTargets",str(1))
+		self.module.setParameterValue("TssTarget",str(self.ui.le_tss.text()))
+		self.module.setParameterValue("TnTarget",str(self.ui.le_tn.text()))
+		self.module.setParameterValue("TpTarget",str(self.ui.le_tp.text()))
+
 	pass
 	
     def Load(self):
