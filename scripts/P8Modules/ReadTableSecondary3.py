@@ -19,6 +19,16 @@ class StreamHydrologyandWaterquality(Module):
 		self.FileName = ""
 		self.createParameter("SimulationCity",DOUBLE,"")
 		self.SimulationCity = 2
+		self.createParameter("AnnualUserRain", DOUBLE, "")
+		self.AnnualUserRain = 0
+		self.createParameter("TssTarget",DOUBLE,"")
+		self.TssTarget = 20.0
+		self.createParameter("TnTarget",DOUBLE,"")
+		self.TnTarget = 0.6
+		self.createParameter("TpTarget",DOUBLE,"")
+		self.TpTarget = 0.05
+		self.createParameter("UseTargets", BOOL,"")
+		self.UseTargets = False
 
 		#Views
 		self.simulation = View("SimulationData",COMPONENT,READ)
@@ -94,6 +104,9 @@ class StreamHydrologyandWaterquality(Module):
 			AnnualRain = 790
 		elif self.SimulationCity == 4:
 			AnnualRain = 1175
+		elif self.SimulationCity == 5:
+			AnnualRain = self.AnnualUserRain
+		print "AnnualRain : " + str(AnnualRain)
 
 		'''version with musicnr
 		list1 = self.readFileToList("PredevelopRunoffFrequency"+str(musicnr)+".TXT")
@@ -157,9 +170,9 @@ class StreamHydrologyandWaterquality(Module):
 		tss = tssVec[len(tssVec)/2]
 		tp = tpVec[len(tpVec)/2]
 		tn = tnVec[len(tnVec)/2]
-		tss = 1-max((float(tss)-20)/(150-20),0)
-		tp = 1-max((float(tp)-0.6)/(2.2-0.6),0)
-		tn = 1-max((float(tn)-0.05)/(0.35-0.05),0)
+		tss = 1-max((float(tss)-self.TssTarget)/(150-self.TssTarget),0)
+		tp = 1-max((float(tp)-self.TpTarget)/(2.2-self.TpTarget),0)
+		tn = 1-max((float(tn)-self.TnTarget)/(0.35-self.TnTarget),0)
 
 
 		freqVec = self.getNotZeroDays(vec1,vec2,vec2,0)
@@ -242,7 +255,7 @@ class StreamHydrologyandWaterquality(Module):
 		tmpFF = 1 - max((float(FreqTreated)-float(FreqPredev))/(float(FreqUntreated)-float(FreqPredev)),0)
 		tmpVR = 1-((VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev))
 		tmpWQ = (tss+tn+tp)/3
-
+		print "tmp WQ: " + str(tmpWQ)
 
 		#for numbers with only value after the comma
 		self.FF.append(float(int(tmpFF*1000))/10) 
