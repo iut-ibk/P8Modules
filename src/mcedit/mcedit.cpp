@@ -38,6 +38,11 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
     teccol.append(new QColor(181,90,29,255));
     teccol.append(new QColor(9,0,173,255));
     teccol.append(new QColor(140,176,135,255));
+    teccol.append(new QColor(4,224,23,255));
+    teccol.append(new QColor(179,209,56,255));
+    teccol.append(new QColor(7,224,126,255));
+    teccol.append(new QColor(181,90,29,255));
+    teccol.append(new QColor(9,0,173,255));
 
 
     this->cx=cx;
@@ -111,6 +116,11 @@ void mcedit::mousemove(QGraphicsSceneMouseEvent *event)
         ui->v4->setValue(selectedCell->getV(3));
         ui->v5->setValue(selectedCell->getV(4));
         ui->v6->setValue(selectedCell->getV(5));
+        ui->v7->setValue(selectedCell->getV(5));
+        ui->v8->setValue(selectedCell->getV(5));
+        ui->v9->setValue(selectedCell->getV(5));
+        ui->v10->setValue(selectedCell->getV(5));
+        ui->v11->setValue(selectedCell->getV(5));
 
         ui->temp->setValue(selectedCell->getRes(0));
     }
@@ -255,6 +265,11 @@ void mcedit::tecLoad(QString tfilename)
                 cell->setV(3,linelist[4].toDouble());
                 cell->setV(4,linelist[5].toDouble());
                 cell->setV(5,linelist[6].toDouble());
+                cell->setV(6,linelist[7].toDouble());
+                cell->setV(7,linelist[8].toDouble());
+                cell->setV(8,linelist[9].toDouble());
+                cell->setV(9,linelist[10].toDouble());
+                cell->setV(10,linelist[11].toDouble());
             }
             file.close();
         }
@@ -342,7 +357,12 @@ void mcedit::tecSave(QString filename)
                << cell->getV(2) << ","
                << cell->getV(3) << ","
                << cell->getV(4) << ","
-               << cell->getV(5) << "\n";
+               << cell->getV(5) << ","
+               << cell->getV(6) << ","
+               << cell->getV(7) << ","
+               << cell->getV(8) << ","
+               << cell->getV(9) << ","
+               << cell->getV(10) << "\n";
     }
     file.close();
 }
@@ -360,7 +380,12 @@ void mcedit::tecSave(p8microclimate_gui *parent)
              << cell->getV(2)
              << cell->getV(3)
              << cell->getV(4)
-             << cell->getV(5);
+             << cell->getV(5)
+             << cell->getV(6)
+             << cell->getV(7)
+             << cell->getV(8)
+             << cell->getV(9)
+             << cell->getV(10);
         qsortlist << line;
     }
     parent->setTec(qsortlist);
@@ -384,6 +409,11 @@ void mcedit::tecLoad(p8microclimate_gui *parent)
             cell->setV(3,0);
             cell->setV(4,0);
             cell->setV(5,0);
+            cell->setV(6,0);
+            cell->setV(7,0);
+            cell->setV(8,0);
+            cell->setV(9,0);
+            cell->setV(10,0);
             i++;
         }
     }
@@ -397,6 +427,11 @@ void mcedit::tecLoad(p8microclimate_gui *parent)
             cell->setV(3,qsortlist[i][3]);
             cell->setV(4,qsortlist[i][4]);
             cell->setV(5,qsortlist[i][5]);
+            cell->setV(6,qsortlist[i][6]);
+            cell->setV(7,qsortlist[i][7]);
+            cell->setV(8,qsortlist[i][8]);
+            cell->setV(9,qsortlist[i][9]);
+            cell->setV(10,qsortlist[i][10]);
             i++;
         }
     }
@@ -462,17 +497,27 @@ void mcedit::on_pb_edit_clicked()
         double v4=0;
         double v5=0;
         double v6=0;
-        CellDialog *dia=new CellDialog(NULL,&v1,&v2,&v3,&v4,&v5,&v6);
+        double v7=0;
+        double v8=0;
+        double v9=0;
+        double v10=0;
+        double v11=0;
+        CellDialog *dia=new CellDialog(NULL,&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8,&v9,&v10,&v11);
         dia->exec();
         foreach (Cell *cell, selectedCells)
         {
-            dia->getValues(&v1,&v2,&v3,&v4,&v5,&v6);
+            dia->getValues(&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8,&v9,&v10,&v11);
             cell->setV(0,v1);
             cell->setV(1,v2);
             cell->setV(2,v3);
             cell->setV(3,v4);
             cell->setV(4,v5);
             cell->setV(5,v6);
+            cell->setV(6,v7);
+            cell->setV(7,v8);
+            cell->setV(8,v9);
+            cell->setV(9,v10);
+            cell->setV(10,v11);
         }
         cellupdate();
     }
