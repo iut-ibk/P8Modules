@@ -29,7 +29,7 @@ public:
 
 
 protected:
-    double v[6];
+    double v[11];
     double res[1];
     int no;
     bool selected;
