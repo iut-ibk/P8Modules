@@ -64,6 +64,8 @@ class StreamErosionIndex(Module):
         Pre = self.readTimeSeries(workpath + "Pre-developedCatchment.csv")
         Urb = self.readTimeSeries(workpath + "UrbanisedCatchment.csv")
         PostWSUD = self.readTimeSeries(workpath + "PostWSUD.csv")
+        self.tmpFile = workpath + "SEItable.txt"
+
         idx =  self.findNearest(Pre,2)
         upper = []
         lower = []
@@ -125,6 +127,21 @@ class StreamErosionIndex(Module):
         simu.addAttribute("NoY", self.NoY)
         simu.addAttribute("alpha", self.alpha)
         city.addComponent(simu,self.simulation)
+
+        if os.path.exists(self.tmpFile):
+            f = open(self.tmpFile,'a+')
+            nr = 0
+            for line in f:
+                linearr = line.strip("\n").split(",")
+                if(nr < linearr[0]):
+                    nr = linearr[0]
+            f.write(str(nr)+","+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")       
+            f.close()
+        else:
+            f = open(self.tmpFile,'w')
+            #f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
+            f.write("1,"+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")       
+            f.close()
     def readLongTimeSeries(self,filename):
         #only reads timeserie and puts it into a vector without changing any of the data inside
         arr = []
