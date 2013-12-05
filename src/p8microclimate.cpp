@@ -490,35 +490,62 @@ double Microclimate::calcDeltaLst(QList<double> t, double frac)
 {
     int counter = 0;
     double res = 0;
-    if(t[1] >= 20)
+    if(t[1] >= 20)// swales
     {
         counter++;
         res += t[1] /100;
     }
-    if(t[2] >= 20)
+    if(t[2] >= 20)//bioretention
     {
         counter++;
         res += ((t[2] /100) -0.2)*0.5;
     }
-    if(t[3] >= 20)
+    if(t[3] >= 20)//infiltration system
     {
         counter++;
         res += ((t[3] /100) -0.2)*0.5;
     }
-    if(t[4] >= 20)
+    if(t[4] >= 20)//surface wetland
     {
         counter++;
         res += t[4] /100 - 0.2;
     }
-    if(t[5] >= 20)
+    if(t[5] >= 20)//pond & basin
     {
         counter++;
         res += t[5] /100 - 0.2;
     }
-    if(t[6] >= 20)
+    if(t[6] >= 20)//tree
     {
         counter++;
         res += ((t[6] /100) - 0.2) * 2.75;
+    }
+    if(t[7] >= 20)//grass
+    {
+        counter++;
+        res += (t[6] /100);
+    }
+    if(t[8] >= 20)
+    {
+        counter++;
+        res += (t[6] /100); // impervious area ... dont know ....
+    }
+    if(t[9] >= 20)// green wall
+    {
+        counter++;
+        res += t[1] /100;
+    }
+    if(t[10] >= 20)// green roof
+    {
+        counter++;
+        res += t[1] /100;
+    }
+    if(t[11] >= 20)// user defiend coefficient
+    {
+        double coef;
+        coef = 1;//getCoef();
+        counter++;
+        res += ((t[1] /100) - 0.2) * coef;
     }
     if(res != 0)
     {
@@ -567,6 +594,26 @@ void Microclimate::exportMCtemp(DM::RasterData *r, QString filename, double scal
             }
         }
     }
+}
+
+double Microclimate::getCoef()
+{
+    double res;
+    QFile file;
+    file.setFileName("filename");
+    file.open(QIODevice::Text|QIODevice::ReadOnly);
+    QTextStream stream;
+    stream.setDevice(&file);
+
+    while(!stream.atEnd())
+    {
+        QString input=stream.readLine();
+        QStringList list=input.split(",",QString::KeepEmptyParts);
+        while(!list.isEmpty())
+            res = list.takeFirst().toDouble();
+    }
+    file.close();
+    return res;
 }
 bool Microclimate::isleft(DM::Node a, DM::Node b, DM::Node c)
 {
