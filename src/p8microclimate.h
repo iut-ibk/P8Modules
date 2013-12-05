@@ -41,6 +41,7 @@ public:
     bool isleft(DM::Node a,DM::Node b,DM::Node c);
     DM::RasterData * calcReductionAirTemp(DM::RasterData * r);
     void exportMCtemp(DM::RasterData *r, QString filename, double scale);
+    double getCoef();
 
 };
 
