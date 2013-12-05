@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import os.path
 import os
-import random
 import math
 from operator import itemgetter
 import platform
@@ -30,7 +29,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			workpath = workpath.replace("/","\\")
 		self.TPRFile = workpath + "TPRtable.txt"
 		self.EBRFile = workpath + "EBRtable.txt"
-		self.UtilFile= workpath + "UtilTable.txt"
+		self.UtilFile = workpath + "UtilTable.txt"
+		self.summaryFile = workpath + "AnalyzerSummary.csv"
 		QtCore.QObject.connect(self.ui.pb_plotEBR, QtCore.SIGNAL("released()"),self.plotEBR)
 		QtCore.QObject.connect(self.ui.pb_plotTPR, QtCore.SIGNAL("released()"),self.plotTPR)
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
@@ -45,7 +45,6 @@ class Analyser2_Gui(QtGui.QDialog):
 		if os.path.exists(self.EBRFile):
 			os.remove(self.EBRFile)
 	def plotEBR(self):
-		random.seed()
 		mpl.rcParams['toolbar'] = 'None'
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
@@ -122,7 +121,6 @@ class Analyser2_Gui(QtGui.QDialog):
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		plt.savefig(str(workpath)+"EviromentalBenefitsPlot.png")
-		
 	def plotTPR(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
@@ -130,7 +128,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
+		filename = workpath + "Perf_TTE.txt"#QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
 		mpl.rcParams['toolbar'] = 'None'
 		show2 = False
 		show3 = False
@@ -171,7 +169,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		ax = fig.add_subplot(111)
 		for bar in bars:
 			tmp = ax.bar(ind + width * j,bar[0],width,color = self.colorarr[j])
-			tmp.set_label('Realisation ' + str(bar[1]))
+			tmp.set_label('' + str(bar[1]))
 			j = j + 1
 		'''
 		rects1 = ax.bar(ind,bars1,width,color = '#1f99d0')
@@ -207,6 +205,20 @@ class Analyser2_Gui(QtGui.QDialog):
 		'''
 		f.close()
 		plt.savefig(str(workpath) + 'TreatmentPerformancePlot.png')
+		#writing information into summary file
+		if(os.path.exists(self.summaryFile)):
+			f = open(self.summaryFile, 'a+')
+			f.write("------------ Analyzer Summary ------------\n\n\n")
+			f.write(" TP: \n\n")
+			for bar in bars:
+				f.write(str(bar[0]) + "\n")
+			f.write("\n------------------------------------------\n\n")
+		else:
+			f = open(self.summaryFile, 'w')
+			f.write(" TP: \n")
+			for bar in bars:
+				f.write(str(bar[0]) + "\n")
+			f.write("\n------------------------------------------\n\n")
 	def plotUtil(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
