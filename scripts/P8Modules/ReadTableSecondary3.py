@@ -171,8 +171,8 @@ class StreamHydrologyandWaterquality(Module):
 		tp = tpVec[len(tpVec)/2]
 		tn = tnVec[len(tnVec)/2]
 		tss = 1-max((float(tss)-self.TssTarget)/(150-self.TssTarget),0)
-		tp = 1-max((float(tp)-self.TpTarget)/(2.2-self.TpTarget),0)
-		tn = 1-max((float(tn)-self.TnTarget)/(0.35-self.TnTarget),0)
+		tp = 1-max((float(tp)-self.TpTarget)/(0.35-self.TpTarget),0)
+		tn = 1-max((float(tn)-self.TnTarget)/(2.2-self.TnTarget),0)
 
 
 		freqVec = self.getNotZeroDays(vec1,vec2,vec2,0)
