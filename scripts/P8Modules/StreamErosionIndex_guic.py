@@ -17,8 +17,8 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.ui.le_r.setText(self.module.getParameterAsString("Csvfile"))
 		self.ui.le_r2.setText(self.module.getParameterAsString("ETfile"))
-		self.ui.le_A.setText(self.module.getParameterAsString("alpha"))
-		self.ui.le_NoY.setText(self.module.getParameterAsString("NoY"))
+		self.ui.le_A.setValue(float(self.module.getParameterAsString("alpha")))
+		self.ui.le_NoY.setValue(int(self.module.getParameterAsString("NoY")))
 		self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
 
 		QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
@@ -30,8 +30,12 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.module.setParameterValue("Csvfile", Filename)
 		Filename = str(self.ui.le_r2.text())
 		self.module.setParameterValue("ETfile",Filename)
+		Filename = str(self.ui.le_r3.text())
+		self.module.setParameterValue("MusicTemplateFile", Filename)
 		city = self.ui.city_combo.currentIndex()
 		self.module.setParameterValue("SimulationCity",str(city))
+		self.module.setParameterValue("alpha",str(self.ui.le_A.text()))
+		self.module.setParameterValue("NoY", str(self.ui.le_NoY.text()))
 	def load(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
@@ -46,3 +50,10 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 			workpath = workpath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", workpath, self.tr("Text Files (*.txt)"))
 		self.ui.le_r2.setText(filename)
+	def load3(self):
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select MUSIC template File", workpath, self.tr("Text Files (*.mlb)"))
+		self.ui.le_r3.setText(filename)

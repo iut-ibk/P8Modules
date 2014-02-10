@@ -19,6 +19,8 @@ class StreamHydrologyandWaterquality(Module):
 		self.FileName = ""
 		self.createParameter("SimulationCity",DOUBLE,"")
 		self.SimulationCity = 2
+		self.createParameter("VolumeReductionIndex",DOUBLE,"")
+		self.VolumeReductionIndex = 1
 		self.createParameter("AnnualUserRain", DOUBLE, "")
 		self.AnnualUserRain = 0
 		self.createParameter("TssTarget",DOUBLE,"")

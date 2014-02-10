@@ -22,6 +22,8 @@ class StreamErosionIndex(Module):
         self.Csvfile = ""
         self.createParameter("ETfile",STRING,"")
         self.ETfile = ""
+        self.createParameter("MusicTemplateFile")
+        self.MusicTemplateFile = ""
         self.createParameter("alpha",DOUBLE,"")
         self.alpha = 0.4
         self.createParameter("NoY",DOUBLE,"")
@@ -337,11 +339,14 @@ class StreamErosionIndex(Module):
                 if(int(linearr[1]) > int(ID)):
                     ID = int(linearr[1])
             if (linearr[0] == "MeteorologicalTemplate"):
-                outfile.write("RainfallFile," + files[0] +"\n")
-                outfile.write("PETFile," + files[1] + "\n")
-                outfile.write("StartDate," + startdate + "\n")
-                outfile.write("EndDate," + enddate + "\n")
-                outfile.write("Timestep," + str(timestep) + "\n")
+                if(self.MusicTemplateFile == ""):
+                    outfile.write("RainfallFile," + files[0] +"\n")
+                    outfile.write("PETFile," + files[1] + "\n")
+                    outfile.write("StartDate," + startdate + "\n")
+                    outfile.write("EndDate," + enddate + "\n")
+                    outfile.write("Timestep," + str(timestep) + "\n")
+                else:
+                    outfile.write("MeteorologicalTemplate," + self.MusicTemplateFile + ",{MLB Filename}\n")
             else:
                 outfile.write(line)
         umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID+1,perArea,False,catchment_paramter_list) #pervious

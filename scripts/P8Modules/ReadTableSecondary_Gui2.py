@@ -18,16 +18,20 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
         self.ui = Ui_ReadTableSecondary_GUI2()
         self.ui.setupUi(self)
 	QtCore.QObject.connect(self.ui.pb_load, QtCore.SIGNAL("released()"),self.Load)
-        QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save)
+	QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save)
 	QtCore.QObject.connect(self.ui.pb_export, QtCore.SIGNAL("released()"),self.export)
+	self.ui.city_combo.currentIndexChanged['QString'].connect(self.cityChanged)#QtCore.QObject.connect(self.ui.city_combo, QtCore.SIGNAL("valueChanged()"),self.cityChanged)
 	QtCore.QObject.connect(self.ui.pb_clipboard, QtCore.SIGNAL("released()"),self.copyToClipboard)
+	self.ui.vol_combo.currentIndexChanged['QString'].connect(self.volChanged)
+
 	#QtCore.QObject.connect(self.ui.pb_plot, QtCore.SIGNAL("released()"),self.plot)
 	self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
+	self.ui.vol_combo.setCurrentIndex(int(self.module.getParameterAsString("VolumeReductionIndex")))
 	if(self.module.getParameterAsString("AnnualUserRain") != "0"):
-		self.ui.le_u.setText(str(self.module.getParameterAsString("AnnualUserRain")))
-	self.ui.le_tss.setText(str(self.module.getParameterAsString("TssTarget")))
-	self.ui.le_tp.setText(str(self.module.getParameterAsString("TpTarget")))
-	self.ui.le_tn.setText(str(self.module.getParameterAsString("TnTarget")))
+		self.ui.spb_city.setValue(int(self.module.getParameterAsString("AnnualUserRain")))
+	self.ui.le_tss.setValue(float(self.module.getParameterAsString("TssTarget")))
+	self.ui.le_tp.setValue(float(self.module.getParameterAsString("TpTarget")))
+	self.ui.le_tn.setValue(float(self.module.getParameterAsString("TnTarget")))
 
 
     def save(self):
@@ -35,11 +39,11 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	if(city == 5):
 		self.module.setParameterValue("AnnualUserRain",str(self.ui.le_u.text()))
 	self.module.setParameterValue("SimulationCity",str(city))
-	if(self.ui.chkbox.isChecked() == 1):
-		self.module.setParameterValue("UserTargets",str(1))
-		self.module.setParameterValue("TssTarget",str(self.ui.le_tss.text()))
-		self.module.setParameterValue("TnTarget",str(self.ui.le_tn.text()))
-		self.module.setParameterValue("TpTarget",str(self.ui.le_tp.text()))
+	self.module.setParameterValue("VolumeReductionIndex",str(self.ui.vol_combo.currentIndex()))
+	self.module.setParameterValue("UserTargets",str(1))
+	self.module.setParameterValue("TssTarget",str(self.ui.le_tss.text()))
+	self.module.setParameterValue("TnTarget",str(self.ui.le_tn.text()))
+	self.module.setParameterValue("TpTarget",str(self.ui.le_tp.text()))
 
 	pass
 	
@@ -65,6 +69,27 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	    self.ui.table.setCellWidget(3,i,QtGui.QLineEdit(str(self.module.FV[i-1])))
 	    self.ui.table.setCellWidget(4,i,QtGui.QLineEdit(str(self.module.WQ[i-1])))
 
+    def cityChanged(self):
+	if self.ui.city_combo.currentIndex() == 0:
+		self.ui.spb_city.setValue(520)
+	elif self.ui.city_combo.currentIndex() == 1:
+		self.ui.spb_city.setValue(1200)
+	elif self.ui.city_combo.currentIndex() == 2:
+		self.ui.spb_city.setValue(650)
+	elif self.ui.city_combo.currentIndex() == 3:
+		self.ui.spb_city.setValue(790)
+	elif self.ui.city_combo.currentIndex() == 4:
+		self.ui.spb_city.setValue(1175)
+	elif self.ui.city_combo.currentIndex() == 5:
+		self.ui.spb_city.setValue(0)
+
+    def volChanged(self):
+	if self.ui.vol_combo.currentIndex() == 0:
+		self.ui.spb_vol.setValue(20)
+	elif self.ui.vol_combo.currentIndex() == 1:
+		self.ui.spb_vol.setValue(60)
+	elif self.ui.vol_combo.currentIndex() == 2:
+		self.ui.spb_vol.setValue(0)
     def export(self):
 	settings = QSettings()
 	workpath = settings.value("workPath").toString() + "/"
