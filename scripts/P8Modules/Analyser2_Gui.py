@@ -36,6 +36,9 @@ class Analyser2_Gui(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
 		QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
 		QtCore.QObject.connect(self.ui.pb_plotSEI, QtCore.SIGNAL("released()"),self.plotSEI)
+		QtCore.QObject.connect(self.ui.pb_plotSEI2, QtCore.SIGNAL("released()"),self.plotSEI2)
+
+
 		self.colorarr = ['#1f99d0','#8fcce7','#abcd88', '#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']#'#1f99d0','#8fcce7','#abcd8',
 	def delete(self):
 		if os.path.exists(self.TPRFile):
@@ -206,7 +209,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		f.close()
 		plt.savefig(str(workpath) + 'TreatmentPerformancePlot.png')
 		#writing information into summary file
-		if(os.path.exists(self.summaryFile)):
+		'''if(os.path.exists(self.summaryFile)):
 			f = open(self.summaryFile, 'a+')
 			f.write("------------ Analyzer Summary ------------\n\n\n")
 			f.write(" TP: \n\n")
@@ -219,6 +222,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			for bar in bars:
 				f.write(str(bar[0]) + "\n")
 			f.write("\n------------------------------------------\n\n")
+		'''
 	def plotUtil(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
@@ -442,7 +446,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		plt.plot([1, 1], ax.get_ylim(), color = 'brown',linestyle = '-', lw=2, label = "~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway")
 		plt.plot([2, 2], ax.get_ylim(), 'k-', lw=2 , label = "~1 in 24 months >> Waterway geomorphic\nprotection")
 		plt.title(" ")
-		fig.canvas.set_window_title('SEI Plot')
+		fig.canvas.set_window_title('SEI Peak flows')
 		plt.ylabel(u"Flow m³/s")
 		plt.xlabel("Plotting Position (ARI)")
 		plt.text(0.01,ax.get_ylim()[1]/5,"SEI Urbanised = " + str(round(self.module.SEIurb,2)) + "\nSEI WSUD = " + str(round(self.module.SEIwsud,2)), backgroundcolor = "white")
@@ -455,7 +459,64 @@ class Analyser2_Gui(QtGui.QDialog):
 		xlim = ax.get_xlim()
 		plt.xlim([0.01,xlim[1]])
 		plt.show()
-		plt.savefig(str(workpath) + 'SEIplot.png')
+		plt.savefig(str(workpath) + 'SEIplot.png')	
+	def plotSEI2(self):
+		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
+		mpl.rcParams.update(params)
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		filename = workpath + "SEItable.txt"#QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
+		mpl.rcParams['toolbar'] = 'None'
+		i = 0
+		urb = 0.0
+		bars = []
+		tmpbar = []
+		xlabel = []
+		xlabel.append("Urbanised")
+		if os.path.exists(filename):
+			f = open(filename,'r')
+			for line in f:
+				linearr = line.strip('\n').split(',')
+				urb = round(float(linearr[2]))
+				tmpbar.append(round(float(linearr[3])))
+				xlabel.append(str(linearr[0]))
+				i = i + 1
+			f.close()
+			xlabel.append("Natural")
+			n = i+2
+			ind = np.arange(n)
+			space = 0.25
+			width = 0.75 / i
+			bars.append(urb)
+			for val in tmpbar:
+				bars.append(val)
+			bars.append(1)
+			print bars
+			fig = plt.figure()
+			ax = fig.add_subplot(111)
+			figbars = ax.bar(ind,bars,color = '#3399FF')
+			figbars[0].set_color('#CC3300')
+			figbars[n-1].set_color('#66FF33')
+			ax.set_ylabel('Stream Erosion index (SEI)')
+			ax.set_title('Stream Erosion Index')
+			ax.set_xticks(ind+(width*i)*0.75)
+			ax.set_xticklabels(xlabel)
+			plt.plot(ax.get_xlim(),[1,1], color = 'brown',linestyle = '--', lw=2, label = "SEI strech limit")
+			plt.plot(ax.get_xlim(),[3,3], 'b--', lw=2, label = "SEI lower limit")
+			plt.plot(ax.get_xlim(),[5,5], 'k--', lw=2, label = "SEI upper limit")
+			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
+			ax.legend(loc='best')
+			#plt.xlim([0,100])
+			fig.canvas.set_window_title('SEI Indices') 
+			fig.autofmt_xdate()
+			plt.grid(True, which="both",ls="-",color="#939393")
+			plt.ylim([0,int(urb)+1])
+			plt.show()
+			plt.savefig(str(workpath) + 'SEIindicesPlot.png')
+		else:
+			print "No SEI file found!!!"
 	def loadUtilFile(self):
 		vec = []
 		f = open(self.UtilFile,"r")

@@ -2,6 +2,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pydynamind import *
 from Analyser2_Gui import *
+import ntpath
 
 class AnalyserModule(Module):
 	def __init__(self):
@@ -68,14 +69,20 @@ class AnalyserModule(Module):
 			f = open(self.EBRFile,'r')
 			for line in f:
 				linearr = line.strip('\n').split(',')
-				tmp = (linearr[0],linearr[5],round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])))
+				tmp = (linearr[5],round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])))
 				output.append(tmp)
 			#writing information into summary file
 			f = open(self.summaryFile, 'w')
 			f.write("------------ Analyzer Summary ------------\n\n")
-			f.write(" EB: \n\n")
+			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction,Proportion of iltered flows,Water Quality\n")
+
 			for line in output:
-				f.write(str(line) + "\n")
+				tmp = str(line)
+				tmp = tmp.replace("(","")
+				tmp = tmp.replace("]","")
+				tmp = tmp.replace("[","")
+				tmp = tmp.replace(")","")
+				f.write(str(tmp) + "\n")
 			f.write("\n------------------------------------------\n\n")
 			f.close()
 		else:
@@ -101,17 +108,22 @@ class AnalyserModule(Module):
 					output.append(tmp)
 					i = i + 1
 				f.close()
-			output.append([i,line1[0],line1[1],line1[2],line1[3]])	
+			output.append([ntpath.basename(self.musicfile),line1[0],line1[1],line1[2],line1[3]])	
 			#writing ouput in summary	
 			if(os.path.exists(self.summaryFile)):
 				f = open(self.summaryFile, 'a+')
-				f.write(" TP: \n\n")
+				f.write(" TP: Treatment Performance\nRealisation,Flow(ML/year),Total Suspended Solids(kg/year), Total Phosphorus (kg/year),Total Nitrogen(kg/year)\n")
 			else:
 				f = open(self.summaryFile, 'w')
 				f.write("------------ Analyzer Summary ------------\n\n")
-				f.write(" TP: \n\n")
+				f.write(" TP: Treatment Performance\nRealisation,Flow(ML/year),Total Suspended Solids(kg/year), Total Phosphorus (kg/year),Total Nitrogen(kg/year)\n")
 			for line in output:
-				f.write(str(line) + "\n")
+				tmp = str(line)
+				tmp = tmp.replace("(","")
+				tmp = tmp.replace("]","")
+				tmp = tmp.replace("[","")
+				tmp = tmp.replace(")","")
+				f.write(str(tmp) + "\n")
 			f.write("\n------------------------------------------\n\n")
 			f.close()
 		else:
@@ -277,32 +289,32 @@ class AnalyserModule(Module):
 				b.append(linearr[1])
 			fil.close()
 			if(os.path.exists(self.summaryFile)):
-				f = open(self.summaryFile, 'a+')
-				f.write(" SEI: \n\n")
+				out = open(self.summaryFile, 'a+')
+				out.write(" SEI: \n\n")
 			else:
-				f = open(self.summaryFile, 'w')
-				f.write("------------ Analyzer Summary ------------\n\n")
-				f.write(" SEI: \n\n")
-			f.write("PRE:\n")
+				out = open(self.summaryFile, 'w')
+				out.write("------------ Analyzer Summary ------------\n\n")
+				out.write(" SEI: \n\n")
+			out.write("PRE:\n")
 			for i in a:
-				f.write(str(i) + ",")
-			f.write("\n")
+				out.write(str(i) + ",")
+			out.write("\n")
 			for i in b:
-				f.write(str(i) + ",")
-			f.write("\n\nURB:\n")
+				out.write(str(i) + ",")
+			out.write("\n\nURB:\n")
 			for i in c:
-				f.write(str(i) + ",")
-			f.write("\n")
+				out.write(str(i) + ",")
+			out.write("\n")
 			for i in d:
-				f.write(str(i) + ",")
-			f.write("\n\Post WSUD:\n")
+				out.write(str(i) + ",")
+			out.write("\n\Post WSUD:\n")
 			for i in e:
-				f.write(str(i) + ",")
-			f.write("\n")
+				out.write(str(i) + ",")
+			out.write("\n")
 			for i in f:
-				f.write(str(i) + ",")
-			f.write("\n")
-			f.write("\n------------------------------------------\n\n")
-			f.close()
+				out.write(str(i) + ",")
+			out.write("\n")
+			out.write("\n------------------------------------------\n\n")
+			out.close()
 		else:
 			print "No SEI files found"
