@@ -11,6 +11,8 @@ import numpy as np
 import os
 import platform
 from subprocess import call
+import ntpath
+
 
 class StreamErosionIndex(Module):
 
@@ -22,7 +24,7 @@ class StreamErosionIndex(Module):
         self.Csvfile = ""
         self.createParameter("ETfile",STRING,"")
         self.ETfile = ""
-        self.createParameter("MusicTemplateFile")
+        self.createParameter("MusicTemplateFile",STRING,"")
         self.MusicTemplateFile = ""
         self.createParameter("alpha",DOUBLE,"")
         self.alpha = 0.4
@@ -30,6 +32,10 @@ class StreamErosionIndex(Module):
         self.NoY = 10
         self.createParameter("SimulationCity",DOUBLE,"")
         self.SimulationCity = 2
+        self.createParameter("useMusic",BOOL,"")
+        self.useMusic = 0
+        self.createParameter("useDefaults",BOOL,"")
+        self.useDefaults = 0
 
         self.simulation = View("SimulationData",COMPONENT,WRITE)
         self.simulation.getAttribute("msfFilename")
@@ -137,12 +143,12 @@ class StreamErosionIndex(Module):
                 linearr = line.strip("\n").split(",")
                 if(nr < linearr[0]):
                     nr = linearr[0]
-            f.write(str(nr)+","+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")       
+            f.write(ntpath.basename(Filename)+","+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")  #str(nr)+","+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")       
             f.close()
         else:
             f = open(self.tmpFile,'w')
             #f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
-            f.write("1,"+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")       
+            f.write(ntpath.basename(Filename)+","+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")#"1,"+str(Q2)+","+str(SEIurb)+","+str(SEIwsud)+"\n")       
             f.close()
     def readLongTimeSeries(self,filename):
         #only reads timeserie and puts it into a vector without changing any of the data inside
