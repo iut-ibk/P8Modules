@@ -263,56 +263,26 @@ class AnalyserModule(Module):
 		f.close()
 		return vec
 	def calcSEI(self,workpath):
-		if((os.path.exists(workpath + "urbtable.csv")) and (os.path.exists(workpath + "wsudtable.csv"))  and (os.path.exists(workpath + "pretable.csv"))):
-			a = []
-			b = []
-			c = []
-			d = []
-			e = []
-			f = []
-			fil = open(workpath + "urbtable.csv","r")
-			for line in fil:
-				linearr = line.strip(" \n").split(",")
-				c.append(float(linearr[0]))
-				d.append(linearr[1])
-			fil.close()
-			fil = open(workpath + "wsudtable.csv","r")
-			for line in fil:
-				linearr = line.strip(" \n").split(",")
-				e.append(float(linearr[0]))
-				f.append(linearr[1])
-			fil.close()
-			fil = open(workpath + "pretable.csv","r")
-			for line in fil:
-				linearr = line.strip(" \n").split(",")
-				a.append(float(linearr[0]))
-				b.append(linearr[1])
-			fil.close()
+		urbs = []
+		wsuds = []
+		names = []
+		if os.path.exists(workpath + "SEItable.txt"):
+			f = open(workpath + "SEItable.txt")
+			for line in f:
+				linearr = line.strip('\n').split(',')
+				urbs.append(round(float(linearr[2])))
+				wsuds.append(round(float(linearr[3])))
+				names.append(str(linearr[0]))
+			f.close()
 			if(os.path.exists(self.summaryFile)):
 				out = open(self.summaryFile, 'a+')
-				out.write(" SEI: \n\n")
+				out.write(" SEI: Stream Erosion Index\nRealisation, SEI urbanised, SEI WSUD\n")
 			else:
 				out = open(self.summaryFile, 'w')
 				out.write("------------ Analyzer Summary ------------\n\n")
-				out.write(" SEI: \n\n")
-			out.write("PRE:\n")
-			for i in a:
-				out.write(str(i) + ",")
-			out.write("\n")
-			for i in b:
-				out.write(str(i) + ",")
-			out.write("\n\nURB:\n")
-			for i in c:
-				out.write(str(i) + ",")
-			out.write("\n")
-			for i in d:
-				out.write(str(i) + ",")
-			out.write("\n\Post WSUD:\n")
-			for i in e:
-				out.write(str(i) + ",")
-			out.write("\n")
-			for i in f:
-				out.write(str(i) + ",")
+				out.write(" SEI: Stream Erosion Index\nRealisation, SEI urbanised, SEI WSUD\n")
+			for i in range(len(urbs)):
+				out.write(str(names[i]) + "," + str(urbs[i]) + "," + str(wsuds[i]) + "\n")
 			out.write("\n")
 			out.write("\n------------------------------------------\n\n")
 			out.close()

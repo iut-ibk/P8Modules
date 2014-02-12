@@ -506,6 +506,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			plt.plot(ax.get_xlim(),[1,1], color = 'brown',linestyle = '--', lw=2, label = "SEI strech limit")
 			plt.plot(ax.get_xlim(),[3,3], 'b--', lw=2, label = "SEI lower limit")
 			plt.plot(ax.get_xlim(),[5,5], 'k--', lw=2, label = "SEI upper limit")
+			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
 			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
 			ax.legend(loc='best')
 			#plt.xlim([0,100])
