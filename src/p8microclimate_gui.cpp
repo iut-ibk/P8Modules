@@ -73,33 +73,42 @@ void p8microclimate_gui::on_pb_map_released()
 {
     QSettings settings;
     this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
-    QString fname = QFileDialog::getOpenFileName(this,"Map png",QString(this->p8microclimate->workingDir.c_str()),"*.png");
+    QString datapath = settings.value("dataPath").toString() + "/";
+    QString fname = QFileDialog::getOpenFileName(this,"Map png",datapath,"*.png");
     if (fname == "")
         return;
-    ui->le_map->setText(fname);
-    this->p8microclimate->setParameterValue("MapPic",fname.toStdString());
+    QFileInfo finfo = QFileInfo(fname);
+    ui->le_map->setText(finfo.fileName());
+    this->p8microclimate->setParameterValue("MapPic",finfo.fileName().toStdString());
+    QFile::copy(fname,settings.value("workPath").toString() + finfo.fileName());
 }
 
 void p8microclimate_gui::on_pb_shape_released()
 {
     QSettings settings;
     this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+    QString datapath = settings.value("dataPath").toString() + "/";
     QString fname = QFileDialog::getOpenFileName(this,"Shape File", QString(this->p8microclimate->workingDir.c_str()), "*.sh");
     if (fname == "")
         return;
-    ui->le_shape->setText(fname);
-    this->p8microclimate->setParameterValue("Shapefile",fname.toStdString());
+    QFileInfo finfo = QFileInfo(fname);
+    ui->le_shape->setText(finfo.fileName());
+    this->p8microclimate->setParameterValue("Shapefile",finfo.fileName().toStdString());
+    QFile::copy(fname,settings.value("workPath").toString() + finfo.fileName());
 }
 
 void p8microclimate_gui::on_pb_landuse_released()
 {
     QSettings settings;
     this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+    QString datapath = settings.value("dataPath").toString() + "/";
     QString fname = QFileDialog::getOpenFileName(this,"Landuse File",QString(this->p8microclimate->workingDir.c_str()),"*.txt");
     if(fname == "")
         return;
-    ui->le_landuse->setText(fname);
-    this->p8microclimate->setParameterValue("Landuse",fname.toStdString());
+    QFileInfo finfo = QFileInfo(fname);
+    ui->le_landuse->setText(finfo.fileName());
+    this->p8microclimate->setParameterValue("Landuse",finfo.fileName().toStdString());
+    QFile::copy(fname,settings.value("workPath").toString() + finfo.fileName());
 }
 
 void p8microclimate_gui::on_pb_wsud_released()
@@ -140,7 +149,7 @@ void p8microclimate_gui::on_pb_placeTech_released()
     int rows;
     double cellsize,newcols,newrows;
     QString input;
-    QFile file(QString(this->p8microclimate->workingDir.c_str()) + "/impfile.txt");
+    QFile file(QString(this->p8microclimate->workingDir.c_str()) + "/Impfile.txt");
 
     if (file.open(QIODevice::Text|QIODevice::ReadOnly))
     {
@@ -148,7 +157,7 @@ void p8microclimate_gui::on_pb_placeTech_released()
         stream.setDevice(&file);
         input = stream.readLine();
         file.close();
-        file.setFileName(input);
+        file.setFileName(QString(this->p8microclimate->workingDir.c_str()) +"/"+ input);
         file.open(QIODevice::Text|QIODevice::ReadOnly);
         int i = 0;
 
