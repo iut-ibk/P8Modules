@@ -80,7 +80,15 @@ void p8microclimate_gui::on_pb_map_released()
     QFileInfo finfo = QFileInfo(fname);
     ui->le_map->setText(finfo.fileName());
     this->p8microclimate->setParameterValue("MapPic",finfo.fileName().toStdString());
-    QFile::copy(fname,settings.value("workPath").toString() + finfo.fileName());
+    if( QFile::exists(settings.value("workPath").toString() + finfo.fileName()))
+    {
+        QFile::remove(settings.value("workPath").toString() +"/"+ finfo.fileName());
+        QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+    }
+    else
+    {
+        QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+    }
 }
 
 void p8microclimate_gui::on_pb_shape_released()
@@ -94,7 +102,15 @@ void p8microclimate_gui::on_pb_shape_released()
     QFileInfo finfo = QFileInfo(fname);
     ui->le_shape->setText(finfo.fileName());
     this->p8microclimate->setParameterValue("Shapefile",finfo.fileName().toStdString());
-    QFile::copy(fname,settings.value("workPath").toString() + finfo.fileName());
+    if( QFile::exists(settings.value("workPath").toString() + finfo.fileName()))
+    {
+        QFile::remove(settings.value("workPath").toString() +"/"+ finfo.fileName());
+        QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+    }
+    else
+    {
+        QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+    }
 }
 
 void p8microclimate_gui::on_pb_landuse_released()
@@ -108,7 +124,15 @@ void p8microclimate_gui::on_pb_landuse_released()
     QFileInfo finfo = QFileInfo(fname);
     ui->le_landuse->setText(finfo.fileName());
     this->p8microclimate->setParameterValue("Landuse",finfo.fileName().toStdString());
-    QFile::copy(fname,settings.value("workPath").toString() + finfo.fileName());
+    if( QFile::exists(settings.value("workPath").toString() + finfo.fileName()))
+    {
+        QFile::remove(settings.value("workPath").toString() +"/"+ finfo.fileName());
+        QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+    }
+    else
+    {
+        QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+    }
 }
 
 void p8microclimate_gui::on_pb_wsud_released()
@@ -149,7 +173,7 @@ void p8microclimate_gui::on_pb_placeTech_released()
     int rows;
     double cellsize,newcols,newrows;
     QString input;
-    QFile file(QString(this->p8microclimate->workingDir.c_str()) + "/Impfile.txt");
+    QFile file(QString(this->p8microclimate->workingDir.c_str()) + "/impfile.txt");
 
     if (file.open(QIODevice::Text|QIODevice::ReadOnly))
     {
