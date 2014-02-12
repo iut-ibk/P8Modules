@@ -34,7 +34,7 @@ class Ui_P8Rain_GUI(object):
         self.le_r.setObjectName(_fromUtf8("le_r"))
         self.gridLayout.addWidget(self.le_r, 0, 1, 1, 1)
         self.pb_r = QtGui.QPushButton(self.groupBox)
-        self.pb_r.setText(QtGui.QApplication.translate("P8Rain_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_r.setText(QtGui.QApplication.translate("P8Rain_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r.setObjectName(_fromUtf8("pb_r"))
         self.gridLayout.addWidget(self.pb_r, 0, 2, 1, 1)
         self.pb_preview = QtGui.QPushButton(self.groupBox)
@@ -50,7 +50,7 @@ class Ui_P8Rain_GUI(object):
         self.le_csv.setObjectName(_fromUtf8("le_csv"))
         self.gridLayout.addWidget(self.le_csv, 2, 1, 1, 1)
         self.pb_csv = QtGui.QPushButton(self.groupBox)
-        self.pb_csv.setText(QtGui.QApplication.translate("P8Rain_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_csv.setText(QtGui.QApplication.translate("P8Rain_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_csv.setObjectName(_fromUtf8("pb_csv"))
         self.gridLayout.addWidget(self.pb_csv, 2, 2, 1, 1)
 
@@ -62,7 +62,7 @@ class Ui_P8Rain_GUI(object):
         self.le_ET.setObjectName(_fromUtf8("le_ET"))
         self.gridLayout.addWidget(self.le_ET, 3, 1, 1, 1)
         self.pb_ET = QtGui.QPushButton(self.groupBox)
-        self.pb_ET.setText(QtGui.QApplication.translate("P8Rain_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_ET.setText(QtGui.QApplication.translate("P8Rain_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_ET.setObjectName(_fromUtf8("pb_Et"))
         self.gridLayout.addWidget(self.pb_ET, 3, 2, 1, 1)
 

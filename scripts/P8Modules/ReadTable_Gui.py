@@ -1,4 +1,5 @@
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QSettings, QFileInfo
 from pydynamind import *
 from Ui_ReadTable_Dialog import Ui_ReadTable_GUI
 import shlex
@@ -7,6 +8,10 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import os.path
 import os
+import platform
+from shutil import copyfile
+
+
 class ReadTable_Gui(QtGui.QDialog):
     def __init__(self, m, parent=None):
         self.module = Module
@@ -22,9 +27,19 @@ class ReadTable_Gui(QtGui.QDialog):
 	if os.path.exists(self.tmpFile):
 	    os.remove(self.tmpFile)
     def load(self):
-	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", "Open New File",self.tr("Text Files (*.txt)"))
-	self.loadTable(filename)
-	
+	settings = QSettings()
+	workpath = settings.value("workPath").toString() + "/"
+	datapath = settings.value("dataPath").toString() + "/"
+	if (platform.system() != "Linux"):
+		workpath = workpath.replace("/","\\")
+		datapath = datapath.replace("/","\\")
+	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", datapath,self.tr("Text Files (*.txt)"))
+	if(filename != ""):
+		self.ui.le_r.setText(QFileInfo(filename).fileName())
+		settings.setValue("dataPath",QFileInfo(filename).absolutePath())
+		copyfile(filename,workpath + QFileInfo(filename).fileName())
+	self.loadTable(workpath + QFileInfo(filename).fileName())
+
     def loadTable(self,filename):
 	'''mpl.rcParams['toolbar'] = 'None'
 	show2 = False

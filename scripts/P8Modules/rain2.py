@@ -59,13 +59,13 @@ class RainModule(Module):
 			simu = Component()
 			simu.addAttribute("UserCsv",self.UserCsv)
 			dataflow.addComponent(simu,self.simulation)
-			self.changeMusicFile(realstring,self.csvFile)
+			self.changeMusicFile(realstring,str(workpath + self.csvFile))
 			tmp = realstring.split(".")
 			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
 		elif(self.UserCsv == "net"):
 			
 			print "NET"
-			data = netCDF4.Dataset(self.Netfile)#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
+			data = netCDF4.Dataset(str(workpath + self.Netfile))#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
 			datas = self.getRainData(self.Xcoord,self.Ycoord,data)
 			f = open(workpath + "RainData.csv",'w')
@@ -151,6 +151,10 @@ class RainModule(Module):
 	    '''
 
 	def changeMusicFile(self, musicf, csvf):
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
 		startdate = ""
 		enddate = ""
 		timestep = 0
@@ -178,14 +182,14 @@ class RainModule(Module):
 		outfile = open(str(tmpfile[0]) + "NewRain." + tmpfile[1] ,"w")
 		csvf = csvf.replace("/","\\")
 		if(self.etFile != ""):
-			etfile = self.etFile.replace("/","\\")
+			etfile = str(workpath + self.etFile.replace("/","\\"))
 		else:
 			etfile = "C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Melbourne Monthly Areal PET.txt"
 		for line in infile:
 			linearr = line.strip("\n").split(",")
 			if (linearr[0] == "MeteorologicalTemplate"):
 				outfile.write("RainfallFile," + csvf +"\n") #todo check if pathes are correct for music
-				outfile.write("PETFile," + str(etfile) + "\n")
+				outfile.write("PETFile," + etfile + "\n")
 				outfile.write("StartDate," + startdate + "\n")
 				outfile.write("EndDate," + enddate + "\n")
 				outfile.write("Timestep," + str(timestep) + "\n")

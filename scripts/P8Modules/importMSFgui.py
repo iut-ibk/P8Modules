@@ -27,7 +27,7 @@ class Ui_importMSFDialog(object):
         self.le_r.setObjectName(_fromUtf8("le_r"))
         self.gridLayout.addWidget(self.le_r, 0, 1, 1, 1)
         self.pb_r = QtGui.QPushButton(self.groupBox)
-        self.pb_r.setText(QtGui.QApplication.translate("importMSF_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_r.setText(QtGui.QApplication.translate("importMSF_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r.setObjectName(_fromUtf8("pb_r"))
         self.gridLayout.addWidget(self.pb_r, 0, 2, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(importMSFguic)

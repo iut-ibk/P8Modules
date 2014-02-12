@@ -23,12 +23,11 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.city_combo.currentIndexChanged['QString'].connect(self.cityChanged)#QtCore.QObject.connect(self.ui.city_combo, QtCore.SIGNAL("valueChanged()"),self.cityChanged)
 	QtCore.QObject.connect(self.ui.pb_clipboard, QtCore.SIGNAL("released()"),self.copyToClipboard)
 	self.ui.vol_combo.currentIndexChanged['QString'].connect(self.volChanged)
-
-	#QtCore.QObject.connect(self.ui.pb_plot, QtCore.SIGNAL("released()"),self.plot)
 	self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
 	self.ui.vol_combo.setCurrentIndex(int(self.module.getParameterAsString("VolumeReductionIndex")))
-	if(self.module.getParameterAsString("AnnualUserRain") != "0"):
-		self.ui.spb_city.setValue(int(self.module.getParameterAsString("AnnualUserRain")))
+	self.ui.spb_vol.setValue(int(self.module.getParameterAsString("VolumeReduction")))
+	self.ui.spb_city.setValue(int(self.module.getParameterAsString("AnnualUserRain")))
+	self.ui.spb_freq.setValue(int(self.module.getParameterAsString("FrequencyRunoffDays")))
 	self.ui.le_tss.setValue(float(self.module.getParameterAsString("TssTarget")))
 	self.ui.le_tp.setValue(float(self.module.getParameterAsString("TpTarget")))
 	self.ui.le_tn.setValue(float(self.module.getParameterAsString("TnTarget")))
@@ -36,10 +35,11 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 
     def save(self):
 	city = self.ui.city_combo.currentIndex()
-	if(city == 5):
-		self.module.setParameterValue("AnnualUserRain",str(self.ui.le_u.text()))
+	self.module.setParameterValue("AnnualUserRain",str(self.ui.spb_city.value()))
+	self.module.setParameterValue("VolumeReduction",str(self.ui.spb_vol.value()))
 	self.module.setParameterValue("SimulationCity",str(city))
 	self.module.setParameterValue("VolumeReductionIndex",str(self.ui.vol_combo.currentIndex()))
+	self.module.setParameterValue("FrequencyRunoffDays",str(self.ui.spb_freq.value()))
 	self.module.setParameterValue("UserTargets",str(1))
 	self.module.setParameterValue("TssTarget",str(self.ui.le_tss.text()))
 	self.module.setParameterValue("TnTarget",str(self.ui.le_tn.text()))

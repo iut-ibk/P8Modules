@@ -20,9 +20,13 @@ class StreamHydrologyandWaterquality(Module):
 		self.createParameter("SimulationCity",DOUBLE,"")
 		self.SimulationCity = 2
 		self.createParameter("VolumeReductionIndex",DOUBLE,"")
-		self.VolumeReductionIndex = 1
+		self.VolumeReductionIndex = 0
+		self.createParameter("VolumeReduction",DOUBLE,"")
+		self.VolumeReduction = 20
 		self.createParameter("AnnualUserRain", DOUBLE, "")
-		self.AnnualUserRain = 0
+		self.AnnualUserRain = 650
+		self.createParameter("FrequencyRunoffDays",DOUBLE,"")
+		self.FrequencyRunoffDays = 0
 		self.createParameter("TssTarget",DOUBLE,"")
 		self.TssTarget = 20.0
 		self.createParameter("TnTarget",DOUBLE,"")
@@ -162,9 +166,9 @@ class StreamHydrologyandWaterquality(Module):
 			if i%4==1:
 				tssVec.append(list7[i])
 			if i%4==2:
-				tnVec.append(list7[i])
-			if i%4==3:
 				tpVec.append(list7[i])
+			if i%4==3:
+				tnVec.append(list7[i])
 
 		tssVec = sorted(tssVec)
 		tpVec = sorted(tpVec)

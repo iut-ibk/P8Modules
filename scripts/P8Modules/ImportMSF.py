@@ -14,7 +14,6 @@ class ImportMSF(Module):
 
         self.createParameter("Filename",STRING,"")
         self.Filename = ""
-
         self.simulation = View("SimulationData",COMPONENT,WRITE)
         self.simulation.addAttribute("msfFilename")
 
@@ -23,12 +22,14 @@ class ImportMSF(Module):
         self.addData("City", datastream)
 
     def run(self):
-
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath.replace("/","\\")
         city = self.getData("City")
         simu = Component()
-        simu.addAttribute("msfFilename",self.Filename)
+        simu.addAttribute("msfFilename",str(workpath + self.Filename))
         city.addComponent(simu,self.simulation)
-        print self.Filename
 
     def createInputDialog(self):
         form = activateimportMSFGUI(self, QApplication.activeWindow())

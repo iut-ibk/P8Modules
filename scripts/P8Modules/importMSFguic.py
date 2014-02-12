@@ -2,9 +2,10 @@
 
 from PyQt4 import QtCore, QtGui
 from pydynamind import *
-from PyQt4.QtCore import QSettings
+from PyQt4.QtCore import QSettings, QFileInfo
 from importMSFgui import Ui_importMSFDialog
 import platform
+from shutil import copyfile
 
 
 class activateimportMSFGUI(QtGui.QDialog):
@@ -24,7 +25,13 @@ class activateimportMSFGUI(QtGui.QDialog):
 	def load(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
+		datapath = settings.value("dataPath").toString() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Music File",  workpath, self.tr("Text Files (*.msf)"))
-		self.ui.le_r.setText(filename)
+			datapath = datapath.replace("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Music File",  datapath, self.tr("Text Files (*.msf)"))
+		if(filename != ""):
+			self.module.setParameterValue("Filename", str(QFileInfo(filename).fileName()))
+			self.ui.le_r.setText(QFileInfo(filename).fileName())
+			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
+			copyfile(filename,workpath + QFileInfo(filename).fileName())

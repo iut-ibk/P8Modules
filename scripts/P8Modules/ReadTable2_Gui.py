@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import os.path
 import os
+from shutil import copyfile
+
 class ReadTable_Gui(QtGui.QDialog):
     def __init__(self, m, parent=None):
         self.module = Module
@@ -24,11 +26,16 @@ class ReadTable_Gui(QtGui.QDialog):
     def load(self):
 	settings = QSettings()
 	workpath = settings.value("workPath").toString()
-	workpath += "/RunMusicSecondary.bat"
+	datapath = settings.value("dataPath").toString()
 	if (platform.system() != "Linux"):
 		workpath = workpath.replace("/","\\")
-	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
-	self.loadTable(filename)
+		datapath = datapath.replace("/","\\")
+	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", datapath,self.tr("Text Files (*.txt)"))
+	f(filename != ""):
+			self.ui.le_r.setText(QFileInfo(filename).fileName())
+			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
+			copyfile(filename,workpath + QFileInfo(filename).fileName())
+	self.loadTable(workpath + QFileInfo(filename).fileName())
 	
     def loadTable(self,filename):
 	'''mpl.rcParams['toolbar'] = 'None'
