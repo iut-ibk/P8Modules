@@ -162,9 +162,9 @@ class StreamHydrologyandWaterquality(Module):
 			if i%4==1:
 				tssVec.append(list7[i])
 			if i%4==2:
-				tnVec.append(list7[i])
-			if i%4==3:
 				tpVec.append(list7[i])
+			if i%4==3:
+				tnVec.append(list7[i])
 
 		tssVec = sorted(tssVec)
 		tpVec = sorted(tpVec)
