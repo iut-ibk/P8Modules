@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import QSettings
+from PyQt4.QtCore import QSettings, QFileInfo
 from pydynamind import *
 from StreamErosionIndex_gui import Ui_StreamErosionIndexDialog
 import platform
+from shutil import copyfile
 
 
 class activateStreamErosionIndexGUI(QtGui.QDialog):
@@ -17,6 +18,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.ui.le_r.setText(self.module.getParameterAsString("Csvfile"))
 		self.ui.le_r2.setText(self.module.getParameterAsString("ETfile"))
+		self.ui.le_r3.setText(self.module.getParameterAsString("MusicTemplateFile"))
 		self.ui.le_A.setValue(float(self.module.getParameterAsString("alpha")))
 		self.ui.le_NoY.setValue(int(self.module.getParameterAsString("NoY")))
 		self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
@@ -25,6 +27,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
 		QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
 		QtCore.QObject.connect(self.ui.pb_r2, QtCore.SIGNAL("released()"), self.load2)
+		QtCore.QObject.connect(self.ui.pb_r3, QtCore.SIGNAL("released()"), self.load3)
 		self.ui.chkb_music.stateChanged['int'].connect(self.chkb_music_change)
 		self.ui.chkb_defaults.stateChanged['int'].connect(self.chkb_defaults_change)
 
@@ -46,24 +49,45 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 	def load(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
+		datapath = settings.value("dataPath").toString() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Csv File", workpath, self.tr("Csv Files (*.csv)"))
-		self.ui.le_r.setText(filename)
+			datapath = datapath.replace("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Csv File", datapath, self.tr("Csv Files (*.csv)"))
+		if(filename != ""):
+			self.module.setParameterValue("CsvFile", str(QFileInfo(filename).fileName()))
+			self.ui.le_r.setText(QFileInfo(filename).fileName())
+			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
+			copyfile(filename,workpath + QFileInfo(filename).fileName())
 	def load2(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
+		datapath = settings.value("dataPath").toString() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", workpath, self.tr("Text Files (*.txt)"))
-		self.ui.le_r2.setText(filename)
+			datapath = datapath.replace("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", datapath, self.tr("Text Files (*.txt)"))
+		if(filename != ""):
+			self.module.setParameterValue("ETFile", str(QFileInfo(filename).fileName()))
+			self.ui.le_r2.setText(QFileInfo(filename).fileName())
+			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
+			copyfile(filename,workpath + QFileInfo(filename).fileName())
 	def load3(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
+		datapath = settings.value("dataPath").toString() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Select MUSIC template File", workpath, self.tr("Text Files (*.mlb)"))
-		self.ui.le_r3.setText(filename)
+			datapath = datapath.replace("/","\\")
+		filename = QtGui.QFileDialog.getOpenFileName(self, "Select MUSIC template File", datapath, self.tr("Text Files (*.mlb)"))
+		if(filename != ""):
+			self.module.setParameterValue("MusicTemplateFile", str(QFileInfo(filename).fileName()))
+			self.ui.le_r3.setText(QFileInfo(filename).fileName())
+			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
+			copyfile(filename,workpath + QFileInfo(filename).fileName())
 	def chkb_music_change(self):
 		if(self.ui.chkb_music.isChecked() == 1):
 			self.ui.chkb_defaults.setChecked(int(False))

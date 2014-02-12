@@ -69,8 +69,11 @@ class StreamErosionIndex(Module):
             PostWSUD = self.readTimeSeries("Pre-developedCatchment.csv")
         else:
         '''
+        print "Reading Pre-developed TimeSeries ..."
         Pre = self.readTimeSeries(workpath + "Pre-developedCatchment.csv")
+        print "Reading Urbanised TimeSeries ..."
         Urb = self.readTimeSeries(workpath + "UrbanisedCatchment.csv")
+        print "Reading PostWSUD TimeSeries ..."
         PostWSUD = self.readTimeSeries(workpath + "PostWSUD.csv")
         self.tmpFile = workpath + "SEItable.txt"
 
@@ -271,21 +274,22 @@ class StreamErosionIndex(Module):
         timestep = 0
         counter = 0
         files = self.getRainEtFile()
-        f = open(files[0],"r")
-        for line in f:
-            counter = counter + 1
-            linearr = line.strip("\n").split(",")
-            if (counter == 2):
-                startdate = linearr[0].split(" ")
-            if (counter == 3):
-                tmp = linearr[0].split(" ")[1].split(":")
-                tmp2 = startdate[1].split(":")
-                timestep = int(tmp[0]) * 360 - int(tmp2[0]) * 360
-                timestep = timestep + (int(tmp[1]) * 60 - int(tmp2[1]) * 60)
-                #timestep = timestep + int(tmp[2]) - int(tmp2[2])
-        enddate = linearr[0].split(" ")[0]
-        startdate = startdate[0]
-        f.close()
+        if((self.useDefaults or self.useMusic) == False):
+            f = open(files[0],"r")
+            for line in f:
+                counter = counter + 1
+                linearr = line.strip("\n").split(",")
+                if (counter == 2):
+                    startdate = linearr[0].split(" ")
+                if (counter == 3):
+                    tmp = linearr[0].split(" ")[1].split(":")
+                    tmp2 = startdate[1].split(":")
+                    timestep = int(tmp[0]) * 360 - int(tmp2[0]) * 360
+                    timestep = timestep + (int(tmp[1]) * 60 - int(tmp2[1]) * 60)
+                    #timestep = timestep + int(tmp[2]) - int(tmp2[2])
+            enddate = linearr[0].split(" ")[0]
+            startdate = startdate[0]
+            f.close()
         infile = open(filename,"r")
         filearr = filename.split(".")
         outfile = open(filearr[0] + "SEI." + filearr[1] ,"w")
@@ -345,14 +349,14 @@ class StreamErosionIndex(Module):
                 if(int(linearr[1]) > int(ID)):
                     ID = int(linearr[1])
             if (linearr[0] == "MeteorologicalTemplate"):
-                if(self.MusicTemplateFile == ""):
+                if(self.useMusic):
+                    outfile.write("MeteorologicalTemplate," + workpath + self.MusicTemplateFile + ",{MLB Filename}\n")
+                else:
                     outfile.write("RainfallFile," + files[0] +"\n")
                     outfile.write("PETFile," + files[1] + "\n")
                     outfile.write("StartDate," + startdate + "\n")
                     outfile.write("EndDate," + enddate + "\n")
                     outfile.write("Timestep," + str(timestep) + "\n")
-                else:
-                    outfile.write("MeteorologicalTemplate," + self.MusicTemplateFile + ",{MLB Filename}\n")
             else:
                 outfile.write(line)
         umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID+1,perArea,False,catchment_paramter_list) #pervious
@@ -374,14 +378,18 @@ class StreamErosionIndex(Module):
             call([str(workpath) + "RunMusicSEI.bat", ""])
         print "Music Done."
     def getRainEtFile(self):
+        settings = QSettings()
+        workpath = settings.value("workPath").toString() + "/"
+        if (platform.system() != "Linux"):
+            workpath = workpath.replace("/","\\")
         #checks wether the user chose a rain file or a city
         #return an array with the path of rainfile and the ET file in it
         files = []
-        if(self.Csvfile == ""):
+        if(self.useDefaults):
             files.append("C:/Program Files (x86)/hydro-IT/P8-WSC/ClimateDataTemplates/Melbourne Rainfall 1985_1995 6min.csv")
         else:
-            files.append(self.Csvfile)
-        if(self.ETfile == ""):
+            files.append(workpath + self.Csvfile)
+        if(self.useDefaults):
             if(self.SimulationCity == 0):
                 files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Adelaide Monthly Areal PET.txt")
             elif(self.SimulationCity == 1):
@@ -393,7 +401,7 @@ class StreamErosionIndex(Module):
             elif(self.SimulationCity == 4):
                 files.append("C:\Program Files (x86)\hydro-IT\P8-WSC\ClimateDataTemplates\Sydney Monthly Areal PET.txt")
         else:
-            files.append(self.ETfile)
+            files.append(workpath + self.ETfile)
         if (platform.system() != "Linux"): #dynamics path slashes depeding on os
             files[0] = files[0].replace("/","\\")
             files[1] = files[1].replace("/","\\")

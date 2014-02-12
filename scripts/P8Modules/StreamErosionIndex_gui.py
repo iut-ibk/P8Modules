@@ -33,7 +33,7 @@ class Ui_StreamErosionIndexDialog(object):
         self.le_r.setObjectName(_fromUtf8("le_r"))
         self.gridLayout.addWidget(self.le_r, 1, 2, 1, 1)
         self.pb_r = QtGui.QPushButton(self.groupBox)
-        self.pb_r.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_r.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r.setObjectName(_fromUtf8("pb_r"))
         self.gridLayout.addWidget(self.pb_r, 1, 3, 1, 1)
         
@@ -50,7 +50,7 @@ class Ui_StreamErosionIndexDialog(object):
         self.le_r2.setObjectName(_fromUtf8("le_r2"))
         self.gridLayout.addWidget(self.le_r2, 3, 2, 1, 1)
         self.pb_r2 = QtGui.QPushButton(self.groupBox)
-        self.pb_r2.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_r2.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r2.setObjectName(_fromUtf8("pb_r"))
         self.gridLayout.addWidget(self.pb_r2, 3, 3, 1, 1)
 
@@ -70,7 +70,7 @@ class Ui_StreamErosionIndexDialog(object):
         self.le_r3.setObjectName(_fromUtf8("le_r3"))
         self.gridLayout.addWidget(self.le_r3, 5, 2, 1, 1)
         self.pb_r3 = QtGui.QPushButton(self.groupBox)
-        self.pb_r3.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.pb_r3.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r3.setObjectName(_fromUtf8("pb_r3"))
         self.gridLayout.addWidget(self.pb_r3, 5, 3, 1, 1)
 
