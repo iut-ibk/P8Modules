@@ -30,7 +30,7 @@ public:
 
 protected:
     double v[11];
-    double res[1];
+    double res[3];
     int no;
     bool selected;
     int px;

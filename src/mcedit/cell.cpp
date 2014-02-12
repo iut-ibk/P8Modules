@@ -37,9 +37,9 @@ int techcountrand=rand()%100;
         else
             res[i]=0;
     */
-    for (int i=0;i<6;i++)
+    for (int i=0;i<11;i++)
         v[i]=0;
-    for (int i=0;i<1;i++)
+    for (int i=0;i<3;i++)
         res[i]=0;
 
     this->no=no;
@@ -87,7 +87,7 @@ void Cell::update(int mode,int viewmode)
         double g=0;
         double b=0;
         double techcover=0;
-        for (int i=0;i<6;i++)
+        for (int i=0;i<11;i++)
         {
             r+=(*teccol)[i]->redF()*v[i]/100.0;
             g+=(*teccol)[i]->greenF()*v[i]/100.0;
@@ -114,13 +114,35 @@ void Cell::update(int mode,int viewmode)
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
     }
-    if (mode==1)
+    if (mode==1) // lst change
     {
         double maxdt=5;
         int col=255.0*fabs((res[0])/maxdt);
         if (res[0]>0)
             brush.setColor(QColor(255,255-col,255-col,127));
         if (res[0]<0)
+            brush.setColor(QColor(255-col,255-col,255,127));
+        if (view->transform().m11()<0.25)
+            pen.setColor(QColor(0,0,0,0));
+    }
+    if (mode==2) // lst before wusd
+    {
+        double maxdt=20;
+        int col=255.0*fabs((res[1]-20)/maxdt);
+        if (res[1]>0)
+            brush.setColor(QColor(255,255-col,255-col,127));
+        if (res[1]<0)
+            brush.setColor(QColor(255-col,255-col,255,127));
+        if (view->transform().m11()<0.25)
+            pen.setColor(QColor(0,0,0,0));
+    }
+    if (mode==3) // lst after wusd
+    {
+        double maxdt=20;
+        int col=255.0*fabs((res[2]-20)/maxdt);
+        if (res[2]>0)
+            brush.setColor(QColor(255,255-col,255-col,127));
+        if (res[2]<0)
             brush.setColor(QColor(255-col,255-col,255,127));
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));

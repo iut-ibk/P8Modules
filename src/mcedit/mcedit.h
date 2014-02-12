@@ -13,6 +13,7 @@ class QGraphicsItem;
 class QGraphicsSceneMouseEvent;
 class QColor;
 class p8microclimate_gui;
+class QGraphicsSimpleTextItem;
 namespace Ui {
 class mcedit;
 }
@@ -36,15 +37,16 @@ public:
     void tecLoad(QString tfilename);
     void cellupdate();
     void changebgcont(int c);
-    void resLoad(QString tfilename);
+    void resLoad(int no, QString tfilename);
     void zoomin();
     void zoomout();
     void loadbackground(QString bgfilename);
+    void setScale(double startTemp, double endTemp, int colorramp);
+    QColor getColor(double startTemp, double endTemp, double temp, int colorramp);
 
 private slots:
     void on_pb_zoomin_clicked();
     void on_pb_zoomout_clicked();
-//    void on_pushButton_clicked();
     void on_pb_load_clicked();
     void on_pb_saveas_clicked();
     void on_pb_save_clicked();
@@ -54,10 +56,9 @@ private slots:
     void on_horizontalSlider_valueChanged(int value);
     void on_comboBox_currentIndexChanged(int index);    
     void on_buttonBox_accepted();
-
     void on_rb_edit_toggled(bool checked);
-
     void on_pb_zoomout_2_clicked();
+    void on_pushButton_clicked();
 
 private:
     p8microclimate_gui *parent;
@@ -75,6 +76,16 @@ private:
     QList<QColor*> teccol;
     QGraphicsRectItem *bgrect;
     QString workpath;
+    QList<QGraphicsRectItem *> scaleboxes;
+    QGraphicsSimpleTextItem* scalestart;
+    QGraphicsSimpleTextItem* scaleend;
+    QGraphicsSimpleTextItem* scaletitle;
+    int scaleposx;
+    int scaleposy;
+    int scalehight;
+    int scalelength;
+    int scalesteps;
+
 };
 
 #endif // MCEDIT_H
