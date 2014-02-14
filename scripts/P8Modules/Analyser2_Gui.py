@@ -110,7 +110,9 @@ class Analyser2_Gui(QtGui.QDialog):
 		ax.set_ylabel('Stream Health Hydrology and Water Quality(%)')
 		ax.set_title('Stream Health Outcomes')
 		ax.set_xticks(ind+(width*i)*0.75)
-		ax.set_xticklabels( ('Flow Frequency' , 'Volume Reduction' , 'Filtered Flow Volume' , 'Water Quality') )
+		ax.set_xticklabels( ('FFrequency of runoff (days/year)' , 'Proportion of total volume reduction (%)' , 'Proportion of filtered flows (%)' , 'Water quality') )
+		
+		
 		ax.tick_params(axis='x', labelsize=10)
 		ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
 		ax.legend(loc='best')#,prop={'size':8})

@@ -142,6 +142,7 @@ class StreamHydrologyandWaterquality(Module):
 		vec6 = []
 		vec8 = []
 		vec9 = []
+		vec10 = []
 		tssVec = []
 		tnVec = []
 		tpVec = []
@@ -157,6 +158,8 @@ class StreamHydrologyandWaterquality(Module):
 			if i <2 or (i+1)%2:
 				continue
 			vec4.append(list4[i])
+			vec6.append(list6[i])
+			vec10.append(list3[i])
 
 		for i in range(len(list7)):
 			if i<4 or ((i)%4==0):
@@ -197,26 +200,34 @@ class StreamHydrologyandWaterquality(Module):
 				vec3.append(list3[i])
 
 		FreqTreated = len(vec3)
+		print "FreqTreated: " +str(FreqTreated)
+		RunoffVol = self.SumAllValues(vec3)		
 		ETsum = self.SumAllValues(vec4)
 		VolumeET = ETsum * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
 		VolumeUntreated = UntreadSum * 60*60*24*1000/1000000
 		preRunoffsum = self.SumAllValues(vec5)
-		VolumePredev = preRunoffsum * 60*60*24*1000/1000000
+		VolumePredev = preRunoffsum * 60*60*24*1000/1000000		
+		VolumeInf = self.SumAllValues(vec6) * 60*60*24*1000/1000000
+		print "VolumeET: " +str(VolumeET)
+		print "VolumeInf: " +str(VolumeInf)
 
-		for i in range(len(list6)):
+		
+		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list6[i]) * EIF >cin):
+			if (float(list3[i]) * EIF >cin):
 				continue
 			if i%2==1:
-				vec6.append(list6[i])
+				vec9.append(list3[i])
 
 
-		exfilSum = self.SumAllValues(vec6)
-		FVg = (exfilSum * 60*60*24*1000/1000000) / VolumeUntreated
-		print "exfilSum: " +str(exfilSum)
-		print "VolumeUntreated: " +str(VolumeUntreated)
+		TreatFiltVol = self.SumAllValues(vec9)* 60*60*24*1000/1000000
+		FVg = (VolumeInf+TreatFiltVol)*1000 / (imparea*10000*AnnualRain/1000)
+		VolImpArea = (imparea*10000*AnnualRain/1000)/1000
+		print "TreatFiltVol: " +str(TreatFiltVol)
+		print "VolImpArea: " +str(VolImpArea)
+		print "VolumeUntreated: " +str(VolumeUntreated)		
 		print "FVg: " +str(FVg)
 
 		#FvForest = self.find_nearest(self.ForestX,FVg)
@@ -246,25 +257,26 @@ class StreamHydrologyandWaterquality(Module):
 			Py1 = self.PastureY[indexPX]
 			Py2 = self.PastureY[indexPX+1]
 
-		FvForest = np.abs((((Fx2-Fx1)*(Fy2-AnnualRain))/(Fy2-Fy1))-Fx2)
-		FvPasture = np.abs((((Px2-Px1)*(Py2-AnnualRain))/(Py2-Py1))-Px2)
+		FvForest = np.abs(1-(((Fx2-Fx1)*(Fy2-AnnualRain))/(Fy2-Fy1))-Fx2)
+		FvPasture = np.abs(1-(((Px2-Px1)*(Py2-AnnualRain))/(Py2-Py1))-Px2)
 		print "FvForest: " + str(FvForest)
 		print "FvPasture: " + str(FvPasture)
-		if FVg < FvForest:
-			tmpFV = FVg/FvForest
-		elif FVg > FvPasture:
-			tmpFV = max(0,(1-(FVg-FvPasture)/FvForest))
-		else:
-			tmpFV = 1
+		#if FVg < FvForest:
+		#	tmpFV = FVg/FvForest
+		#elif FVg > FvPasture:
+		#	tmpFV = max(0,(1-(FVg-FvPasture)/FvForest))
+		#else:
+		tmpFV = FVg
 
 		print "tmpFV: " + str(tmpFV)
-		tmpFF = 1 - max((float(FreqTreated)-float(FreqPredev))/(float(FreqUntreated)-float(FreqPredev)),0)
-		tmpVR = 1-((VolumeUntreated-VolumePredev-VolumeET)/(VolumeUntreated-VolumePredev))
+		tmpFF = FreqTreated
+		tmpVR = ((VolumeET+VolumeInf)*1000)/((imparea*10000*AnnualRain/1000))
+		print "tmp VR: " + str(tmpVR)
 		tmpWQ = (tss+tn+tp)/3
 		print "tmp WQ: " + str(tmpWQ)
 
 		#for numbers with only value after the comma
-		self.FF.append(float(int(tmpFF*1000))/10) 
+		self.FF.append(float(int(tmpFF*1))/1) 
 		self.VR.append(float(int(tmpVR*1000))/10) 
 		self.WQ.append(float(int(tmpWQ*1000))/10)
 		self.FV.append(float(int(tmpFV*1000))/10)

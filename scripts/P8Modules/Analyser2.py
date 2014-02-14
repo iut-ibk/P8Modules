@@ -74,7 +74,7 @@ class AnalyserModule(Module):
 			#writing information into summary file
 			f = open(self.summaryFile, 'w')
 			f.write("------------ Analyzer Summary ------------\n\n")
-			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction,Proportion of iltered flows,Water Quality\n")
+			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction,Proportion of filtered flows,Water quality\n")
 
 			for line in output:
 				tmp = str(line)

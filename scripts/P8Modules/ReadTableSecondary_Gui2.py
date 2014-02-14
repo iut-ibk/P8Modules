@@ -53,9 +53,9 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	font.setBold(True)
 	widget.setFont(font)
 	self.ui.table.setCellWidget(0,0,widget)
-	self.ui.table.setCellWidget(1,0,QtGui.QLineEdit(str("Flow-Frequency Index (%)")))
-	self.ui.table.setCellWidget(2,0,QtGui.QLineEdit(str("Volume Reduction Index (%)")))
-	self.ui.table.setCellWidget(3,0,QtGui.QLineEdit(str("Filtered Flow Volume Index (%)")))
+	self.ui.table.setCellWidget(1,0,QtGui.QLineEdit(str("Frequency of Runoff Days (days/year)")))
+	self.ui.table.setCellWidget(2,0,QtGui.QLineEdit(str("Proportion of Total Volume Reduction (%)")))
+	self.ui.table.setCellWidget(3,0,QtGui.QLineEdit(str("Proportion of Filtered Flow Volume  (%)")))
 	self.ui.table.setCellWidget(4,0,QtGui.QLineEdit(str("Water Quality Index (%)")))
 	for i in range(len(self.module.FF)):
 	    i = i + 1
@@ -97,9 +97,9 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 		workpath = workpath.replace("/","\\")
 	f = open(workpath + 'EnvironmentalBenefit.csv','w')
 	f.write("Stream Hydrology and Water quality,%\n")
-	f.write("Flow-Frequency Index," + str(self.module.FF) + "\n")
-	f.write("Volume Reduction Index," + str(self.module.VR) + "\n")
-	f.write("Filtered Flow Volume Index," +str(self.module.FV) + "\n")
+	f.write("Frequency of Runoff Days (days/year)," + str(self.module.FF) + "\n")
+	f.write("Proportion of Total Volume Reduction (%)," + str(self.module.VR) + "\n")
+	f.write("Proportion of Filtered Flow Volume  (%)," +str(self.module.FV) + "\n")
 	f.write("Water Quality Index," + str(self.module.WQ) + "\n")
 	f.close()
     def plot(self):
@@ -158,11 +158,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	r = Tk()
 	r.withdraw()
 	r.clipboard_clear()
-	r.clipboard_append("Stream Hydrology and Water quality\t%\nFlow-Frequency Index\t" + str(self.module.FF) + 
-	"\nVolume Reduction Index\t" + str(self.module.VR) + 
-	"\nFiltered Flow Volume Index\t" +str(self.module.FV) + 
+	r.clipboard_append("Stream Hydrology and Water quality\t%\nFrequency of Runoff Days (days/year)\t" + str(self.module.FF) + 
+	"\nProportion of Total Volume Reduction (%)\t" + str(self.module.VR) + 
+	"\nProportion of Filtered Flow Volume \t" +str(self.module.FV) + 
 	"\nWater Quality Index\t" + str(self.module.WQ) + "\n")
-
-
-
-
