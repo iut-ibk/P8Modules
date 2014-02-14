@@ -105,6 +105,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Export</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -752,7 +759,7 @@
           </widget>
          </item>
          <item row="11" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+          <widget class="QDoubleSpinBox" name="v11coeff"/>
          </item>
         </layout>
        </item>
@@ -839,7 +846,17 @@
          </item>
          <item>
           <property name="text">
-           <string>View results</string>
+           <string>View LST reductiion</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>View LST before WSUD</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>View LST after WSUD</string>
           </property>
          </item>
         </widget>

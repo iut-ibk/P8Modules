@@ -11,13 +11,14 @@
 #include "cell.h"
 #include "mcgraphicscene.h"
 #include <QGraphicsSceneMouseEvent>
-
+#include <QGraphicsSimpleTextItem>
 #include <QFile>
 #include <QTextStream>
 #include <QColor>
 #include <QRect>
 #include <QMessageBox>
 #include <QTransform>
+#include <cmath>
 #include "../p8microclimate_gui.h"
 
 #include "celldialog.h"
@@ -50,13 +51,20 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
     this->sx=sx;
     this->sy=sy;
 
+    scaleposx=0;
+    scaleposy=-30;
+    scalehight=10;
+    scalelength=100;
+    scalesteps=10;
+
+
     scene=new McGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
 
     double lx=cx*sx;
     double ly=cy*sy;
-    scene->setSceneRect(0,0,lx,ly);
+    scene->setSceneRect(0,-30,lx,ly);
     bgrect=scene->addRect(0,0,lx,ly);
     changebgcont(0);
     cellmap.clear();
@@ -85,15 +93,43 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
     ui->graphicsView->show();
     ui->graphicsView->setMouseTracking(true);
 
+    double rectwidth=double(scalelength)/double(scalesteps);
+    for (int i=0;i<scalesteps;i++)
+    {
+        int rectposx=scaleposx+i*rectwidth;
+        QGraphicsRectItem *scalebox=scene->addRect(QRect(rectposx,scaleposy,rectwidth,scalehight));
+        scaleboxes.append(scalebox);
+    }
+    scalestart=scene->addSimpleText("25.0 °C");
+    scalestart->moveBy(0,scaleposy+scalehight+5);
+    scaleend=scene->addSimpleText("40.0 °C");
+    scaleend->moveBy(rectwidth*(scalesteps-1),scaleposy+scalehight+5);
+    scaletitle=scene->addSimpleText("Scale");
+    scaletitle->moveBy(rectwidth*scalesteps+5,scaleposy);
+
+    setScale(25,40,0);
+
+
+
     mode=0;
     viewmode=1;
     tecLoad(parent);
     tecLoad(workpath+"/WSUDtech.mcd");
     if (QFile::exists(workpath+"/Reduction in LST.mcd"))
     {
-        resLoad(workpath+"/Reduction in LST.mcd");
+        resLoad(0,workpath+"/Reduction in LST.mcd");
         ui->cb_mode->setCurrentIndex(1);
     }
+    if (QFile::exists(workpath+"/LST before WSUD.mcd"))
+    {
+        resLoad(1,workpath+"/LST before WSUD.mcd");
+    }
+    if (QFile::exists(workpath+"/LST after WSUD.mcd"))
+    {
+        resLoad(2,workpath+"/LST after WSUD.mcd");
+    }
+
+
     if (!bgimage.isEmpty())
         loadbackground(bgimage);
     cellupdate();
@@ -116,11 +152,11 @@ void mcedit::mousemove(QGraphicsSceneMouseEvent *event)
         ui->v4->setValue(selectedCell->getV(3));
         ui->v5->setValue(selectedCell->getV(4));
         ui->v6->setValue(selectedCell->getV(5));
-        ui->v7->setValue(selectedCell->getV(5));
-        ui->v8->setValue(selectedCell->getV(5));
-        ui->v9->setValue(selectedCell->getV(5));
-        ui->v10->setValue(selectedCell->getV(5));
-        ui->v11->setValue(selectedCell->getV(5));
+        ui->v7->setValue(selectedCell->getV(6));
+        ui->v8->setValue(selectedCell->getV(7));
+        ui->v9->setValue(selectedCell->getV(8));
+        ui->v10->setValue(selectedCell->getV(9));
+        ui->v11->setValue(selectedCell->getV(10));
 
         ui->temp->setValue(selectedCell->getRes(0));
     }
@@ -220,6 +256,54 @@ void mcedit::loadbackground(QString bgfilename)
     }
 }
 
+QColor mcedit::getColor(double startTemp, double endTemp, double temp, int colorramp)
+{
+    QColor retVal(0,0,0,255);
+
+    if (temp<startTemp || temp>endTemp )
+        return retVal;
+
+    double perc=(temp-startTemp)/(endTemp-startTemp);
+
+    if (colorramp==0)
+    {
+        QColor startColor(0,0,255,255);
+        QColor endColor(255,0,0,255);
+        retVal.setRedF((1-perc)*startColor.redF()+perc*endColor.redF());
+        retVal.setGreenF((1-perc)*startColor.greenF()+perc*endColor.greenF());
+        retVal.setBlueF((1-perc)*startColor.blueF()+perc*endColor.blueF());
+    }
+
+    if (colorramp==1)
+    {
+        QColor startColor(255,255,255,255);
+        QColor endColor(255,0,0,255);
+        retVal.setRedF((1-perc)*startColor.redF()+perc*endColor.redF());
+        retVal.setGreenF((1-perc)*startColor.greenF()+perc*endColor.greenF());
+        retVal.setBlueF((1-perc)*startColor.blueF()+perc*endColor.blueF());
+    }
+
+    return retVal;
+}
+
+void mcedit::setScale(double startTemp, double endTemp, int colorramp)
+{
+    for (int i=0;i<scalesteps;i++)
+    {
+        QBrush brush;
+        brush.setStyle(Qt::SolidPattern);
+        double temp=startTemp+i*(endTemp-startTemp)/scalesteps;
+        brush.setColor(getColor(startTemp,endTemp,temp,colorramp));
+        //        QPen pen;
+        //        pen.setColor(QColor(0,0,0,255));
+        QGraphicsRectItem *scalebox=scaleboxes[i];
+        scalebox->setBrush(brush);
+        //        scalebox->setPen(pen);
+    }
+    scalestart->setText(QString("%1 °C").arg(startTemp));
+    scaleend->setText(QString("%1 °C").arg(endTemp));
+}
+
 
 /*
 void mcedit::on_pushButton_clicked()
@@ -277,7 +361,7 @@ void mcedit::tecLoad(QString tfilename)
 }
 
 
-void mcedit::resLoad(QString tfilename)
+void mcedit::resLoad(int no, QString tfilename)
 {
     if (!tfilename.isEmpty())
     {
@@ -301,14 +385,14 @@ void mcedit::resLoad(QString tfilename)
             foreach (Cell *cell, sortlist)
             {
                 QStringList linelist=stream.readLine().split(",");
-                cell->setRes(0,linelist[1].toDouble());
+                cell->setRes(no,linelist[1].toDouble());
             }
         }
         else
         {
             foreach (Cell *cell, sortlist)
             {
-                cell->setRes(0,0);
+                cell->setRes(no,0);
             }
         }
         file.close();
@@ -439,6 +523,27 @@ void mcedit::tecLoad(p8microclimate_gui *parent)
 
 void mcedit::cellupdate()
 {
+    foreach(QGraphicsRectItem* scalebox,scaleboxes)
+    {
+        if (mode==0)
+        {
+            setScale(0,0,0);
+        }
+        if (mode==1)
+        {
+            setScale(-5,5,0);
+        }
+        if (mode==2)
+        {
+            setScale(30,45,1);
+        }
+        if (mode==3)
+        {
+            setScale(30,40,1);
+        }
+    }
+
+
     foreach (Cell *cell, cellmap.values())
     {
         cell->update(mode,viewmode);
@@ -547,6 +652,15 @@ void mcedit::on_buttonBox_accepted()
     tecSave(workpath+"/WSUDtech.mcd");
     tecSave(parent);
     //    tecFill(doublecelllist);
+
+    cout << "Workpath: "<<workpath.toStdString()<<endl;
+    QFile file;
+    file.setFileName(workpath+QString("/userdefcoef.txt"));
+    file.open(QIODevice::WriteOnly|QIODevice::Text);
+    QTextStream stream;
+    stream.setDevice(&file);
+    stream <<     ui->v11coeff->value() << endl;
+    file.close();
 }
 
 
@@ -569,4 +683,25 @@ void mcedit::on_pb_zoomout_2_clicked()
     while (ui->graphicsView->transform().m11()>=0.05)
         ui->graphicsView->scale(1.0/1.1,1.0/1.1);
     cellupdate();
+}
+
+void mcedit::on_pushButton_clicked()
+{
+    QString tfilename=QFileDialog::getSaveFileName(this,"Export tecnology map",workpath,"*.png");
+    if (!tfilename.isEmpty())
+    {
+        /*
+        QPixmap pixMap = QPixmap::grabWidget(ui->graphicsView);
+        pixMap.save(tfilename);
+        */
+        //        ui->graphicsView->scene()->clearSelection();                                                  // Selections would also render to the file
+        //ui->graphicsView->scene()->setSceneRect(ui->graphicsView->scene()->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
+        QImage image(ui->graphicsView->scene()->sceneRect().size().toSize(), QImage::Format_ARGB32);  // Create the image with the exact size of the shrunk scene
+        //QImage image(1000,1000, QImage::Format_ARGB32);
+        image.fill(Qt::transparent);                                              // Start all pixels transparent
+
+        QPainter painter(&image);
+        ui->graphicsView->scene()->render(&painter);
+        image.save(tfilename);
+    }
 }

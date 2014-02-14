@@ -16,7 +16,6 @@ DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
 
 Microclimate::Microclimate()
 {
-
     gridsize = 30;
     percentile = 80;
     mapPic = "";
@@ -261,8 +260,12 @@ void Microclimate::run()
             impAreabeforeWSUD->setCell(j,i,(impPercentage/100)*(gridsize*gridsize));
             perAreabeforeWSUD->setCell(j,i,(gridsize*gridsize) - ((impPercentage/100)*(gridsize*gridsize)));
             //newPervArea->setCell(j,i, perAreabeforeWSUD->getCell(j,i) + perAreabeforeWSUD->getCell(j,i) * techarea / 100);
-            newPervArea->setCell(j,i, perAreabeforeWSUD->getCell(j,i) + (gridsize*gridsize) * techarea / 100);
+            if (wsudline[8]>=20)
+                newPervArea->setCell(j,i, perAreabeforeWSUD->getCell(j,i) - (gridsize*gridsize) * techarea / 100);
+            else
+                newPervArea->setCell(j,i, perAreabeforeWSUD->getCell(j,i) + (gridsize*gridsize) * techarea / 100);
             pervareafrac = (newPervArea->getCell(j,i) / (gridsize * gridsize))*100;
+
             if (pervareafrac > 100)
                 pervareafrac = 100;
             newPervFrac->setCell(j,i,pervareafrac);
@@ -302,7 +305,9 @@ void Microclimate::run()
     printRaster(lstReductionAir);
     exportRasterData(imp,QString::fromStdString(workingDir)+"/Grid.txt");
     exportRasterData(lst,QString::fromStdString(workingDir)+"/LST before WSUD.txt");
+    exportMCtemp(lst,QString::fromStdString(workingDir)+"/LST before WSUD.mcd",1);
     exportRasterData(lstAfterWsud,QString::fromStdString(workingDir)+"/LST after WSUD.txt");
+    exportMCtemp(lstAfterWsud,QString::fromStdString(workingDir)+"/LST after WSUD.mcd",1);
     exportRasterData(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.txt");
     exportMCtemp(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.mcd",-1);
     exportRasterData(lstReductionAir,QString::fromStdString(workingDir)+"/Reduction in Air Temperature.txt");
@@ -523,29 +528,29 @@ double Microclimate::calcDeltaLst(QList<double> t, double frac)
     if(t[7] >= 20)//grass
     {
         counter++;
-        res += (t[6] /100);
+        res += (t[7] /100);
     }
     if(t[8] >= 20)
     {
         counter++;
-        res += (t[6] /100); // impervious area ... dont know ....
+        res += (t[8] /100); // impervious area ... dont know ....
     }
     if(t[9] >= 20)// green wall
     {
         counter++;
-        res += t[1] /100;
+        res += t[9] /100;
     }
     if(t[10] >= 20)// green roof
     {
         counter++;
-        res += t[1] /100;
+        res += t[10] /100;
     }
     if(t[11] >= 20)// user defiend coefficient
     {
         double coef;
-        coef = 1;//getCoef();
+        coef = getCoef();
         counter++;
-        res += ((t[1] /100) - 0.2) * coef;
+        res += ((t[11] /100) - 0.2) * coef;
     }
     if(res != 0)
     {
@@ -598,20 +603,23 @@ void Microclimate::exportMCtemp(DM::RasterData *r, QString filename, double scal
 
 double Microclimate::getCoef()
 {
-    double res;
+    double res=0;
     QFile file;
-    file.setFileName("filename");
+    file.setFileName(QString(this->workingDir.c_str()) + QString("/userdefcoef.txt"));
     file.open(QIODevice::Text|QIODevice::ReadOnly);
     QTextStream stream;
     stream.setDevice(&file);
-
+    /*
     while(!stream.atEnd())
     {
         QString input=stream.readLine();
         QStringList list=input.split(",",QString::KeepEmptyParts);
         while(!list.isEmpty())
             res = list.takeFirst().toDouble();
-    }
+    }*/
+    if (!stream.atEnd())
+        res=stream.readLine().toDouble();
+    cout << "Res:"<<res<<endl;
     file.close();
     return res;
 }
