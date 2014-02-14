@@ -288,12 +288,12 @@ class StreamHydrologyandWaterquality(Module):
 				linearr = line.strip("\n").split(",")
 				if(nr < linearr[0]):
 					nr = linearr[0]
-			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "\n")		
+			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) +"\n")		
 			f.close()
 		else:
 			f = open(self.tmpFile,'w')
 			#f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
-			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "\n")
+			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + "\n")
 			f.close()
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
