@@ -32,6 +32,9 @@ class Analyser2_Gui(QtGui.QDialog):
 		self.UtilFile = workpath + "UtilTable.txt"
 		self.summaryFile = workpath + "AnalyzerSummary.csv"
 		QtCore.QObject.connect(self.ui.pb_plotEBR, QtCore.SIGNAL("released()"),self.plotEBR)
+		QtCore.QObject.connect(self.ui.pb_plotEBR2, QtCore.SIGNAL("released()"),self.plotEBR2)
+		QtCore.QObject.connect(self.ui.pb_plotEBR3, QtCore.SIGNAL("released()"),self.plotEBR3)
+		QtCore.QObject.connect(self.ui.pb_plotEBR4, QtCore.SIGNAL("released()"),self.plotEBR4)
 		QtCore.QObject.connect(self.ui.pb_plotTPR, QtCore.SIGNAL("released()"),self.plotTPR)
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
 		QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
@@ -48,84 +51,160 @@ class Analyser2_Gui(QtGui.QDialog):
 		if os.path.exists(self.EBRFile):
 			os.remove(self.EBRFile)
 	def plotEBR(self):
-		mpl.rcParams['toolbar'] = 'None'
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
-		f = open(self.EBRFile,'r')
-		#print f.readlines().strip('\n').split(',')
-		show1 = False
-		show2 = False
-		show3 = False
-		i = 0
-		bars = []
-		names = []
-		for line in f:
-			linearr = line.strip('\n').split(',')
-			tmpbar = (round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])))
-			names.append(linearr[5])
-			arr2 = [tmpbar,linearr[0]]
-			bars.append(arr2)
-			'''
-			if (int(line[0]) == 1):
-				bars1 = tmpbar
-				show1 = True
-			elif (int(line[0]) == 2):
-				bars2 = tmpbar
-				show2 = True
-			elif (int(line[0]) == 3):
-				bars3 = tmpbar
-				show3 = True
-			'''
-			i = i+1
-		f.close()
-		ind = np.arange(4)
-		print bars[0]
-		print ind
-		space = 0.25
-		if (i == 0):
-			width = space
-		else:
-			width = 0.75 / i
-
-		fig = plt.figure()
-		ax = fig.add_subplot(111)
-		j = 0
-		#tmpaxes = []
-		for bar in bars:
-			tmp = ax.bar(ind + width * j,bar[0],width,color = self.colorarr[j])
-			tmp.set_label(names[j])#'Realisation ' + str(bar[1]))
-			j = j + 1
-			#tmpaxes.append(ax)
-		'''
-		if (show1):
-			rects1 = ax.bar(ind,bars1,width,color = '#1f99d0')
-			rects1.set_label('Realisation 1')
-		if (show2):
-			rects2 = ax.bar(ind+width,bars2,width,color='#8fcce7')
-			rects2.set_label('Realisation 2')
-		if (show3):
-			rects3 = ax.bar(ind+width*2,bars3,width,color='#abcd8f')
-			rects3.set_label('Realisation 3')
-		'''
-		ax.set_ylabel('Stream Health Hydrology and Water Quality(%)')
-		ax.set_title('Stream Health Outcomes')
-		ax.set_xticks(ind+(width*i)*0.75)
-		ax.set_xticklabels( ('FFrequency of runoff (days/year)' , 'Proportion of total volume reduction (%)' , 'Proportion of filtered flows (%)' , 'Water quality') )
-		
-		
-		ax.tick_params(axis='x', labelsize=10)
-		ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
-		ax.legend(loc='best')#,prop={'size':8})
-		fig.canvas.set_window_title(' ') 
-		#plt.xlim([0,100])
-		#fig.autofmt_xdate()
-		plt.ylim([0,100])
-		plt.show()
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
-		plt.savefig(str(workpath)+"EviromentalBenefitsPlot.png")
+		filename = workpath + "EBRtable.txt"
+		mpl.rcParams['toolbar'] = 'None'
+		i = 0
+		FreqUn = 0.0
+		FreqRun = 0.0
+		bars = []
+		tmpbar = []
+		xlabel = []
+		if os.path.exists(filename):
+			f = open(filename,'r')
+			for line in f:
+				linearr = line.strip('\n').split(',')
+				FreqUn = round(float(linearr[6]))
+				FreqRun = round(float(linearr[7]))
+				tmpbar.append(round(float(linearr[1])))
+				xlabel.append(str(linearr[5]))
+				i = i + 1
+			f.close()
+			ind = np.arange(i)
+			space = 0.25
+			width = 0.75 / i
+			for val in tmpbar:
+				bars.append(val)
+			print bars
+			fig = plt.figure()
+			ax = fig.add_subplot(111)
+			figbars = ax.bar(ind,bars,color = '#3399FF')
+			ax.set_ylabel('Frequency of runoff days per year')
+			ax.set_title('Stream Hydrology and Water Quality')
+			ax.set_xticks(ind+(width*i)*0.75)
+			ax.set_xticklabels(xlabel)
+			plt.plot(ax.get_xlim(),[FreqUn,FreqUn], color = 'red',linestyle = '--', lw=2, label = "Urbanised catchment")
+			plt.plot(ax.get_xlim(),[FreqRun,FreqRun], color = 'green', linestyle = '--', lw=2, label = "Target")
+			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
+			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
+			ax.legend(loc='best')
+			#plt.xlim([0,100])
+			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
+			fig.autofmt_xdate()
+			plt.grid(True, which="both",ls="-",color="#939393")
+			#plt.ylim([0,int(urb)+1])
+			plt.show()
+			plt.savefig(str(workpath)+"FrequencyRunOffPerDaysPlot.png")
+		else:
+			print "No EBR file found!!!"
+	def plotEBR2(self):
+		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
+		mpl.rcParams.update(params)
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		filename = workpath + "EBRtable.txt"
+		mpl.rcParams['toolbar'] = 'None'
+		i = 0
+		TotVolRed = 0.0
+		bars = []
+		tmpbar = []
+		xlabel = []
+		if os.path.exists(filename):
+			f = open(filename,'r')
+			for line in f:
+				linearr = line.strip('\n').split(',')
+				TotVolRed = round(float(linearr[8]))
+				tmpbar.append(round(float(linearr[2])))
+				xlabel.append(str(linearr[5]))
+				i = i + 1
+			f.close()
+			ind = np.arange(i)
+			space = 0.25
+			width = 0.75 / i
+			for val in tmpbar:
+				bars.append(val)
+			print bars
+			fig = plt.figure()
+			ax = fig.add_subplot(111)
+			figbars = ax.bar(ind,bars,color = '#3399FF')
+			ax.set_ylabel('Proportion of total volume reduction')
+			ax.set_title('Stream Hydrology and Water Quality')
+			ax.set_xticks(ind+(width*i)*0.75)
+			ax.set_xticklabels(xlabel)
+			plt.plot(ax.get_xlim(),[TotVolRed,TotVolRed], color = 'red',linestyle = '--', lw=2, label = "Target")
+			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
+			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
+			ax.legend(loc='best')
+			#plt.xlim([0,100])
+			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
+			fig.autofmt_xdate()
+			plt.grid(True, which="both",ls="-",color="#939393")
+			#plt.ylim([0,int(urb)+1])
+			plt.show()
+			plt.savefig(str(workpath)+"ProportionOfTotalVolumeReductionPlot.png")
+		else:
+			print "No EBR file found!!!"
+	def plotEBR3(self):
+		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
+		mpl.rcParams.update(params)
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		filename = workpath + "EBRtable.txt"
+		mpl.rcParams['toolbar'] = 'None'
+		i = 0
+		FvF = 0.0
+		FvP = 0.0
+		bars = []
+		tmpbar = []
+		xlabel = []
+		if os.path.exists(filename):
+			f = open(filename,'r')
+			for line in f:
+				linearr = line.strip('\n').split(',')
+				FvF = round(float(linearr[9]))
+				FvP = round(float(linearr[10]))
+				tmpbar.append(round(float(linearr[3])))
+				xlabel.append(str(linearr[5]))
+				i = i + 1
+			f.close()
+			ind = np.arange(i)
+			space = 0.25
+			width = 0.75 / i
+			for val in tmpbar:
+				bars.append(val)
+			print bars
+			fig = plt.figure()
+			ax = fig.add_subplot(111)
+			figbars = ax.bar(ind,bars,color = '#3399FF')
+			ax.set_ylabel('Proportion of filtered volume')
+			ax.set_title('Proportion of filtered volume')
+			ax.set_xticks(ind+(width*i)*0.75)
+			ax.set_xticklabels(xlabel)
+			plt.plot(ax.get_xlim(),[FvF,FvF], color = 'green',linestyle = '--', lw=2, label = "Forest")
+			plt.plot(ax.get_xlim(),[FvP,FvP], color = 'red',linestyle = '--', lw=2, label = "Pasture")
+			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
+			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
+			ax.legend(loc='best')
+			#plt.xlim([0,100])
+			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
+			fig.autofmt_xdate()
+			plt.grid(True, which="both",ls="-",color="#939393")
+			#plt.ylim([0,int(urb)+1])
+			plt.show()
+			plt.savefig(str(workpath)+"ProportionOfFilteredVolumePlot.png")
+		else:
+			print "No EBR file found!!!"	
+	def plotEBR4(self):
+		pass
 	def plotTPR(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
