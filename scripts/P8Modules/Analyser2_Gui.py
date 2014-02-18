@@ -62,6 +62,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		i = 0
 		FreqUn = 0.0
 		FreqRun = 0.0
+		FreqPredev = 0
 		bars = []
 		tmpbar = []
 		xlabel = []
@@ -71,6 +72,7 @@ class Analyser2_Gui(QtGui.QDialog):
 				linearr = line.strip('\n').split(',')
 				FreqUn = round(float(linearr[6]))
 				FreqRun = round(float(linearr[7]))
+				FreqPredev = round(float(linearr[11]))
 				tmpbar.append(round(float(linearr[1])))
 				xlabel.append(str(linearr[5]))
 				i = i + 1
@@ -88,8 +90,12 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax.set_title('Stream Hydrology and Water Quality')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
-			plt.plot(ax.get_xlim(),[FreqUn,FreqUn], color = 'red',linestyle = '--', lw=2, label = "Urbanised catchment")
-			plt.plot(ax.get_xlim(),[FreqRun,FreqRun], color = 'green', linestyle = '--', lw=2, label = "Target")
+			ax.text(0,FreqUn,"Urbanised catchment")
+			plt.plot(ax.get_xlim(),[FreqUn,FreqUn], color = 'red',linestyle = '--', lw=2)#, label = "Urbanised catchment")
+			ax.text(0,FreqRun,"Target")
+			plt.plot(ax.get_xlim(),[FreqRun,FreqRun], color = 'green', linestyle = '--', lw=2)#, label = "Target")
+ 			ax.text(0,FreqPredev,"Natural catchment")
+			plt.plot(ax.get_xlim(),[FreqPredev,FreqPredev], color = 'blue', linestyle = '--', lw=2)#, label = "Natural catchment")
 			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
 			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
 			ax.legend(loc='best')
@@ -134,11 +140,17 @@ class Analyser2_Gui(QtGui.QDialog):
 			fig = plt.figure()
 			ax = fig.add_subplot(111)
 			figbars = ax.bar(ind,bars,color = '#3399FF')
-			ax.set_ylabel('Proportion of total volume reduction')
+			ax.set_ylabel('Proportion of total volume reduction (%)')
 			ax.set_title('Stream Hydrology and Water Quality')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
-			plt.plot(ax.get_xlim(),[TotVolRed,TotVolRed], color = 'red',linestyle = '--', lw=2, label = "Target")
+			ax.text(0,100,"Natural catchment")
+			plt.plot(ax.get_xlim(),[100,100], color = 'blue',linestyle = '--', lw=2)#, label = "Natural catchment")
+			ax.text(0,1,"Impervious catchment")
+			plt.plot(ax.get_xlim(),[0.5,0.5], color = 'red',linestyle = '--', lw=2)#, label = "Impervious catchment")
+			ax.text(0,TotVolRed,"Target")
+			plt.plot(ax.get_xlim(),[TotVolRed,TotVolRed], color = 'green',linestyle = '--', lw=2)#, label = "Target")
+			
 			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
 			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
 			ax.legend(loc='best')
@@ -146,7 +158,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig.autofmt_xdate()
 			plt.grid(True, which="both",ls="-",color="#939393")
-			#plt.ylim([0,int(urb)+1])
+			plt.ylim([0,105])
 			plt.show()
 			plt.savefig(str(workpath)+"ProportionOfTotalVolumeReductionPlot.png")
 		else:
@@ -170,8 +182,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			f = open(filename,'r')
 			for line in f:
 				linearr = line.strip('\n').split(',')
-				FvF = round(float(linearr[9]))
-				FvP = round(float(linearr[10]))
+				FvF = round(float(linearr[9])*100)
+				FvP = round(float(linearr[10])*100)
 				tmpbar.append(round(float(linearr[3])))
 				xlabel.append(str(linearr[5]))
 				i = i + 1
@@ -185,26 +197,116 @@ class Analyser2_Gui(QtGui.QDialog):
 			fig = plt.figure()
 			ax = fig.add_subplot(111)
 			figbars = ax.bar(ind,bars,color = '#3399FF')
-			ax.set_ylabel('Proportion of filtered volume')
-			ax.set_title('Proportion of filtered volume')
+			ax.set_ylabel('Proportion of filtered volume (%) (stream flow coefficient)')
+			ax.set_title('Stream Hydrology and Water Quality')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
-			plt.plot(ax.get_xlim(),[FvF,FvF], color = 'green',linestyle = '--', lw=2, label = "Forest")
-			plt.plot(ax.get_xlim(),[FvP,FvP], color = 'red',linestyle = '--', lw=2, label = "Pasture")
-			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
+			ax.text(0,FvF,"Upper limit (area of forest)")
+			plt.plot(ax.get_xlim(),[FvF,FvF], color = 'blue',linestyle = '--', lw=2)#, label = "Upper limit (area of forest)")
+			ax.text(0,FvP,"Lower limit (area of pasture)")
+			plt.plot(ax.get_xlim(),[FvP,FvP], color = 'green',linestyle = '--', lw=2)#, label = "Lower limit (area of pasture)")
+			ax.text(0,1,"Impervious catchment")
+			plt.plot(ax.get_xlim(),[0.5,0.5], color = 'red',linestyle = '--', lw=2)#, label = "Impervious catchment")
 			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
 			ax.legend(loc='best')
 			#plt.xlim([0,100])
 			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig.autofmt_xdate()
 			plt.grid(True, which="both",ls="-",color="#939393")
-			#plt.ylim([0,int(urb)+1])
+			plt.ylim([0,100])
 			plt.show()
 			plt.savefig(str(workpath)+"ProportionOfFilteredVolumePlot.png")
 		else:
 			print "No EBR file found!!!"	
 	def plotEBR4(self):
-		pass
+		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
+		mpl.rcParams.update(params)
+		settings = QSettings()
+		workpath = settings.value("workPath").toString() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		filename = workpath + "WQtable.txt"
+		mpl.rcParams['toolbar'] = 'None'
+		i = 0
+		tsstop = 150
+		tptop = 0.35
+		tntop = 2.2
+		tsstarget = 0
+		tptarget = 0
+		tntarget = 0
+		bars = []
+		tss = []
+		tp = []
+		tn = []
+		xlabel = []
+		if os.path.exists(filename):
+			f = open(filename,'r')
+			for line in f:
+				linearr = line.strip('\n').split(',')
+				tsstarget = round(float(linearr[4]),2)
+				tptarget = round(float(linearr[5]),2)
+				tntarget = round(float(linearr[6]),2)
+				tss.append(round(float(linearr[1]),2))
+				tp.append(round(float(linearr[2]),2))
+				tn.append(round(float(linearr[3]),2))
+				xlabel.append(str(linearr[0]))
+				i = i + 1
+			f.close()
+			ind = np.arange(i)
+			space = 0.25
+			width = 0.75 / i
+
+			fig = plt.figure()
+			ax = fig.add_subplot(111)
+			figbars = ax.bar(ind,tss,color = '#3399FF')
+			ax.set_ylabel('Tss Pollutant')
+			ax.set_title('Stream Hydrology and Water Quality')
+			ax.set_xticks(ind+(width*i)*0.75)
+			ax.set_xticklabels(xlabel)
+			ax.text(0,tsstop,"Untreadted stormwater")
+			ax.plot(ax.get_xlim(),[tsstop,tsstop], color = 'red',linestyle = '--', lw=2)
+			ax.text(0,tsstarget,"Target")
+			ax.plot(ax.get_xlim(),[tsstarget,tsstarget], color = 'green',linestyle = '--', lw=2)
+			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
+			fig.autofmt_xdate()
+			plt.grid(True, which="both",ls="-",color="#939393")
+			plt.savefig(str(workpath)+"WQtss.png")
+
+			fig1 = plt.figure()
+			ax1 = fig1.add_subplot(111)
+			figbars1 = ax1.bar(ind,tp,color = '#3399FF')
+			ax1.set_ylabel('Tp Pollutant')
+			ax1.set_title('Stream Hydrology and Water Quality')
+			ax1.set_xticks(ind+(width*i)*0.75)
+			ax1.set_xticklabels(xlabel)
+			ax1.text(0,tptop,"Untreadted stormwater")
+			ax1.plot(ax.get_xlim(),[tptop,tptop], color = 'red',linestyle = '--', lw=2)
+			ax1.text(0,tptarget,"Target")
+			ax1.plot(ax.get_xlim(),[tptarget,tptarget], color = 'green',linestyle = '--', lw=2)
+			fig1.canvas.set_window_title('Stream Hydrology and Water Quality') 
+			fig1.autofmt_xdate()
+			plt.grid(True, which="both",ls="-",color="#939393")
+			plt.savefig(str(workpath)+"WQtp.png")
+
+			fig2 = plt.figure()
+			ax2 = fig2.add_subplot(111)
+			figbars2 = ax2.bar(ind,tn,color = '#3399FF')
+			ax2.set_ylabel('Tn Pollutant')
+			ax2.set_title('Stream Hydrology and Water Quality')
+			ax2.set_xticks(ind+(width*i)*0.75)
+			ax2.set_xticklabels(xlabel)
+			ax2.text(0,tntop,"Untreadted stormwater")
+			ax2.plot(ax.get_xlim(),[tntop,tntop], color = 'red',linestyle = '--', lw=2)
+			ax2.text(0,tntarget,"Target")
+			ax2.plot(ax.get_xlim(),[tntarget,tntarget], color = 'green',linestyle = '--', lw=2)
+			fig2.canvas.set_window_title('Stream Hydrology and Water Quality') 
+			fig2.autofmt_xdate()
+
+			plt.grid(True, which="both",ls="-",color="#939393")
+			plt.savefig(str(workpath)+"WQtn.png")
+			plt.show()
+		else:
+			print "No WQ file found!!!"
 	def plotTPR(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)

@@ -74,7 +74,7 @@ class AnalyserModule(Module):
 			#writing information into summary file
 			f = open(self.summaryFile, 'w')
 			f.write("------------ Analyzer Summary ------------\n\n")
-			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction,Proportion of filtered flows,Water quality\n")
+			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction (%),Proportion of filtered flows (%),Water quality (%)\n")
 
 			for line in output:
 				tmp = str(line)
@@ -112,7 +112,7 @@ class AnalyserModule(Module):
 			#writing ouput in summary	
 			if(os.path.exists(self.summaryFile)):
 				f = open(self.summaryFile, 'a+')
-				f.write(" TP: Treatment Performance\nRealisation,Flow(ML/year),Total Suspended Solids(kg/year), Total Phosphorus (kg/year),Total Nitrogen(kg/year)\n")
+				f.write(" TP: Treatment Performance (Load reduction)\nRealisation,Flow(ML/year),Total Suspended Solids(kg/year), Total Phosphorus (kg/year),Total Nitrogen(kg/year)\n")
 			else:
 				f = open(self.summaryFile, 'w')
 				f.write("------------ Analyzer Summary ------------\n\n")

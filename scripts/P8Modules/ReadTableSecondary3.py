@@ -99,7 +99,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.WQ = [] 
 		self.FV = []
 		self.tmpFile = workpath + "EBRtable.txt"
-
+		self.WQtable = workpath + "WQtable.txt"
 		if self.SimulationCity == 0:
 			AnnualRain = 520
 		elif self.SimulationCity == 1:
@@ -179,6 +179,16 @@ class StreamHydrologyandWaterquality(Module):
 		tss = tssVec[len(tssVec)/2]
 		tp = tpVec[len(tpVec)/2]
 		tn = tnVec[len(tnVec)/2]
+
+		#write tss tp and tn into file for analyser
+		if os.path.exists(self.WQtable):
+			f = open(self.WQtable,'a+')
+			f.write(ntpath.basename(realstring) + ","+str(tss)+","+str(tp)+","+str(tn) + "," + str(self.TssTarget) + "," + str(self.TpTarget) + "," +str(self.TnTarget) + "\n")
+			f.close()
+		else:
+			f = open(self.WQtable,'w')
+			f.write(ntpath.basename(realstring) + ","+str(tss)+","+str(tp)+","+str(tn) + "," + str(self.TssTarget) + "," + str(self.TpTarget) + "," +str(self.TnTarget) + "\n")
+			f.close()
 		tss = 1-max((float(tss)-self.TssTarget)/(150-self.TssTarget),0)
 		tp = 1-max((float(tp)-self.TpTarget)/(0.35-self.TpTarget),0)
 		tn = 1-max((float(tn)-self.TnTarget)/(2.2-self.TnTarget),0)
@@ -288,12 +298,12 @@ class StreamHydrologyandWaterquality(Module):
 				linearr = line.strip("\n").split(",")
 				if(nr < linearr[0]):
 					nr = linearr[0]
-			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) +"\n")		
+			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(FreqPredev) +"\n")		
 			f.close()
 		else:
 			f = open(self.tmpFile,'w')
 			#f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
-			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + "\n")
+			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(FreqPredev) +"\n")
 			f.close()
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
