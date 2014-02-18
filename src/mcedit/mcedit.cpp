@@ -131,7 +131,7 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
 
 
     if (!bgimage.isEmpty())
-        loadbackground(bgimage);
+        loadbackground(workpath+"/"+bgimage);
     cellupdate();
 }
 
