@@ -23,11 +23,12 @@ Microclimate::Microclimate()
     landuse = "";
     QSettings settings;
     workingDir = settings.value("workPath").toString().toStdString();
+/*
     if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd")))
         QFile::remove(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd"));
     if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in LST.mcd")))
         QFile::remove(QString(this->workingDir.c_str()) + QString("/Reduction in LST.mcd"));
-
+*/
     this->addParameter("Gridsize", DM::INT, &this->gridsize);
     this->addParameter("MapPic", DM::STRING, &this->mapPic);
     this->addParameter("Shapefile",DM::STRING,&this->shapefile);
