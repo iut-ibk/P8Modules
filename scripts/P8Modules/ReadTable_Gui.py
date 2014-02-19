@@ -35,10 +35,15 @@ class ReadTable_Gui(QtGui.QDialog):
 		datapath = datapath.replace("/","\\")
 	filename = QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", datapath,self.tr("Text Files (*.txt)"))
 	if(filename != ""):
+		finfo = QFileInfo(filename)
 		self.ui.le_r.setText(QFileInfo(filename).fileName())
-		settings.setValue("dataPath",QFileInfo(filename).absolutePath())
-		copyfile(filename,workpath + QFileInfo(filename).fileName())
-	self.loadTable(workpath + QFileInfo(filename).fileName())
+		settings.setValue("dataPath",finfo.absolutePath())
+		if(os.path.exists(workpath + finfo.fileName())):
+			os.remove(workpath + finfo.fileName())
+			copyfile(filename, workpath + finfo.fileName())
+		else:
+			copyfile(filename,workpath + finfo.fileName())
+	self.loadTable(workpath + finfo.fileName())
 
     def loadTable(self,filename):
 	'''mpl.rcParams['toolbar'] = 'None'
