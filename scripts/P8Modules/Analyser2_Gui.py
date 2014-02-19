@@ -97,8 +97,6 @@ class Analyser2_Gui(QtGui.QDialog):
  			ax.text(0,FreqPredev,"Natural catchment")
 			plt.plot(ax.get_xlim(),[FreqPredev,FreqPredev], color = 'blue', linestyle = '--', lw=2)#, label = "Natural catchment")
 			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
-			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
-			ax.legend(loc='best')
 			#plt.xlim([0,100])
 			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig.autofmt_xdate()
@@ -152,8 +150,6 @@ class Analyser2_Gui(QtGui.QDialog):
 			plt.plot(ax.get_xlim(),[TotVolRed,TotVolRed], color = 'green',linestyle = '--', lw=2)#, label = "Target")
 			
 			#plt.text(ax.get_xlim()[1],1,"SEI stretch limit", backgroundcolor = "white")
-			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
-			ax.legend(loc='best')
 			#plt.xlim([0,100])
 			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig.autofmt_xdate()
@@ -207,8 +203,6 @@ class Analyser2_Gui(QtGui.QDialog):
 			plt.plot(ax.get_xlim(),[FvP,FvP], color = 'green',linestyle = '--', lw=2)#, label = "Lower limit (area of pasture)")
 			ax.text(0,1,"Impervious catchment")
 			plt.plot(ax.get_xlim(),[0.5,0.5], color = 'red',linestyle = '--', lw=2)#, label = "Impervious catchment")
-			ax.legend()# (bars1[0],bars2[0],bars3[0]) , ('Option 1', 'Option 2', 'Option 3') )
-			ax.legend(loc='best')
 			#plt.xlim([0,100])
 			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig.autofmt_xdate()
@@ -269,6 +263,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax.plot(ax.get_xlim(),[tsstarget,tsstarget], color = 'green',linestyle = '--', lw=2)
 			fig.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig.autofmt_xdate()
+			plt.ylim([0,160])
 			plt.grid(True, which="both",ls="-",color="#939393")
 			plt.savefig(str(workpath)+"WQtss.png")
 
@@ -285,6 +280,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax1.plot(ax.get_xlim(),[tptarget,tptarget], color = 'green',linestyle = '--', lw=2)
 			fig1.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig1.autofmt_xdate()
+			plt.ylim([0,0.40])
 			plt.grid(True, which="both",ls="-",color="#939393")
 			plt.savefig(str(workpath)+"WQtp.png")
 
@@ -301,7 +297,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax2.plot(ax.get_xlim(),[tntarget,tntarget], color = 'green',linestyle = '--', lw=2)
 			fig2.canvas.set_window_title('Stream Hydrology and Water Quality') 
 			fig2.autofmt_xdate()
-
+			plt.ylim([0,2.5])
 			plt.grid(True, which="both",ls="-",color="#939393")
 			plt.savefig(str(workpath)+"WQtn.png")
 			plt.show()
