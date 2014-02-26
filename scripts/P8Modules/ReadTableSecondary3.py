@@ -54,6 +54,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.addData("City",datastream)
 
 	def run(self):
+		self.ReceivBas = ""
 		settings = QSettings()
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
@@ -83,8 +84,8 @@ class StreamHydrologyandWaterquality(Module):
 			if (stringname != ""):
 				realstring = stringname
 		self.writeBatFileFromFile(realstring)
-		self.writeMusicConfigFileSecondaryFromFile(realstring)
 		areas = self.convertToSecondaryMusic(realstring)
+		self.writeMusicConfigFileSecondaryFromFile(realstring,self.ReceivBas)
 		imparea = areas[0] 		#total impervious area
 		totalarea = areas[1] 	#total area
 		print "Music is running ... "
@@ -368,7 +369,7 @@ class StreamHydrologyandWaterquality(Module):
 		f = open(workpath,'w')
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \"" + workpath + "RunMusicSecondary.bat\" \"" + workpath + "musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
-	def writeMusicConfigFileSecondaryFromFile(self,file):
+	def writeMusicConfigFileSecondaryFromFile(self,file,name):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
@@ -384,8 +385,8 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency.TXT\",1d)\n")
 		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment.TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency.TXT\",1d)\n")
-		f.write("Export_TS (Receiving Node, Inflow, \"TreatedRunoffFrequency.TXT\",1d)\n")
-		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ.TXT\",1d)\n")
+		f.write("Export_TS ("+str(name)+", Inflow, \"TreatedRunoffFrequency.TXT\",1d)\n")
+		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ.TXT\",1d)\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromNr(self,nr):
 		settings = QSettings()
@@ -415,7 +416,11 @@ class StreamHydrologyandWaterquality(Module):
 		urbsplit1 = ""
 		urbsplit2 = ""
 		urbtmp = ""
+		receiveBasName = ""
 		recvcounter = 0
+		foundOutBas = 0
+		OutBasId = 0
+		receivingnodeid = 0		
 		sumID = 0
 		tmpID = 0
 		idfound = False
@@ -469,10 +474,16 @@ class StreamHydrologyandWaterquality(Module):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
 			if(linearr[0] == "Node ID"):
+				if(foundOutBas):
+					OutBasId = linearr[1]
+					foundOutBas = 0
 				NodeIDToType[str(linearr[1])] = currentNodeType
 				if(int(linearr[1]) > sumID):
 					sumID = int(linearr[1])
-
+			if(linearr[0] == "Node Name"):
+				if(linearr[1].find("OUT_Bas") != -1):
+					receiveBasName = linearr[1]
+					foundOutBas = 1
 			if(linearr[0] == "Node Type"):
 				self.printsplitNodes(split,tmpID,urbfirst,urbsec,urbsplit1,urbsplit2,urbtmp,fileOut)
 				currentNodeType = linearr[1]
@@ -608,7 +619,9 @@ class StreamHydrologyandWaterquality(Module):
 		print "sumID: " + str(sumID)
 		print "Area sum: " + str(area)
 		print "ReceivingNode: " + str(receivingnodeid)
-		print "Lists: " 
+		print "OutBasId: " + str(OutBasId)
+		print "receiveBasName: " + str(receiveBasName)
+		print "Lists: "
 		print catchment_paramter_list
 
 		print "Node Types List: " 
@@ -670,7 +683,14 @@ class StreamHydrologyandWaterquality(Module):
 			umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
 		for k in fluxinfl_list2:
 		    umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
-		umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
+		if(OutBasId == 0 and receivingnodeid != 0):
+			umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
+			self.ReceivBas = "Receiving Node"
+		if(OutBasId != 0 and receivingnodeid == 0):
+			umusic.writeMUSIClink(fileOut, areaSumID+4,int(OutBasId))
+			self.ReceivBas = receiveBasName
+		if (OutBasId == 0 and receivingnodeid == 0):
+			print "didnt find any receiving nodes!!!"
 		for l in tanklist:
 			umusic.writeTankLinkReuse(fileOut,l,areaSumID + 3)
 		umusic.writeMUSICfooter(fileOut)

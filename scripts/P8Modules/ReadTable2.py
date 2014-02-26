@@ -56,7 +56,8 @@ class TreatmentPerformanceResultsModule(Module):
 		newname = str(tmp[0] + "TP." + str(tmp[1]))
 		shutil.copyfile(realstring,newname)
 		self.writeBatFile(newname)
-		self.writeMusicConfigFile(newname)
+		name = self.readMusicFile(newname)
+		self.writeMusicConfigFile(newname,name)
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
@@ -66,7 +67,35 @@ class TreatmentPerformanceResultsModule(Module):
 		if (platform.system() != "Linux"):
 			call([str(workpath) + "RunMusicTP.bat", ""])
 		print "Music Done."
-
+	def readMusicFile(self,filename):
+		recvcounter = 0
+		foundOutBas = 0
+		OutBasId = 0
+		receivingnodeid = 0		
+		receiveBasName = ""
+		fileIn = open(filename,"r")
+		for line in fileIn:
+			linearr = line.strip("\n").split(",")
+			if (recvcounter == 2):
+					receivingnodeid = int(linearr[1])
+					recvcounter = 0
+			if (recvcounter == 1):
+				recvcounter = 2
+			if(linearr[0] == "Node Type"):
+				if(linearr[1] == "ReceivingNode"):
+					recvcounter = 1
+			if(linearr[0] == "Node ID"):
+				if(foundOutBas):
+					OutBasId = linearr[1]
+					foundOutBas = 0
+			if(linearr[0] == "Node Name"):
+				if(linearr[1].find("OUT_Bas") != -1):
+					receiveBasName = linearr[1]
+					foundOutBas = 1
+		if(OutBasId == 0 and receivingnodeid != 0):
+			return "Receiving Node"
+		if(OutBasId != 0 and receivingnodeid == 0):
+			return receiveBasName
 	def writeBatFile(self,file):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
@@ -86,7 +115,7 @@ class TreatmentPerformanceResultsModule(Module):
 		f = open(workpath + "RunMusicTP.bat",'w')
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \"" + workpath + "musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
-	def writeMusicConfigFile(self,file):
+	def writeMusicConfigFile(self,file,name):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
@@ -94,7 +123,7 @@ class TreatmentPerformanceResultsModule(Module):
 		f = open(workpath + "musicConfigFileTP.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
-		f.write("Export_TTE (Receiving Node,\"Perf_TTE.txt\")\n")
+		f.write("Export_TTE ("+str(name)+",\"Perf_TTE.txt\")\n")
 		f.close()
 	def writeMusicConfigFileFromNr(self,nr):
 		f = open("musicConfigFileTP"+str(nr)+".mcf", 'w')
