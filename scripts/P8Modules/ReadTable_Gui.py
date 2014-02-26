@@ -43,7 +43,7 @@ class ReadTable_Gui(QtGui.QDialog):
 			copyfile(filename, workpath + finfo.fileName())
 		else:
 			copyfile(filename,workpath + finfo.fileName())
-	self.loadTable(workpath + finfo.fileName())
+		self.loadTable(workpath + finfo.fileName())
 
     def loadTable(self,filename):
 	'''mpl.rcParams['toolbar'] = 'None'
