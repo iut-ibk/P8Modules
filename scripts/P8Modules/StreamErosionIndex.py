@@ -62,7 +62,13 @@ class StreamErosionIndex(Module):
             if (stringname != ""):
                 Filename = stringname
         
-        self.changeMusicFile(Filename) #running music in function
+        name = self.changeMusicFile(Filename)
+        self.writeBatFileFromFile(Filename)
+        #Run music
+        print "Music is running ... "
+        if (platform.system() != "Linux"):
+            call([str(workpath) + "RunMusicSEI.bat", ""])
+        print "Music Done."
         '''if(platform.system() == "Linux"):
             Pre = self.readTimeSeries("Pre-developedCatchment.csv")
             Urb = self.readTimeSeries("Pre-developedCatchment.csv")
@@ -246,7 +252,7 @@ class StreamErosionIndex(Module):
         filearr = file.split(".")
         f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \"" + workpath + "musicConfigFileSEI.mcf\" -light -silent\n")
         f.close()
-    def writeMusicConfigFile(self,routed):
+    def writeMusicConfigFile(self,routed,name):
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"
         if (platform.system() != "Linux"):
@@ -260,10 +266,9 @@ class StreamErosionIndex(Module):
         else:
             f.write("Export_TS (Pre-developed Catchment, Outflow, \"Pre-developedCatchment.csv\")\n")
             f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment.csv\")\n")  
-        f.write("Export_TS (Receiving Node, Inflow, \"PostWSUD.csv\")\n")
+        f.write("Export_TS ("+str(name)+", Inflow, \"PostWSUD.csv\")\n")
         f.close()
     def changeMusicFile(self,filename):
-        self.writeBatFileFromFile(filename)
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"
         if (platform.system() != "Linux"):
@@ -304,9 +309,30 @@ class StreamErosionIndex(Module):
         imp = 0.0
         per = 0.0
         ID = 0
+        recvcounter = 0
+        foundOutBas = 0
+        OutBasId = 0
+        receivingnodeid = 0     
+        receiveBasName = ""
         catchment_paramter_list = []#[1,120,30,20,200,1,10,25,5,0] old static parameter list
         for line in infile:
             linearr = line.strip("\n").split(",")
+            if (recvcounter == 2):
+                    receivingnodeid = int(linearr[1])
+                    recvcounter = 0
+            if (recvcounter == 1):
+                recvcounter = 2
+            if(linearr[0] == "Node Type"):
+                if(linearr[1] == "ReceivingNode"):
+                    recvcounter = 1
+            if(linearr[0] == "Node ID"):
+                if(foundOutBas):
+                    OutBasId = linearr[1]
+                    foundOutBas = 0
+            if(linearr[0] == "Node Name"):
+                if(linearr[1].find("OUT_Bas") != -1):
+                    receiveBasName = linearr[1]
+                    foundOutBas = 1
             if(linearr[0] == "Link Name"):
                 link = True
             if(link):
@@ -359,9 +385,9 @@ class StreamErosionIndex(Module):
                     outfile.write("Timestep," + str(timestep) + "\n")
             else:
                 outfile.write(line)
+
         umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID+1,perArea,False,catchment_paramter_list) #pervious
         umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 2,impArea,True,catchment_paramter_list) #impervious
-        self.writeMusicConfigFile(routed)
         if(routed):
             umusic.writeMUSICjunction2(outfile,"PreJunction",ID + 3,0,0)
             umusic.writeMUSICjunction2(outfile,"UrbJunction",ID + 4,0,0)
@@ -372,11 +398,12 @@ class StreamErosionIndex(Module):
         outfile.close()
         print "Impervious Area: " + str(impArea)
         print "Pervious Area: " + str(perArea)
-        #Run music
-        print "Music is running ... "
-        if (platform.system() != "Linux"):
-            call([str(workpath) + "RunMusicSEI.bat", ""])
-        print "Music Done."
+        if(OutBasId == 0 and receivingnodeid != 0):
+            self.writeMusicConfigFile(routed,"Receiving Node")
+        if(OutBasId != 0 and receivingnodeid == 0):
+            self.writeMusicConfigFile(routed,receiveBasName)
+        if(OutBasId != 0 and receivingnodeid != 0):
+            self.writeMusicConfigFile(routed,"Receiving Node")
     def getRainEtFile(self):
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"

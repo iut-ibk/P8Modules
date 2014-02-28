@@ -689,6 +689,9 @@ class StreamHydrologyandWaterquality(Module):
 		if(OutBasId != 0 and receivingnodeid == 0):
 			umusic.writeMUSIClink(fileOut, areaSumID+4,int(OutBasId))
 			self.ReceivBas = receiveBasName
+		if(OutBasId != 0 and receivingnodeid != 0):
+			umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
+			self.ReceivBas = "Receiving Node"
 		if (OutBasId == 0 and receivingnodeid == 0):
 			print "didnt find any receiving nodes!!!"
 		for l in tanklist:

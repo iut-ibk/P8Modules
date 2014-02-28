@@ -96,6 +96,8 @@ class TreatmentPerformanceResultsModule(Module):
 			return "Receiving Node"
 		if(OutBasId != 0 and receivingnodeid == 0):
 			return receiveBasName
+		if(OutBasId != 0 and receivingnodeid != 0):
+			return "Receiving Node"
 	def writeBatFile(self,file):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
