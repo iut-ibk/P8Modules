@@ -16,8 +16,11 @@ void Current_RealisationModule::init()
 
     Simu = DM::View("SimulationData",DM::COMPONENT,DM::WRITE);
     Simu.addAttribute("MusicFileNo");
+    MapAttr = DM::View("GlobalMapAttributes",DM::COMPONENT,DM::READ);
+
     std::vector<DM::View> vdata;
     vdata.push_back(Simu);
+    vdata.push_back(MapAttr);
     this->addData("City",vdata);
 }
 void Current_RealisationModule::run()

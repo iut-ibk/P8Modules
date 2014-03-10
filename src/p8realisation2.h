@@ -11,6 +11,7 @@ class DM_HELPER_DLL_EXPORT Current_RealisationModule: public DM::Module
     DM_DECLARE_NODE(Current_RealisationModule)
 private:
     DM::View Simu;
+    DM::View MapAttr;
 
 public:
     Current_RealisationModule();
