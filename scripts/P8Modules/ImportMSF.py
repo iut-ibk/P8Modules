@@ -29,6 +29,7 @@ class ImportMSF(Module):
         city = self.getData("City")
         simu = Component()
         simu.addAttribute("msfFilename",str(workpath + self.Filename))
+        simu.addAttribute("MusicFileNo","-1")
         city.addComponent(simu,self.simulation)
 
     def createInputDialog(self):
