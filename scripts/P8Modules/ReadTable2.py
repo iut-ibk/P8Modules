@@ -35,6 +35,7 @@ class TreatmentPerformanceResultsModule(Module):
 		self.addData("City",datastream)
 
 	def run(self):
+		realstring = ""
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
 		''' version with musicnr
@@ -46,14 +47,27 @@ class TreatmentPerformanceResultsModule(Module):
 		self.writeBatFileFromNr(musicnr)
 		self.writeMusicConfigFileFromNr(musicnr)
 		'''
+		settings = QSettings()
+		workpath = settings.value("workPath").toString()
+		workpath += "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
 		#version with musicfile
+		realstring = ""
 		for value in strvec:
 			simuAttr = city.getComponent(value)
 			stringname = simuAttr.getAttribute("msfFilename").getString()
 			if (stringname != ""):
 				realstring = stringname
-		tmp = realstring.split(".")
-		newname = str(tmp[0] + "TP." + str(tmp[1]))
+			musicNo = int(simuAttr.getAttribute("MusicFileNo").getDouble())
+			if (musicNo != 0):
+				musicnr = musicNo
+		if (realstring != ""):
+			tmp = realstring.split(".")
+			newname = str(tmp[0] + "TP." + str(tmp[1]))
+		else:
+			realstring = workpath + "ubeatsMUSIC-ID" + str(musicnr) + ".msf"
+			newname = workpath + "ubeatsMUSIC-ID" + str(musicnr) + "TP.msf" 
 		shutil.copyfile(realstring,newname)
 		self.writeBatFile(newname)
 		name = self.readMusicFile(newname)

@@ -55,6 +55,7 @@ class StreamHydrologyandWaterquality(Module):
 
 	def run(self):
 		self.ReceivBas = ""
+		realstring = ""
 		settings = QSettings()
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
@@ -68,11 +69,11 @@ class StreamHydrologyandWaterquality(Module):
 			stringname = simuData.getAttribute("msfFilename").getString()
 			if (stringname != ""):
 				realstring = stringname
-			'''
+			
 			musicNo = int(simuData.getAttribute("MusicFileNo").getDouble())
 			if (musicNo != 0):
 				musicnr = musicNo
-			'''
+			
 		'''
 		self.writeBatFileFromNr(musicnr)
 		self.writeMusicConfigFileSecondaryFromNr(musicnr)
@@ -83,9 +84,14 @@ class StreamHydrologyandWaterquality(Module):
 			stringname = simuAttr.getAttribute("msfFilename").getString()
 			if (stringname != ""):
 				realstring = stringname
+		if(realstring == ""):
+			realstring = workpath + "ubeatsMUSIC-ID" + str(musicnr) + ".msf"	#if music file from urbanbeats
+			number = str(musicnr)
+		else:														#music nr is -1 if music file from importMSF module
+			number = ""
 		self.writeBatFileFromFile(realstring)
 		areas = self.convertToSecondaryMusic(realstring)
-		self.writeMusicConfigFileSecondaryFromFile(realstring,self.ReceivBas)
+		self.writeMusicConfigFileSecondaryFromFile(realstring,self.ReceivBas,number)
 		imparea = areas[0] 		#total impervious area
 		totalarea = areas[1] 	#total area
 		print "Music is running ... "
@@ -126,14 +132,14 @@ class StreamHydrologyandWaterquality(Module):
 		list8 = self.readFileToList("PredevelopBaseflowFrequency"+str(musicnr)+".TXT")
 		'''
 		#version with music file
-		list1 = self.readFileToList(workpath + "PredevelopRunoffFrequency.TXT")
-		list2 = self.readFileToList(workpath + "UntreatedRunoffFrequency.TXT")
-		list3 = self.readFileToList(workpath + "TreatedRunoffFrequency.TXT")
-		list4 = self.readFileToList(workpath + "ETandRe-useFluxes.TXT")
-		list5 = self.readFileToList(workpath + "PredevelopTotalRunoff.TXT")
-		list6 = self.readFileToList(workpath + "Exfiltration.TXT")
-		list7 = self.readFileToList(workpath + "WQ.TXT")
-		list8 = self.readFileToList(workpath + "PredevelopBaseflowFrequency.TXT")
+		list1 = self.readFileToList(workpath + "PredevelopRunoffFrequency"+str(number)+".TXT")
+		list2 = self.readFileToList(workpath + "UntreatedRunoffFrequency"+str(number)+".TXT")
+		list3 = self.readFileToList(workpath + "TreatedRunoffFrequency"+str(number)+".TXT")
+		list4 = self.readFileToList(workpath + "ETandRe-useFluxes"+str(number)+".TXT")
+		list5 = self.readFileToList(workpath + "PredevelopTotalRunoff"+str(number)+".TXT")
+		list6 = self.readFileToList(workpath + "Exfiltration"+str(number)+".TXT")
+		list7 = self.readFileToList(workpath + "WQ"+str(number)+".TXT")
+		list8 = self.readFileToList(workpath + "PredevelopBaseflowFrequency"+str(number)+".TXT")
 
 		vec1 = []
 		vec2 = []
@@ -369,7 +375,7 @@ class StreamHydrologyandWaterquality(Module):
 		f = open(workpath,'w')
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \"" + workpath + "RunMusicSecondary.bat\" \"" + workpath + "musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
-	def writeMusicConfigFileSecondaryFromFile(self,file,name):
+	def writeMusicConfigFileSecondaryFromFile(self,file,name,number):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
@@ -378,15 +384,15 @@ class StreamHydrologyandWaterquality(Module):
 		f = open(workpath + "musicConfigFileSecondary.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
-		f.write("Export_TS (Reuse and ET fluxes, Inflow, \"ETandRe-useFluxes.TXT\",1d)\n")
-		f.write("Export_TS (Infiltration Fluxes, Inflow, \"Exfiltration.TXT\",1d)\n")
-		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff.TXT\",1d)\n")
-		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency.TXT \",1d)\n")
-		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency.TXT\",1d)\n")
-		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment.TXT\",1d)\n")
-		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency.TXT\",1d)\n")
-		f.write("Export_TS ("+str(name)+", Inflow, \"TreatedRunoffFrequency.TXT\",1d)\n")
-		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ.TXT\",1d)\n")
+		f.write("Export_TS (Reuse and ET fluxes, Inflow, \"ETandRe-useFluxes"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Infiltration Fluxes, Inflow, \"Exfiltration"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency"+str(number)+".TXT \",1d)\n")
+		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS ("+str(name)+", Inflow, \"TreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(number)+".TXT\",1d)\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromNr(self,nr):
 		settings = QSettings()
