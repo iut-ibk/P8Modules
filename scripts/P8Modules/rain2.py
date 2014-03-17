@@ -209,17 +209,17 @@ class RainModule(Module):
 
 		#convert xvalue
 		#convert yvalue
-
+		variables = netCDF.variables.keys()
 		longs = doublevector()
-		longs = netCDF.variables['longitude'][:]
+		longs = netCDF.variables[variables[1]][:] # long
 		lats = doublevector()
-		lats = netCDF.variables['latitude'][:]
+		lats = netCDF.variables[variables[0]][:] # lat
 		#looking here in the netCDF vector for the index of our values
 
 		x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
 		y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
 		datas = Attribute().getDoubleVector()
-		size = netCDF.variables['time'].size
+		size = netCDF.variables[variables[2]].size #time
 		counter = long(0)
 		oldpercent = 0
 		newpercent = float(0)
@@ -229,7 +229,7 @@ class RainModule(Module):
 			if(oldpercent < int(newpercent)):
 				oldpercent = int(newpercent)
 				print "Reading Rain-Data " + str(oldpercent) + "%"
-			datas.append(float(netCDF.variables['precipitation'][counter][int(lats[y])][int(longs[x])]))
+			datas.append(float(netCDF.variables[variables[3]][counter][int(lats[y])][int(longs[x])])) #prec
 			counter = counter + 1
 			#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 		return datas
