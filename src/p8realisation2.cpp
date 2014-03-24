@@ -15,7 +15,7 @@ void Current_RealisationModule::init()
 {
 
     Simu = DM::View("SimulationData",DM::COMPONENT,DM::WRITE);
-    Simu.addAttribute("MusicFileNo");
+    Simu.addAttribute("msfFilename");
     MapAttr = DM::View("GlobalMapAttributes",DM::COMPONENT,DM::READ);
 
     std::vector<DM::View> vdata;
@@ -29,7 +29,7 @@ void Current_RealisationModule::run()
     DM::Component * cmp = new DM::Component();
     sys->addComponent(cmp,Simu);
 
-    cmp->addAttribute("MusicFileNo",atoi(this->RealisationNr.c_str()));
+    cmp->addAttribute("msfFilename",this->RealisationNr);
 }
 bool Current_RealisationModule::createInputDialog()
 {
