@@ -27,7 +27,7 @@ def createMUSICmsf(path, name):
     return f
 
 def writeMUSICheader(f,climatepath):
-    path = "C:\\Program Files (x86)\\eWater\\MUSIC 5 SL\\Template\\Melbourne 1959 6 Minute.mlb"
+    path = "C:\\Program Files (x86)\\eWater\\MUSIC 6 6.0.1.547 SL\\Template\\Melbourne 1959 6 Minute.mlb"
     #path = climatepath
     f.write("====================================================================================\n")
     f.write("DESCRIPTION\n")
