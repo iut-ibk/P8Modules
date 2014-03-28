@@ -17,9 +17,20 @@ p8realisationModule_gui::p8realisationModule_gui(Current_RealisationModule * p8,
     QDir dir = QDir(path);
     dir.setFilter(QDir::Files);
     QStringList files = dir.entryList();
+    QList<QBool> fileIsSplit = QList<QBool>();
+    for (int i = 0; i<files.length()+1; i++)
+    {
+        fileIsSplit.append(QBool(false));
+    }
     int length = files.length();
     for(int i = 0;i<length;i++)
     {
+        if(files.at(i).contains("Bas"))
+        {
+            int nr = QChar(files.at(i).at(14)).digitValue();
+            fileIsSplit[nr] = QBool(true);
+        }
+
         if(!files[i].contains("ubeatsMUSIC-ID"))
         {
             files.removeAt(i);
@@ -27,6 +38,20 @@ p8realisationModule_gui::p8realisationModule_gui(Current_RealisationModule * p8,
             length--;
         }
 
+    }
+    for(int i = 0;i<length;i++)
+    {
+        int number = QChar(files.at(i).at(14)).digitValue();
+        bool b = fileIsSplit.at(number);
+        if(b)
+        {
+            if(!files.at(i).contains("Bas"))
+            {
+                files.removeAt(i);
+                i--;
+                length--;
+            }
+        }
     }
     ui->comboBox->addItems(files);
 }
