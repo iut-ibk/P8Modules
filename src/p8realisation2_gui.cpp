@@ -41,7 +41,7 @@ p8realisationModule_gui::p8realisationModule_gui(Current_RealisationModule * p8,
     }
     for(int i = 0;i<length;i++)
     {
-        int number = QChar(files.at(i).at(1)).digitValue();
+        int number = QChar(files.at(i).at(10)).digitValue();
         bool b = fileIsSplit.at(number);
         if(b)
         {
