@@ -27,11 +27,11 @@ p8realisationModule_gui::p8realisationModule_gui(Current_RealisationModule * p8,
     {
         if(files.at(i).contains("Bas"))
         {
-            int nr = QChar(files.at(i).at(14)).digitValue();
+            int nr = QChar(files.at(i).at(10)).digitValue();
             fileIsSplit[nr] = QBool(true);
         }
 
-        if(!files[i].contains("ubeatsMUSIC-ID"))
+        if(!files[i].contains("ubMUSIC-ID"))
         {
             files.removeAt(i);
             i--;
@@ -41,7 +41,7 @@ p8realisationModule_gui::p8realisationModule_gui(Current_RealisationModule * p8,
     }
     for(int i = 0;i<length;i++)
     {
-        int number = QChar(files.at(i).at(14)).digitValue();
+        int number = QChar(files.at(i).at(1)).digitValue();
         bool b = fileIsSplit.at(number);
         if(b)
         {
