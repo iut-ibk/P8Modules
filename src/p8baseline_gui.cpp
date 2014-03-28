@@ -47,7 +47,7 @@ void URBAN_FORM_GUI::on_pb_s_released()
 void URBAN_FORM_GUI::on_pb_t_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Topology",QDir::currentPath(),"*.*");
-    this->p8baseline->createRaster(fname,"Topology");
+    this->p8baseline->createRaster(fname,"Elevation");
     p8baseline->setParameterValue("FileNameT",fname.toStdString());
     ui->le_t->setText(fname);
 }
@@ -55,7 +55,7 @@ void URBAN_FORM_GUI::on_pb_t_released()
 void URBAN_FORM_GUI::on_pb_p_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Plan Map",QDir::currentPath(),"*.*");
-    this->p8baseline->createRaster(fname,"Plan Map");
+    this->p8baseline->createRaster(fname,"PlanMap");
     p8baseline->setParameterValue("FileNameP",fname.toStdString());
     ui->le_p->setText(fname);
 }
@@ -63,7 +63,7 @@ void URBAN_FORM_GUI::on_pb_p_released()
 void URBAN_FORM_GUI::on_pb_d_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Population Map",QDir::currentPath(),"*.*");
-    this->p8baseline->createRaster(fname,"Population Density");
+    this->p8baseline->createRaster(fname,"Population");
     p8baseline->setParameterValue("FileNameD",fname.toStdString());
     ui->le_d->setText(fname);
 }
@@ -71,7 +71,7 @@ void URBAN_FORM_GUI::on_pb_d_released()
 void URBAN_FORM_GUI::on_pb_l_released()
 {
     QString fname = QFileDialog::getOpenFileName(this,"Landuse Map",QDir::currentPath(),"*.*");
-    this->p8baseline->createRaster(fname,"Landuse");
+    this->p8baseline->createRaster(fname,"LandUse");
     p8baseline->setParameterValue("FileNameL",fname.toStdString());
     ui->le_l->setText(fname);
 }

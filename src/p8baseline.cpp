@@ -3,7 +3,7 @@
 #include "dmsimulation.h"
 #include "dmporttuple.h"
 #include "sstream"
-
+#include "QSettings"
 #include <cmath>
 
 DM_DECLARE_GROUP_NAME(URBAN_FORM, CRCP8)
@@ -37,6 +37,8 @@ void URBAN_FORM::run()
 
 void URBAN_FORM::init()
 {
+    QSettings settings;
+    QString installDir = settings.value("installPath").toString();
     this->addTuplePort("out", DM::OUTTUPLESYSTEM);
     if (this->getSimulation()->getModuleByName("Mixer")==NULL)
     {
@@ -51,6 +53,14 @@ void URBAN_FORM::init()
         cout << "Createing Links"<<endl;
         DM::ModuleLink * l1=this->getSimulation()->addLink( mix->getOutPort("Combined"),this->getOutPortTuple("out")->getInPort());
         cout << "created"<<endl;
+
+        //making and linking default rasters
+
+        createRaster(installDir+"/elevation.txt",QString("Employment"));
+        createRaster(installDir+"/elevation.txt",QString("Groundwater"));
+        createRaster(installDir+"/elevation.txt",QString("SocialParam1"));
+        createRaster(installDir+"/elevation.txt",QString("SocialParam2"));
+
     }
 }
 
@@ -91,7 +101,7 @@ void URBAN_FORM::createRaster(QString filename, QString name)
 {
     if(this->getSimulation()->getModuleByName(name.toStdString())!=0)
         return;
-    DM::Module * m = this->getSimulation()->addModule("ImportRasterData");
+    DM::Module * m = this->getSimulation()->addModule("ImportRasterData2");
     cout << "Raster: " << m << endl;
     if (m!=NULL)
     {

@@ -3,7 +3,7 @@
 #include "dmsimulation.h"
 #include "dmporttuple.h"
 #include "sstream"
-
+#include "QSettings"
 #include "dmsystem.h"
 #include "dmview.h"
 
@@ -28,107 +28,84 @@ void SCENARIO::run()
 }
 
 void SCENARIO::init() {
+    QSettings settings;
+    string installDir = settings.value("installPath").toString().toStdString();
     this->addTuplePort("out", DM::OUTTUPLESYSTEM);
     this->addTuplePort("in", DM::INTUPLESYSTEM);
 
     if (!modulesHaveBeenCreated)
     {
- //new serialized version
-        //created by netread
-        cout << "2=====================" << endl;
+
         DM::Module *blocDelin;
-        blocDelin=this->getSimulation()->addModule("delinblocks");
+        blocDelin=this->getSimulation()->addModule("Delinblocks");
         blocDelin->setGroup(this);
         blocDelin->setName("blocDelin");
         blocDelin->init();
-        //mmap.insert("blocDelin",QString::fromStdString(blocDelin->getUuid()));
+        cout << "2=====================" << endl;
 
-        DM::Module *basinDelin;
-        basinDelin=this->getSimulation()->addModule("delinbasin");
-        basinDelin->setGroup(this);
-        basinDelin->init();
-        //mmap.insert("basinDelin",QString::fromStdString(basinDelin->getUuid()));
+        DM::Module *getPrevBlock;
+        getPrevBlock=this->getSimulation()->addModule("GetPreviousBlocks");
+        getPrevBlock->setGroup(this);
+        getPrevBlock->setParameterValue("block_path_name",installDir + "/emptyblockmap.shp");
+        getPrevBlock->setParameterValue("patch_path_name",installDir + "/emptyblockmap.shp");
+        getPrevBlock->init();
+
+        DM::Module *mix1=this->getSimulation()->addModule("AppendViewFromSystem");
+        mix1->setGroup(this);
+        QString inports1 = QString::fromStdString(mix1->getParameterAsString("Inports"));
+        inports1 += "*|*" + QString("Delinblocks") + "*|*" + "GetPreviousBlocks";
+        mix1->setParameterValue("Inports",inports1.toStdString());
+        mix1->init();
 
         DM::Module *planbbUrban;
-        planbbUrban=this->getSimulation()->addModule("urbplanbb");
+        planbbUrban=this->getSimulation()->addModule("Urbplanbb");
         planbbUrban->setGroup(this);
         planbbUrban->setName("planbbUrban");
         planbbUrban->init();
-        //mmap.insert("planbbUrban",QString::fromStdString(planbbUrban->getUuid()));
 
-       DM::Module *urbplanResidential;
-        urbplanResidential=this->getSimulation()->addModule("ubp_residential");
-        urbplanResidential->setGroup(this);
-        urbplanResidential->init();
-       // mmap.insert("urbplanResidential",QString::fromStdString(urbplanResidential->getUuid()));
+        DM::Module *getPrevSys;
+        getPrevSys=this->getSimulation()->addModule("GetSystems");
+        getPrevSys->setGroup(this);
+        getPrevSys->setParameterValue("path_name",installDir + "/emptysystemsmap.shp");
+        getPrevSys->init();
 
-        cout << "3=====================" << endl;
-         DM::Module *urbplanNonResidential;
-        urbplanNonResidential=this->getSimulation()->addModule("ubp_nonres");
-        urbplanNonResidential->setGroup(this);
-        urbplanNonResidential->init();
-        //mmap.insert("urbplanNonResidential",QString::fromStdString(urbplanNonResidential->getUuid()));
-
-        DM::Module *urbplanFacilities;
-        urbplanFacilities=this->getSimulation()->addModule("ubp_facilities");
-        urbplanFacilities->setGroup(this);
-        urbplanFacilities->init();
-        //mmap.insert("urbplanFacilities",QString::fromStdString(urbplanFacilities->getUuid()));
-
-        DM::Module *urbplanSpaces;
-        urbplanSpaces=this->getSimulation()->addModule("ubp_spaces");
-        urbplanSpaces->setGroup(this);
-        urbplanSpaces->init();
-        //mmap.insert("urbplanSpaces",QString::fromStdString(urbplanSpaces->getUuid()));
-        cout << "4=====================" << endl;
-
-        DM::Module *planSummaryUrban;
-        planSummaryUrban=this->getSimulation()->addModule("urbplansummary");
-        planSummaryUrban->setGroup(this);
-        planSummaryUrban->init();
-        //mmap.insert("planSummaryUrban",QString::fromStdString(planSummaryUrban->getUuid()));
-
+        DM::Module *mix2=this->getSimulation()->addModule("AppendViewFromSystem");
+        mix2->setGroup(this);
+        QString inports2 = QString::fromStdString(mix2->getParameterAsString("Inports"));
+        inports2 += "*|*" + QString("Urbplanbb") + "*|*" + "GetSystems";
+        mix2->setParameterValue("Inports",inports2.toStdString());
+        mix2->init();
 
         DM::Module *placementTech;
-        placementTech=this->getSimulation()->addModule("techplacement");
+        placementTech=this->getSimulation()->addModule("Techplacement");
         placementTech->setGroup(this);
         placementTech->setName("placementTech");
         placementTech->init();
-        //mmap.insert("placementTech",QString::fromStdString(placementTech->getUuid()));
 
-        DM::Module *lotTechOpp;
-        lotTechOpp=this->getSimulation()->addModule("techopp_lot");
-        lotTechOpp->setGroup(this);
-        lotTechOpp->init();
-        //mmap.insert("lotTechOpp",QString::fromStdString(lotTechOpp->getUuid()));
 
-        DM::Module *streetTechOpp;
-        streetTechOpp=this->getSimulation()->addModule("techopp_street");
-        streetTechOpp->setGroup(this);
-        streetTechOpp->init();
-        //mmap.insert("streetTechOpp",QString::fromStdString(streetTechOpp->getUuid()));
-
-        DM::Module *neighTechOpp;
-        neighTechOpp=this->getSimulation()->addModule("techopp_neigh");
-        neighTechOpp->setGroup(this);
-        neighTechOpp->init();
-        //mmap.insert("neighTechOpp",QString::fromStdString(neighTechOpp->getUuid()));
-        cout << "4b====================" << endl;
-
-        DM::Module *precTechOpp;
-        precTechOpp=this->getSimulation()->addModule("techopp_precinct");
-        precTechOpp->setGroup(this);
-        precTechOpp->init();
-       // mmap.insert("precTechOpp",QString::fromStdString(precTechOpp->getUuid()));
-
-        DM::Module *evalTechStrategy;
-        evalTechStrategy=this->getSimulation()->addModule("techstrategy_eval");
-        evalTechStrategy->setGroup(this);
-        evalTechStrategy->init();
-        //mmap.insert("evalTechStrategy",QString::fromStdString(evalTechStrategy->getUuid()));
+        DM::Module *writeMusic;
+        writeMusic=this->getSimulation()->addModule("WriteResults2MUSIC");
+        writeMusic->setGroup(this);
+        writeMusic->init();
         cout << "5=====================" << endl;
 
+
+
+
+
+
         DM::ModuleLink *l_START_blocDelin=this->getSimulation()->addLink( this->getInPortTuple("in")->getOutPort(),blocDelin->getInPort("City"));
+        DM::ModuleLink *l_blocDelin_mix1 = this->getSimulation()->addLink(blocDelin->getOutPort("City"), mix1->getInPort("Delinblocks"));
+        DM::ModuleLink *l_getblock_mix1 = this->getSimulation()->addLink(getPrevBlock->getOutPort("City"), mix1->getInPort("GetPreviousBlocks"));
+        DM::ModuleLink *l_mix1_plannurb = this->getSimulation()->addLink(mix1->getOutPort("Combined"), planbbUrban->getInPort("City"));
+        DM::ModuleLink *l_plannurb_mix2 = this->getSimulation()->addLink(planbbUrban->getOutPort("City"), mix2->getInPort("Urbplanbb"));
+        DM::ModuleLink *l_getsys_mix2 = this->getSimulation()->addLink(getPrevSys->getOutPort("City"), mix2->getInPort("GetSystems"));
+        DM::ModuleLink *l_mix2_techplace = this->getSimulation()->addLink(mix2->getOutPort("Combined"), placementTech->getInPort("City"));
+        DM::ModuleLink *l_placement_WriteMusic = this->getSimulation()->addLink(placementTech->getOutPort("City"), writeMusic->getInPort("City"));
+        DM::ModuleLink * l_WriteMusic_END=this->getSimulation()->addLink(writeMusic->getOutPort("City"),this->getOutPortTuple("out")->getInPort());
+
+
+        /*
         DM::ModuleLink *l_blocDelin_basinDelin=this->getSimulation()->addLink( blocDelin->getOutPort("City"),basinDelin->getInPort("City"));
         DM::ModuleLink *l_basinDelin_planbbUrban=this->getSimulation()->addLink( basinDelin->getOutPort("City"),planbbUrban->getInPort("City"));
         DM::ModuleLink *l_planbbUrban_urbplanResidential=this->getSimulation()->addLink( planbbUrban->getOutPort("City"),urbplanResidential->getInPort("City"));
@@ -145,7 +122,7 @@ void SCENARIO::init() {
         DM::ModuleLink *l_precTechOpp_evalTechStrategy=this->getSimulation()->addLink( precTechOpp->getOutPort("City"),evalTechStrategy->getInPort("City"));
         DM::ModuleLink * l_evalTechStrategy_END=this->getSimulation()->addLink( evalTechStrategy->getOutPort("City"),this->getOutPortTuple("out")->getInPort());
         // end created by netread
-
+*/
         modulesHaveBeenCreated = true;
         cout << "6=====================" << endl;
 
