@@ -37,8 +37,9 @@ class RainGui(QtGui.QDialog):
         dic = {}
         filename = str(self.ui.le_r.text())
         if (filename != ""):
-            a = netCDF4.Dataset(filename,'r',format='NETCDF4')
-            units = a.variables['precipitation'].units
+            a = netCDF4.Dataset(str(workpath) + str(filename),'r',format='NETCDF4')
+            variables = a.variables.keys()
+            units = a.variables[variables[3]].units
             a.close()
         else:
             units = "mm/6min"
