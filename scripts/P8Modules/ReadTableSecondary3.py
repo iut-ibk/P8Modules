@@ -35,6 +35,29 @@ class StreamHydrologyandWaterquality(Module):
 		self.TpTarget = 0.05
 		self.createParameter("UseTargets", BOOL,"")
 		self.UseTargets = False
+		self.createParameter("Base" , DOUBLE , "")
+		self.Base = 0
+		self.createParameter("RainThres" , DOUBLE , "")
+		self.RainThres = 1
+		self.createParameter("RainSoil" , DOUBLE , "")
+		self.RainSoil = 120
+		self.createParameter("RainInitial" , DOUBLE , "")
+		self.RainInitial = 30
+		self.createParameter("RainField" , DOUBLE , "")
+		self.RainField = 80
+		self.createParameter("RainInfil" , DOUBLE , "")
+		self.RainInfil = 200
+		self.createParameter("RainInfil2" , DOUBLE , "")
+		self.RainInfil2 = 1
+		self.createParameter("RainDepth" , DOUBLE , "")
+		self.RainDepth = 10
+		self.createParameter("RainRecharge" , DOUBLE , "")
+		self.RainRecharge = 25
+		self.createParameter("RainBaseflow" , DOUBLE , "")
+		self.RainBaseflow = 5
+		self.createParameter("RainDeep" , DOUBLE , "")
+		self.RainDeep = 0
+
 
 		#Views
 		self.simulation = View("SimulationData",COMPONENT,READ)
@@ -206,7 +229,14 @@ class StreamHydrologyandWaterquality(Module):
 		FreqUntreated = freqVec[1]
 		vec8 = sorted(vec8)
 		cin = 3 * float(vec8[len(vec8)/2])
-		print "cin: " +str(cin)
+		if(float(self.Base) != float(0.0)):
+			print "using user defined cin"
+			cin = self.Base
+			print "cin: " +str(cin)
+		else:
+			print "using default cin"
+			print "cin: " +str(cin)
+
 
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
@@ -459,6 +489,7 @@ class StreamHydrologyandWaterquality(Module):
 		writetop = True
 		writebot = False
 		catchment_paramter_list = [] #[1,120,30,20,200,1,10,25,5,0]
+		catchment_paramter_list2 = [self.RainThres,self.RainSoil,self.RainInitial,self.RainField,self.RainInfil,self.RainInfil2,self.RainDepth,self.RainRecharge,self.RainBaseflow,self.RainDeep]
 		j = -1
 		i = 0
 		
@@ -637,7 +668,7 @@ class StreamHydrologyandWaterquality(Module):
 		print fluxinfl_list
 		print fluxinfl_list2
 		areaSumID = sumID + 1
-		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, area,1, catchment_paramter_list)
+		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, area,1, catchment_paramter_list2)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Baseflows", areaSumID+1, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID,areaSumID+1)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Runoff Frequency", areaSumID+2, 0, 0)

@@ -28,9 +28,21 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.spb_vol.setValue(int(self.module.getParameterAsString("VolumeReduction")))
 	self.ui.spb_city.setValue(int(self.module.getParameterAsString("AnnualUserRain")))
 	self.ui.spb_freq.setValue(int(self.module.getParameterAsString("FrequencyRunoffDays")))
+	self.ui.spb_base.setValue(int(self.module.getParameterAsString("Base")))
 	self.ui.le_tss.setValue(float(self.module.getParameterAsString("TssTarget")))
 	self.ui.le_tp.setValue(float(self.module.getParameterAsString("TpTarget")))
 	self.ui.le_tn.setValue(float(self.module.getParameterAsString("TnTarget")))
+	self.ui.le_rainthres.setText((self.module.getParameterAsString("RainThres")))
+	self.ui.le_rainsoil.setText((self.module.getParameterAsString("RainSoil")))
+	self.ui.le_raininitial.setText((self.module.getParameterAsString("RainInitial")))
+	self.ui.le_rainfield.setText((self.module.getParameterAsString("RainField")))
+	self.ui.le_raininfil.setText((self.module.getParameterAsString("RainInfil")))
+	self.ui.le_raininfil2.setText((self.module.getParameterAsString("RainInfil2")))
+	self.ui.le_raindepth.setText((self.module.getParameterAsString("RainDepth")))
+	self.ui.le_rainrecharge.setText((self.module.getParameterAsString("RainRecharge")))
+	self.ui.le_rainbaseflow.setText((self.module.getParameterAsString("RainBaseflow")))
+	self.ui.le_raindeep.setText((self.module.getParameterAsString("RainDeep")))
+
 
 
     def save(self):
@@ -40,11 +52,21 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.module.setParameterValue("SimulationCity",str(city))
 	self.module.setParameterValue("VolumeReductionIndex",str(self.ui.vol_combo.currentIndex()))
 	self.module.setParameterValue("FrequencyRunoffDays",str(self.ui.spb_freq.value()))
-	self.module.setParameterValue("UserTargets",str(1))
+	self.module.setParameterValue("Base",str(self.ui.spb_base.value()))
+	self.module.setParameterValue("UseTargets",str(1))
 	self.module.setParameterValue("TssTarget",str(self.ui.le_tss.text()))
 	self.module.setParameterValue("TnTarget",str(self.ui.le_tn.text()))
 	self.module.setParameterValue("TpTarget",str(self.ui.le_tp.text()))
-
+	self.module.setParameterValue("RainThres",str(self.ui.le_rainthres.text()))
+	self.module.setParameterValue("RainSoil",str(self.ui.le_rainsoil.text()))
+	self.module.setParameterValue("RainInitial",str(self.ui.le_raininitial.text()))
+	self.module.setParameterValue("RainField",str(self.ui.le_rainfield.text()))
+	self.module.setParameterValue("RainInfil",str(self.ui.le_raininfil.text()))
+	self.module.setParameterValue("RainInfil2",str(self.ui.le_raininfil2.text()))
+	self.module.setParameterValue("RainDepth",str(self.ui.le_raindepth.text()))
+	self.module.setParameterValue("RainRecharge",str(self.ui.le_rainrecharge.text()))
+	self.module.setParameterValue("RainBaseflow",str(self.ui.le_rainbaseflow.text()))
+	self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
 	pass
 	
     def Load(self):
