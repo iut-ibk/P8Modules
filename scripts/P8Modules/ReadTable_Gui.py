@@ -39,7 +39,7 @@ class ReadTable_Gui(QtGui.QDialog):
 		self.ui.le_r.setText(QFileInfo(filename).fileName())
 		settings.setValue("dataPath",finfo.absolutePath())
 		if(os.path.exists(workpath + finfo.fileName())):
-			os.remove(str(workpath) + str(finfo.fileName())
+			os.remove(str(workpath) + str(finfo.fileName()))
 			copyfile(filename, str(workpath) + str(finfo.fileName()))
 		else:
 			copyfile(filename,str(workpath) + str(finfo.fileName()))
