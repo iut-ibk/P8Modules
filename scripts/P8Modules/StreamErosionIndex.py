@@ -36,6 +36,27 @@ class StreamErosionIndex(Module):
         self.useMusic = 0
         self.createParameter("useDefaults",BOOL,"")
         self.useDefaults = 0
+        self.createParameter("RainThres" , DOUBLE , "")
+        self.RainThres = 1
+        self.createParameter("RainSoil" , DOUBLE , "")
+        self.RainSoil = 120
+        self.createParameter("RainInitial" , DOUBLE , "")
+        self.RainInitial = 30
+        self.createParameter("RainField" , DOUBLE , "")
+        self.RainField = 80
+        self.createParameter("RainInfil" , DOUBLE , "")
+        self.RainInfil = 200
+        self.createParameter("RainInfil2" , DOUBLE , "")
+        self.RainInfil2 = 1
+        self.createParameter("RainDepth" , DOUBLE , "")
+        self.RainDepth = 10
+        self.createParameter("RainRecharge" , DOUBLE , "")
+        self.RainRecharge = 25
+        self.createParameter("RainBaseflow" , DOUBLE , "")
+        self.RainBaseflow = 5
+        self.createParameter("RainDeep" , DOUBLE , "")
+        self.RainDeep = 0
+
 
         self.simulation = View("SimulationData",COMPONENT,WRITE)
         self.simulation.getAttribute("msfFilename")
@@ -321,6 +342,8 @@ class StreamErosionIndex(Module):
         receivingnodeid = 0     
         receiveBasName = ""
         catchment_paramter_list = []#[1,120,30,20,200,1,10,25,5,0] old static parameter list
+        catchment_paramter_list2 = [self.RainThres,self.RainSoil,self.RainInitial,self.RainField,self.RainInfil,self.RainInfil2,self.RainDepth,self.RainRecharge,self.RainBaseflow,self.RainDeep]
+
         for line in infile:
             linearr = line.strip("\n").split(",")
             if (recvcounter == 2):
@@ -392,7 +415,7 @@ class StreamErosionIndex(Module):
             else:
                 outfile.write(line)
 
-        umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID+1,perArea,False,catchment_paramter_list) #pervious
+        umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID+1,perArea,False,catchment_paramter_list2) #pervious
         umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 2,impArea,True,catchment_paramter_list) #impervious
         if(routed):
             umusic.writeMUSICjunction2(outfile,"PreJunction",ID + 3,0,0)

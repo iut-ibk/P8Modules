@@ -30,7 +30,16 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_r3, QtCore.SIGNAL("released()"), self.load3)
 		self.ui.chkb_music.stateChanged['int'].connect(self.chkb_music_change)
 		self.ui.chkb_defaults.stateChanged['int'].connect(self.chkb_defaults_change)
-
+		self.ui.le_rainthres.setText((self.module.getParameterAsString("RainThres")))
+		self.ui.le_rainsoil.setText((self.module.getParameterAsString("RainSoil")))
+		self.ui.le_raininitial.setText((self.module.getParameterAsString("RainInitial")))
+		self.ui.le_rainfield.setText((self.module.getParameterAsString("RainField")))
+		self.ui.le_raininfil.setText((self.module.getParameterAsString("RainInfil")))
+		self.ui.le_raininfil2.setText((self.module.getParameterAsString("RainInfil2")))
+		self.ui.le_raindepth.setText((self.module.getParameterAsString("RainDepth")))
+		self.ui.le_rainrecharge.setText((self.module.getParameterAsString("RainRecharge")))
+		self.ui.le_rainbaseflow.setText((self.module.getParameterAsString("RainBaseflow")))
+		self.ui.le_raindeep.setText((self.module.getParameterAsString("RainDeep")))
 
 	def save_values(self):
 		Filename = str(self.ui.le_r.text())
@@ -45,6 +54,16 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.module.setParameterValue("NoY", str(self.ui.le_NoY.text()))
 		self.module.setParameterValue("useMusic",str(int(self.ui.chkb_music.isChecked())))
 		self.module.setParameterValue("useDefaults",str(int(self.ui.chkb_defaults.isChecked())))
+		self.module.setParameterValue("RainThres",str(self.ui.le_rainthres.text()))
+		self.module.setParameterValue("RainSoil",str(self.ui.le_rainsoil.text()))
+		self.module.setParameterValue("RainInitial",str(self.ui.le_raininitial.text()))
+		self.module.setParameterValue("RainField",str(self.ui.le_rainfield.text()))
+		self.module.setParameterValue("RainInfil",str(self.ui.le_raininfil.text()))
+		self.module.setParameterValue("RainInfil2",str(self.ui.le_raininfil2.text()))
+		self.module.setParameterValue("RainDepth",str(self.ui.le_raindepth.text()))
+		self.module.setParameterValue("RainRecharge",str(self.ui.le_rainrecharge.text()))
+		self.module.setParameterValue("RainBaseflow",str(self.ui.le_rainbaseflow.text()))
+		self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
 
 	def load(self):
 		settings = QSettings()
