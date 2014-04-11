@@ -54,7 +54,7 @@ class RainModule(Module):
 			stringname = simuAttr.getAttribute("msfFilename").getString()
 			if (stringname != ""):
 				realstring = stringname
-		
+		self.timestep = 0
 		if (self.UserCsv == "csv"):
 			simu = Component()
 			simu.addAttribute("UserCsv",self.UserCsv)
@@ -80,7 +80,7 @@ class RainModule(Module):
 				if(oldpercent < int(newpercent)):
 					oldpercent = int(newpercent)
 					print "Writing Rain-Data " + str(oldpercent) + "%"
-				f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i])+"\n")
+				f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i] * self.timestep / 60)+"\n")
 				i = i +1
 			f.close()
 			print "Done"
@@ -206,7 +206,6 @@ class RainModule(Module):
 		idx=(np.abs(array-value)).argmin()
 		return array[idx]
 	def getRainData(self,xValue, yValue, netCDF):
-
 		#convert xvalue
 		#convert yvalue
 		variables = netCDF.variables.keys()
@@ -218,6 +217,10 @@ class RainModule(Module):
 
 		x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
 		y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
+
+		self.timestep = (netCDF.variables[variables[2]][1] - netCDF.variables[variables[2]][0]) / 60 #get timestep in minutes
+
+
 		datas = Attribute().getDoubleVector()
 		size = netCDF.variables[variables[2]].size #time
 		counter = long(0)
