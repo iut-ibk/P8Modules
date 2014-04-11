@@ -28,7 +28,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.spb_vol.setValue(int(self.module.getParameterAsString("VolumeReduction")))
 	self.ui.spb_city.setValue(int(self.module.getParameterAsString("AnnualUserRain")))
 	self.ui.spb_freq.setValue(int(self.module.getParameterAsString("FrequencyRunoffDays")))
-	self.ui.spb_base.setValue(int(self.module.getParameterAsString("Base")))
+	self.ui.spb_base.setValue(float(self.module.getParameterAsString("Base")))
 	self.ui.le_tss.setValue(float(self.module.getParameterAsString("TssTarget")))
 	self.ui.le_tp.setValue(float(self.module.getParameterAsString("TpTarget")))
 	self.ui.le_tn.setValue(float(self.module.getParameterAsString("TnTarget")))

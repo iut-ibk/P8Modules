@@ -36,7 +36,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.createParameter("UseTargets", BOOL,"")
 		self.UseTargets = False
 		self.createParameter("Base" , DOUBLE , "")
-		self.Base = 0
+		self.Base = 0.0
 		self.createParameter("RainThres" , DOUBLE , "")
 		self.RainThres = 1
 		self.createParameter("RainSoil" , DOUBLE , "")

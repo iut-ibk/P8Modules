@@ -55,13 +55,14 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.gridLayout.addWidget(self.label_head3, 2, 0, 1, 1)
 
         self.label_base = QtGui.QLabel(self.groupBox)
-        self.label_base.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "    Baseflow allowed in the WSUD catchment[m³/day]", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_base.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "    Baseflow allowed in the WSUD catchment[m³/day] (Leave zero for default value.)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_base.setObjectName(_fromUtf8("lbl_base"))
         self.gridLayout.addWidget(self.label_base, 3, 0, 1, 1)
 
-        self.spb_base = QtGui.QSpinBox(self.groupBox)
+        self.spb_base = QtGui.QDoubleSpinBox(self.groupBox)
         self.spb_base.setObjectName(_fromUtf8("city_base"))
         self.spb_base.setRange(0,2000)
+        self.spb_base.setDecimals(10)
         self.gridLayout.addWidget(self.spb_base, 3, 1, 1, 1)
 
 
