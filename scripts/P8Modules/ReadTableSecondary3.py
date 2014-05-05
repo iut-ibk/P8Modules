@@ -692,31 +692,37 @@ class StreamHydrologyandWaterquality(Module):
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
 		#Link to Infiltration
+		print "start Flux list"
+		print fluxinfl_list
+		print "StartNodeConnectionsPrimary"
+		print StartNodeConnectionsPrimary
 		for j in fluxinfl_list:
 			#CechkIfConnectedToPound
 			print str(j)
 			start_node = str(j)
-			end_node = StartNodeConnectionsPrimary[str(j)]
-			print NodeIDToType[end_node]
-			print NodeIDToType[start_node]
-			if NodeIDToType[end_node] == "PondNode":
-				print "PondNode Found"
-				continue
-			if NodeIDToType[end_node] == "WetlandNode":
-				print "Wetland Found"
-				continue
-			if NodeIDToType[end_node] == "DetentionBasinNode":
-				print "DetentionBasinNode Found"
-				continue
-			if NodeIDToType[end_node] == "InfiltrationSystemNodeV4":
-				print "InfiltrationSystemNode Found"
-				continue				
-			if NodeIDToType[end_node] == "BioRetentionNodeV4":
-				print "BioRetentionNode Found"
-				continue
-			if NodeIDToType[end_node] == "SwaleNode":
-				print "SwaleNode Found"
-				continue				
+			if(str(j) in StartNodeConnectionsPrimary):
+				end_node = StartNodeConnectionsPrimary[str(j)]
+				print NodeIDToType[end_node]
+				print NodeIDToType[start_node]
+				if NodeIDToType[end_node] == "PondNode":
+					print "PondNode Found"
+					continue
+				if NodeIDToType[end_node] == "WetlandNode":
+					print "Wetland Found"
+					continue
+				if NodeIDToType[end_node] == "DetentionBasinNode":
+					print "DetentionBasinNode Found"
+					continue
+				if NodeIDToType[end_node] == "InfiltrationSystemNodeV4":
+					print "InfiltrationSystemNode Found"
+					continue				
+				if NodeIDToType[end_node] == "BioRetentionNodeV4":
+					print "BioRetentionNode Found"
+					continue
+				if NodeIDToType[end_node] == "SwaleNode":
+					print "SwaleNode Found"
+					continue				
+			print "writing link for " + str(j)
 			umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
 		for k in fluxinfl_list2:
 		    umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
