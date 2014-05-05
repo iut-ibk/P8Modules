@@ -95,7 +95,6 @@ def writeMUSICcatchmentnode(f, ID, nodepart, ncount, x, y, area, imp, parameter_
     f.write("Import Flow Properties - Impervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Pervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Unit,5,{Index from 0 to 14 for \"ML\" | \"kL\" | \"L\" | \"mL\" | \"ML/s\" | \"m3/s\" | \"L/s\" | \"mL/s\" | \"ML/day\" | \"kL/day\" | \"L/day\" | \"mL/day\" | \"km\" | \"m\" | \"mm\"}\n")
-    f.write("Import Flow Properties - Import Flow File,,\n")
     f.write("Import Flow Properties - Catchment Area for GP (ha),1,{ha}\n")	
     f.write("------------------------------------------------------------------------------------\n")
     return True
@@ -158,9 +157,7 @@ def writeMUSICcatchmentnodeEro(f, ID, ncount, area, imp, parameter_list):
     f.write("Import Flow Properties - Impervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Pervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Unit,5,{Index from 0 to 14 for \"ML\" | \"kL\" | \"L\" | \"mL\" | \"ML/s\" | \"m3/s\" | \"L/s\" | \"mL/s\" | \"ML/day\" | \"kL/day\" | \"L/day\" | \"mL/day\" | \"km\" | \"m\" | \"mm\"}\n")
-    f.write("Import Flow Properties - Import Flow File,,\n")
     f.write("Import Flow Properties - Catchment Area for GP (ha),1,{ha}\n") 
-    f.write("Import Flow Properties - Catchment Area for GP (ha),1,{ha}")		
     f.write("------------------------------------------------------------------------------------\n")
     return True
 def writeMUSICcatchmentnode2(f, ID, nodepart, ncount, x, y, area, imp, parameter_list):
@@ -218,9 +215,7 @@ def writeMUSICcatchmentnode2(f, ID, nodepart, ncount, x, y, area, imp, parameter
     f.write("Import Flow Properties - Impervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Pervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Unit,5,{Index from 0 to 14 for \"ML\" | \"kL\" | \"L\" | \"mL\" | \"ML/s\" | \"m3/s\" | \"L/s\" | \"mL/s\" | \"ML/day\" | \"kL/day\" | \"L/day\" | \"mL/day\" | \"km\" | \"m\" | \"mm\"}\n")
-    f.write("Import Flow Properties - Import Flow File,,\n")
     f.write("Import Flow Properties - Catchment Area for GP (ha),1,{ha}\n") 
-    f.write("Import Flow Properties - Catchment Area for GP (ha),1,{ha}")	
     f.write("------------------------------------------------------------------------------------\n")
     return True
 
@@ -279,9 +274,7 @@ def writeMUSICcatchmentnode3(f, ID, nodepart, ncount, x, y, area, imp, parameter
     f.write("Import Flow Properties - Impervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Pervious Stormflow Column,0,\n")
     f.write("Import Flow Properties - Unit,5,{Index from 0 to 14 for \"ML\" | \"kL\" | \"L\" | \"mL\" | \"ML/s\" | \"m3/s\" | \"L/s\" | \"mL/s\" | \"ML/day\" | \"kL/day\" | \"L/day\" | \"mL/day\" | \"km\" | \"m\" | \"mm\"}\n")
-    f.write("Import Flow Properties - Import Flow File,,\n")
     f.write("Import Flow Properties - Catchment Area for GP (ha),1,{ha}\n") 
-    f.write("Import Flow Properties - Catchment Area for GP (ha),1,{ha}")	
     f.write("------------------------------------------------------------------------------------\n")
     return True
 def writeMUSICnodeWSUR(f, ID, nodepart, ncount, x, y, parameter_list):
