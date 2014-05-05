@@ -409,45 +409,70 @@ class Analyser2_Gui(QtGui.QDialog):
 			workpath = workpath.replace("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
 		ResultVec = []
-		if(os.path.exists(self.UtilFile)):
-			ResultVec = self.loadUtilFile()
+		#if(os.path.exists(self.UtilFile)):
+			#ResultVec = self.loadUtilFile()
 		print len(ResultVec)
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
-		f = open(workpath + "UB_BasinStrategy No 1-" + str(self.module.musicnr) + ".csv",'r')
+		f = open(self.module.musicfile,'r')
 		j = 0
 		serviceVec = []
 		lines = []
-		BFsum = 0
-		PBsum = 0
-		ISsum = 0
-		WSURsum = 0
-		SWsum = 0
+		BFsum = 0.0
+		PBsum = 0.0
+		ISsum = 0.0
+		WSURsum = 0.0
+		SWsum = 0.0
+		allsums = 0.0
+
+		totarea = 0.0
+		urban = False 
+		bio = False
+		pond = False
+		infil = False
+		swale = False
+		wet = False
+
 		for line in f:
-			j = j + 1
-			text = shlex.shlex(line,posix = False)
-			text.whitespace += ','
-			text.whitespace_split = True
-			liste = list(text)
-			if (j >11):
-				lines.append(liste)
-		for k in range(len(lines)):
-			serviceVec.append((lines[k][1],float(lines[k][3])*float(lines[k][4])*float(lines[k][5])/100))
-			serviceVec.append((lines[k][6],float(lines[k][8])))
-			serviceVec.append((lines[k][9],float(lines[k][11])))
-			serviceVec.append((lines[k][12],float(lines[k][14])))
-		for k in range(len(serviceVec)):
-			if (serviceVec[k][0] == "BF"):
-				BFsum += serviceVec[k][1]
-			elif (serviceVec[k][0] == "PB"):
-				PBsum += serviceVec[k][1]
-			elif (serviceVec[k][0] == "IS"):
-				ISsum += serviceVec[k][1]
-			elif (serviceVec[k][0] == "WSUR"):
-				WSURsum += serviceVec[k][1]
-			elif (serviceVec[k][0] == "SW"):
-				SWsum += serviceVec[k][1]
-		allsums = BFsum + PBsum + ISsum + WSURsum + SWsum
+ 			linearr = line.strip("\n").split(",")
+ 			if(linearr[0] == "Node Type" and linearr[1] == "UrbanSourceNode"):
+ 				urban = True
+			if(linearr[0] == "Node Type" and linearr[1] == "WetlandNode"):
+				wet = True
+			if(linearr[0] == "Node Type" and linearr[1] == "PondNode"):
+				pond = True
+			if(linearr[0] == "Node Type" and linearr[1] == "InfiltrationSystemNodeV4"):
+				infil = True
+			if(linearr[0] == "Node Type" and linearr[1] == "BioRetentionNodeV4"):
+				bio = True
+			if(linearr[0] == "Node Type" and linearr[1] == "SwaleNode"):
+				swale = True
+			if(urban):
+				if(linearr[0] == "Areas - Total Area (ha)"):
+					totarea = float(linearr[1]) * 10000
+				if(linearr[0] == "Areas - Impervious (%)"):
+					allsums += totarea * float(linearr[1]) / 100
+					urban = False
+			if(wet):
+				if(linearr[0] == "Storage Properties - Surface Area (square metres)"):
+					WSURsum += float(linearr[1])
+					wet = False
+			if(pond):
+				if(linearr[0] == "Storage Properties - Surface Area (square metres)"):
+					PBsum += float(linearr[1])
+					pond = False
+			if(infil):
+				if(linearr[0] == "Storage Properties - Surface Area (square metres)"):
+					ISsum += float(linearr[1])
+					infil = False
+			if(swale):
+				if(linearr[0] == "Storage Properties - Surface Area (square metres)"):
+					SWsum += float(linearr[1])
+					swale = False
+			if(bio):
+				if(linearr[0] == "Storage Properties - Surface Area (square metres)"):
+					BFsum += float(linearr[1])
+					bio = False
 		BF = BFsum *100/allsums
 		PB = PBsum *100/allsums
 		IS = ISsum *100/allsums
@@ -458,7 +483,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		print IS
 		print WSUR
 		print SW
-		ResultVec.append((self.module.musicnr,allsums*100,BF,PB,IS,WSUR,SW))
+		ResultVec.append((ntpath.basename(self.module.musicfile),allsums*100,BF,PB,IS,WSUR,SW))
 		BFvec =[]
 		PBvec = []
 		ISvec = []
@@ -498,7 +523,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		SWvec = np.array(SWvec)
 		if(BfFlag):
 			p1 = plt.bar(ind,BFvec,width,color ='b')
-		p1.set_label('BF')
+			p1.set_label('BF')
 		if(PbFlag):
 			p2 = plt.bar(ind,PBvec,width,color = 'r',bottom = BFvec)
 			p2.set_label('PB')
@@ -511,11 +536,11 @@ class Analyser2_Gui(QtGui.QDialog):
 		if(SwFlag):
 			p5 = plt.bar(ind,SWvec,width, color = 'black',bottom = BFvec + PBvec + ISvec + WSURvec)
 			p5.set_label('SW')
-		plt.ylim([0,100])
+		#plt.ylim([0,100])
 		ax.set_xticks(ind+width)
 		xticksvec = []
 		for i in range(len(ResultVec)):
-			xticksvec.append("Realisation " + str(int(ResultVec[i][0])) + "\n" + str('%.2f' % ResultVec[i][1]) + "%")
+			xticksvec.append(str(ResultVec[i][0]) )#+ "\n" + str('%.2f' % ResultVec[i][1]) + "%")
 		ax.set_xticklabels(xticksvec)
 		ax.set_ylabel("Proportion of Utilisation (%)")
 		ax.legend()
@@ -560,7 +585,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			outtxt += "Swale," + SWstring + "\n"
 		fig.text(0.05,0.01,txt)
 		plt.show()
-		plt.savefig(str(workath) + 'UtilisationsPlot.png')
+		plt.savefig(str(workpath) + 'UtilisationsPlot.png')
 		f = open(workpath + "util.csv", "w")
 		f.write(outtxt)
 		f.close()
