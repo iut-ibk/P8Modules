@@ -1,6 +1,7 @@
 from PyQt4 import QtCore, QtGui
 from pydynamind import *
 from PyQt4.QtCore import QSettings, QFileInfo
+from PyQt4.QtGui import QMessageBox
 from Ui_Rain_Dialog import Ui_P8Rain_GUI
 import netCDF4
 from matplotlib import *
@@ -8,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import platform
 from shutil import copyfile
+import os
 
 
 class RainGui(QtGui.QDialog):
@@ -44,9 +46,16 @@ class RainGui(QtGui.QDialog):
         else:
             units = "mm/6min"
         if(self.module.UserCsv == "csv"):
-            f = open(self.module.csvFile,"r")
+            f = open(workpath + self.module.csvFile,"r")
         else:
-            f = open(workpath + "RainData.csv","r")
+            if(os.path.exists(workpath + "RainData.csv")):
+                f = open(workpath + "RainData.csv","r")
+            else:
+                if(str(self.ui.le_r.text()) == ""):
+                    QMessageBox.about(self, "No Rain File found", "Please import a Rain File")
+                else:
+                    QMessageBox.about(self, "No Rain File found", "To preview the NetCDF file please run the module first")
+                return
         for line in f:
             linearr = line.strip('\n').split(',')
             if (linearr[0] == "Date"):
@@ -120,10 +129,12 @@ class RainGui(QtGui.QDialog):
             datapath = datapath.replace("/","\\")
         filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", datapath, self.tr("Rain Files (*.csv)"))
         if(filename != ""):
-            self.module.setParameterValue("CsvFile", str(QFileInfo(filename).fileName()))
+            self.module.setParameterValue("csvFile", str(QFileInfo(filename).fileName()))
             self.ui.le_csv.setText(QFileInfo(filename).fileName())
             settings.setValue("dataPath",QFileInfo(filename).absolutePath())
             copyfile(filename,workpath + QFileInfo(filename).fileName())
+            self.module.setParameterValue("UserCsv", "csv")
+
     def loadET(self):
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"
@@ -137,3 +148,4 @@ class RainGui(QtGui.QDialog):
             self.ui.le_ET.setText(QFileInfo(filename).fileName())
             settings.setValue("dataPath",QFileInfo(filename).absolutePath())
             copyfile(filename,workpath + QFileInfo(filename).fileName())
+            self.module.setParameterValue("UserCsv","net")

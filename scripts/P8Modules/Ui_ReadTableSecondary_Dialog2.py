@@ -18,15 +18,17 @@ except AttributeError:
 class Ui_ReadTableSecondary_GUI2(object):
     def setupUi(self, ReadTableSecondary_GUI2):
         ReadTableSecondary_GUI2.setObjectName(_fromUtf8("ReadTableSecondary_GUI2"))
-        ReadTableSecondary_GUI2.resize(500, 310)
         ReadTableSecondary_GUI2.setWindowTitle(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Stream Hydrology and Water quality", None, QtGui.QApplication.UnicodeUTF8))
+        ReadTableSecondary_GUI2.setGeometry(QtCore.QRect(400,100,200,200))
         self.verticalLayout = QtGui.QVBoxLayout(ReadTableSecondary_GUI2)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        
         self.groupBox = QtGui.QGroupBox(ReadTableSecondary_GUI2)
         self.groupBox.setTitle(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Regional Rainfall Data", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.gridLayout = QtGui.QGridLayout(self.groupBox)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+
 
         self.label_head = QtGui.QLabel(self.groupBox)
         self.label_head.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Mean annual rainfall [ mm ]", None, QtGui.QApplication.UnicodeUTF8))
