@@ -26,9 +26,9 @@ class RainModule(Module):
 		self.createParameter("etFile", STRING, "")
 		self.etFile = ""
 		self.createParameter("Xcoord", DOUBLE , "")
-		self.Xcoord = 151.25
+		self.Xcoord = -34.05
 		self.createParameter("Ycoord", DOUBLE ,"")
-		self.Ycoord = -34.05
+		self.Ycoord = 151.25
 		self.simulation = View("SimulationData",COMPONENT,WRITE)
 		self.simulation.addAttribute("UserCsv")
 		self.simulation.getAttribute("msfFilename")
@@ -68,6 +68,7 @@ class RainModule(Module):
 			data = netCDF4.Dataset(str(workpath + self.Netfile))#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
 			datas = self.getRainData(self.Xcoord,self.Ycoord,data)
+			
 			f = open(workpath + "RainData.csv",'w')
 			f.write("Date,Rainfall\n")
 			print "Start writing Rain Data"
@@ -88,6 +89,7 @@ class RainModule(Module):
 			self.changeMusicFile(realstring,workpath + "RainData.csv")
 			tmp = realstring.split(".")
 			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
+			
 		else:
 			print "nothing"
 		'''old code for old rain file
@@ -204,19 +206,32 @@ class RainModule(Module):
 		return True 
 	def find_nearest(self,array,value):
 		idx=(np.abs(array-value)).argmin()
-		return array[idx]
+		print "Index " + str(idx)
+		return idx
 	def getRainData(self,xValue, yValue, netCDF):
 		#convert xvalue
 		#convert yvalue
+		print "netcdf " + str(netCDF)
+
 		variables = netCDF.variables.keys()
+		print "variables " + str(variables)
+
 		longs = doublevector()
 		longs = netCDF.variables[variables[1]][:] # long
 		lats = doublevector()
 		lats = netCDF.variables[variables[0]][:] # lat
 		#looking here in the netCDF vector for the index of our values
+		print "LONGS"
+		print longs
+		print "LATS"
+		print lats
 
 		x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
 		y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
+
+		print x
+		print y
+
 
 		self.timestep = (netCDF.variables[variables[2]][1] - netCDF.variables[variables[2]][0]) / 60 #get timestep in minutes
 
@@ -232,7 +247,7 @@ class RainModule(Module):
 			if(oldpercent < int(newpercent)):
 				oldpercent = int(newpercent)
 				print "Reading Rain-Data " + str(oldpercent) + "%"
-			datas.append(float(netCDF.variables[variables[3]][counter][int(lats[y])][int(longs[x])])) #prec
+			datas.append(float(netCDF.variables[variables[3]][counter][lats[y]][longs[x]])) #prec
 			counter = counter + 1
 			#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 		return datas
