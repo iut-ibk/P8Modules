@@ -26,9 +26,9 @@ class RainModule(Module):
 		self.createParameter("etFile", STRING, "")
 		self.etFile = ""
 		self.createParameter("Xcoord", DOUBLE , "")
-		self.Xcoord = -34.05
+		self.Xcoord = 151.25
 		self.createParameter("Ycoord", DOUBLE ,"")
-		self.Ycoord = 151.25
+		self.Ycoord = -34.05
 		self.simulation = View("SimulationData",COMPONENT,WRITE)
 		self.simulation.addAttribute("UserCsv")
 		self.simulation.getAttribute("msfFilename")
@@ -67,6 +67,13 @@ class RainModule(Module):
 			print "NET"
 			data = netCDF4.Dataset(str(workpath + self.Netfile))#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
+
+			if(self.checkCoords(data,self.Xcoord,self.Ycoord)):
+				print "WRONG COORDS"
+				return 
+
+
+
 			datas = self.getRainData(self.Xcoord,self.Ycoord,data)
 			
 			f = open(workpath + "RainData.csv",'w')
@@ -208,6 +215,24 @@ class RainModule(Module):
 		idx=(np.abs(array-value)).argmin()
 		print "Index " + str(idx)
 		return idx
+	def checkCoords(self,netCDF,x,y):
+		xWrong = False
+		yWrong = False
+
+		variables = netCDF.variables.keys()
+		longs = netCDF.variables[variables[1]][:] # long
+		lats = netCDF.variables[variables[0]][:] # lat
+		if(x < longs[0] or x > longs[len(longs)-1]):
+			xWrong = True
+		if(y < lats[0] or y > lats[len(lats)-1]):
+			yWrong = True
+		if( yWrong or yWrong):
+			#todo show warning messagebox
+			#QMessageBox.warning(QApplication.activeWindow(),QString("Warning"),QString("Wrong Coords"), QMessageBox.Ok)
+  			return True
+		return False
+
+
 	def getRainData(self,xValue, yValue, netCDF):
 		#convert xvalue
 		#convert yvalue
@@ -220,6 +245,7 @@ class RainModule(Module):
 		longs = netCDF.variables[variables[1]][:] # long
 		lats = doublevector()
 		lats = netCDF.variables[variables[0]][:] # lat
+		rain = netCDF.variables[variables[3]]
 		#looking here in the netCDF vector for the index of our values
 		print "LONGS"
 		print longs
@@ -247,7 +273,7 @@ class RainModule(Module):
 			if(oldpercent < int(newpercent)):
 				oldpercent = int(newpercent)
 				print "Reading Rain-Data " + str(oldpercent) + "%"
-			datas.append(float(netCDF.variables[variables[3]][counter][lats[y]][longs[x]])) #prec
+			datas.append(float(rain[counter,y,x])) #prec
 			counter = counter + 1
 			#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 		return datas
