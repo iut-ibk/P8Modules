@@ -37,3 +37,5 @@ class Analyser(Module):
 		form = Analyser_Gui(self, QApplication.activeWindow())
 		form.exec_()
 		return True 
+	def getClassName(self):
+		return "blabal"

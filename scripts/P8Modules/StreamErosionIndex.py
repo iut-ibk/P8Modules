@@ -466,3 +466,7 @@ class StreamErosionIndex(Module):
         form = activateStreamErosionIndexGUI(self, QApplication.activeWindow())
         form.exec_()
         return True 
+    def getClassName(self):
+        return "Stream Erosion and Minor Flooding"
+    def getFileName(self):
+        return "Scenario Simulation and Assessment"

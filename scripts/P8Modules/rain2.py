@@ -277,3 +277,7 @@ class RainModule(Module):
 			counter = counter + 1
 			#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 		return datas
+	def getClassName(self):
+		return "Rainfall"
+	def getFileName(self):
+		return "Scenario Simulation and Assessment"

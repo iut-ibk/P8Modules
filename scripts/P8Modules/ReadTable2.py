@@ -151,3 +151,7 @@ class TreatmentPerformanceResultsModule(Module):
 		form = ReadTable_Gui(self, QApplication.activeWindow())
 		form.exec_()
 		return True 
+	def getClassName(self):
+		return "Treatment and Harvesting Performance (MUSIC)"
+	def getFileName(self):
+		return "Scenario Simulation and Assessment"

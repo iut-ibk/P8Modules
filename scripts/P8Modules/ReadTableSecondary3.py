@@ -758,3 +758,7 @@ class StreamHydrologyandWaterquality(Module):
 			fileOut.write(urbfirst)
 			fileOut.write(urbtmp)
 			fileOut.write(urbsec)
+	def getClassName(self):
+		return "Stream Hydrology and Water Quality"
+	def getFileName(self):
+		return "Scenario Simulation and Assessment"

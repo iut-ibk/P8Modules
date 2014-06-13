@@ -288,3 +288,8 @@ class AnalyserModule(Module):
 			out.close()
 		else:
 			print "No SEI files found"
+
+	def getClassName(self):
+		return "Analyser"
+	def getFileName(self):
+		return "Scenario Simulation and Assessment"

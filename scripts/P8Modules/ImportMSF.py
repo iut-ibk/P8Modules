@@ -36,3 +36,7 @@ class ImportMSF(Module):
         form = activateimportMSFGUI(self, QApplication.activeWindow())
         form.exec_()
         return True 
+    def getClassName(self):
+        return "Import MUSIC File (.msf)"
+    def getFileName(self):
+        return "Scenario Simulation and Assessment"
