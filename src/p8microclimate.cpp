@@ -12,8 +12,8 @@
 #include <QFileDialog>
 #include <QSettings>
 
-DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
-
+//DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
+DM_DECLARE_CUSTOM_NODE_NAME(Microclimate,"Microclimate", "Scenario Simulation and Assessment")
 Microclimate::Microclimate()
 {
     gridsize = 30;

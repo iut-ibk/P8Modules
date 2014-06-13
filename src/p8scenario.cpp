@@ -9,8 +9,8 @@
 
 #include <cmath>
 
-DM_DECLARE_GROUP_NAME(SCENARIO, CRCP8)
-
+//DM_DECLARE_GROUP_NAME(SCENARIO, CRCP8)
+DM_DECLARE_CUSTOM_GROUP_NAME(SCENARIO,"Scenario Setup","Scenario Generation")
 
 SCENARIO::SCENARIO()
 {
@@ -37,7 +37,7 @@ void SCENARIO::init() {
     {
 
         DM::Module *blocDelin;
-        blocDelin=this->getSimulation()->addModule("Delinblocks");
+        blocDelin=this->getSimulation()->addModule("Spatial Delineation of Building Blocks");
         blocDelin->setGroup(this);
         blocDelin->setName("blocDelin");
         blocDelin->init();
@@ -53,12 +53,12 @@ void SCENARIO::init() {
         DM::Module *mix1=this->getSimulation()->addModule("AppendViewFromSystem");
         mix1->setGroup(this);
         QString inports1 = QString::fromStdString(mix1->getParameterAsString("Inports"));
-        inports1 += "*|*" + QString("Delinblocks") + "*|*" + "GetPreviousBlocks";
+        inports1 += "*|*" + QString("Spatial Delineation of Building Blocks") + "*|*" + "GetPreviousBlocks";
         mix1->setParameterValue("Inports",inports1.toStdString());
         mix1->init();
 
         DM::Module *planbbUrban;
-        planbbUrban=this->getSimulation()->addModule("Urbplanbb");
+        planbbUrban=this->getSimulation()->addModule("Urban Planning Customization");
         planbbUrban->setGroup(this);
         planbbUrban->setName("planbbUrban");
         planbbUrban->init();
@@ -72,12 +72,12 @@ void SCENARIO::init() {
         DM::Module *mix2=this->getSimulation()->addModule("AppendViewFromSystem");
         mix2->setGroup(this);
         QString inports2 = QString::fromStdString(mix2->getParameterAsString("Inports"));
-        inports2 += "*|*" + QString("Urbplanbb") + "*|*" + "GetSystems";
+        inports2 += "*|*" + QString("Urban Planning Customization") + "*|*" + "GetSystems";
         mix2->setParameterValue("Inports",inports2.toStdString());
         mix2->init();
 
         DM::Module *placementTech;
-        placementTech=this->getSimulation()->addModule("Techplacement");
+        placementTech=this->getSimulation()->addModule("Decentralised Technology Design and Implementation");
         placementTech->setGroup(this);
         placementTech->setName("placementTech");
         placementTech->init();

@@ -7,6 +7,7 @@
 class DM_HELPER_DLL_EXPORT Microclimate : public DM::Module
 {
     DM_DECLARE_NODE(Microclimate)
+
 private:
 
 

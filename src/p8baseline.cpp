@@ -6,8 +6,8 @@
 #include "QSettings"
 #include <cmath>
 
-DM_DECLARE_GROUP_NAME(URBAN_FORM, CRCP8)
-
+//DM_DECLARE_GROUP_NAME(URBAN_FORM, CRCP8)
+DM_DECLARE_CUSTOM_GROUP_NAME(URBAN_FORM,"Urban Form","Scenario Generation")
 
 URBAN_FORM::URBAN_FORM()
 {
