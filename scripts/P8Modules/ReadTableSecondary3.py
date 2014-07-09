@@ -26,7 +26,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.createParameter("AnnualUserRain", DOUBLE, "")
 		self.AnnualUserRain = 650
 		self.createParameter("FrequencyRunoffDays",DOUBLE,"")
-		self.FrequencyRunoffDays = 0
+		self.FrequencyRunoffDays = 12
 		self.createParameter("TssTarget",DOUBLE,"")
 		self.TssTarget = 20.0
 		self.createParameter("TnTarget",DOUBLE,"")
