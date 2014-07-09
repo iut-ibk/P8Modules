@@ -40,6 +40,7 @@
 #include "p8microclimate.h"
 #include "importrasterdata2.h"
 //#include "p8shapemicro.h"
+#include "p8microclimate_heat.h"
 using namespace std;
 using namespace DM;
 
@@ -60,5 +61,7 @@ extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
     registry->addNodeFactory(new NodeFactory<Microclimate>());
     registry->addNodeFactory(new NodeFactory<ImportRasterData2>());
     //registry->addNodeFactory(new NodeFactory<p8shapemicro>());
+    registry->addNodeFactory(new NodeFactory<Microclimate_heat>());
+
 }
 
