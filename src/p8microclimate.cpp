@@ -228,6 +228,8 @@ void Microclimate::run()
             pervcounter = 0;
             techarea = 0;
             vector<QPointF> cells = getCoveringCells(j*gridsize,i*gridsize,gridsize,imp->getCellSizeX());
+
+            // getting % of imp and perv area
             while(!cells.empty())
             {
                 QPointF p = cells.back();
@@ -248,6 +250,8 @@ void Microclimate::run()
                 }
                 cells.pop_back();
             }
+
+
             wsudline = getTechAreasForCell(i,j,width,WsudTech);
             for (int k = 1;k<wsudline.size();k++)
             {
