@@ -17,21 +17,21 @@
    <item>
     <widget class="QPushButton" name="pb_ui_delinblocks">
      <property name="text">
-      <string>Delin Blocks</string>
+      <string>Spatial Delineation of Building Blocks</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="pb_ui_urbplanbb">
      <property name="text">
-      <string>Urban Plan BB</string>
+      <string>Urban Planning Customization</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="pb_ui_techplacement">
      <property name="text">
-      <string>Techplacement</string>
+      <string>Decentralised Technology Design and Implementation</string>
      </property>
     </widget>
    </item>
