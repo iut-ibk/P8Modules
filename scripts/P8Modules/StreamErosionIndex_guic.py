@@ -28,6 +28,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
 		QtCore.QObject.connect(self.ui.pb_r2, QtCore.SIGNAL("released()"), self.load2)
 		QtCore.QObject.connect(self.ui.pb_r3, QtCore.SIGNAL("released()"), self.load3)
+		self.ui.city_combo.currentIndexChanged['QString'].connect(self.cityChanged)
 		self.ui.chkb_music.stateChanged['int'].connect(self.chkb_music_change)
 		self.ui.chkb_defaults.stateChanged['int'].connect(self.chkb_defaults_change)
 		self.ui.le_rainthres.setText((self.module.getParameterAsString("RainThres")))
@@ -64,7 +65,32 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.module.setParameterValue("RainRecharge",str(self.ui.le_rainrecharge.text()))
 		self.module.setParameterValue("RainBaseflow",str(self.ui.le_rainbaseflow.text()))
 		self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
-
+	def cityChanged(self):
+		'''
+		if self.ui.city_combo.currentIndex() == 0:
+			self.ui.le_rainsoil.setText("120")
+			self.ui.le_rainfield.setText("80")
+		elif self.ui.city_combo.currentIndex() == 1:
+			self.ui.le_rainsoil.setText("200")
+			self.ui.le_rainfield.setText("170")
+		elif self.ui.city_combo.currentIndex() == 2:
+			self.ui.le_rainsoil.setText("40")
+			self.ui.le_rainfield.setText("25")
+		'''
+		if self.ui.city_combo.currentIndex() == 3:
+			self.ui.le_rainsoil.setText("30")
+			self.ui.le_rainfield.setText("20")
+		'''
+		elif self.ui.city_combo.currentIndex() == 4:
+			self.ui.le_rainsoil.setText("30")
+			self.ui.le_rainfield.setText("20")
+		elif self.ui.city_combo.currentIndex() == 5:
+			self.ui.le_rainsoil.setText("40")
+			self.ui.le_rainfield.setText("30")
+		elif self.ui.city_combo.currentIndex() == 6:
+			self.ui.le_rainsoil.setText("250")
+			self.ui.le_rainfield.setText("23")
+		'''
 	def load(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"

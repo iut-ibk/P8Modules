@@ -75,7 +75,7 @@ class Ui_StreamErosionIndexDialog(object):
         self.gridLayout.addWidget(self.pb_r3, 5, 3, 1, 1)
 
         self.header4 = QtGui.QLabel(self.groupBox)
-        self.header4.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "or use the WSC model defaults       Use:", None, QtGui.QApplication.UnicodeUTF8))
+        self.header4.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "or use Templates                    Use:", None, QtGui.QApplication.UnicodeUTF8))
         self.header4.setObjectName(_fromUtf8("label"))
         self.gridLayout.addWidget(self.header4, 6, 0, 1, 1) 
         self.chkb_defaults = QtGui.QCheckBox(self.groupBox)
@@ -86,10 +86,12 @@ class Ui_StreamErosionIndexDialog(object):
         self.city_combo.setGeometry(QtCore.QRect(250, 39, 141, 22))
         self.city_combo.setObjectName(_fromUtf8("city_combo"))
         self.city_combo.addItem(_fromUtf8(""))
+        '''self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))'''
         self.gridLayout.addWidget(self.city_combo, 7,2,1,1)
 
 
@@ -230,9 +232,15 @@ class Ui_StreamErosionIndexDialog(object):
 
 
     def retranslateUi(self, StreamErosionIndexguic):
-        self.city_combo.setItemText(0,"Adelaide")
-        self.city_combo.setItemText(1,"Brisbane")   
-        self.city_combo.setItemText(2,"Melbourne")
-        self.city_combo.setItemText(3,"Perth")
-        self.city_combo.setItemText(4,"Sydney")
+        '''
+        self.city_combo.setItemText(0,"Brisbane")
+        self.city_combo.setItemText(1,"Sydney")   
+        self.city_combo.setItemText(2,"Canberra")
+        '''
+        self.city_combo.setItemText(0,"Melbourne")
+        '''
+        self.city_combo.setItemText(4,"Hobart")
+        self.city_combo.setItemText(5,"Adelaide")
+        self.city_combo.setItemText(6,"Perth")
+        '''
         pass

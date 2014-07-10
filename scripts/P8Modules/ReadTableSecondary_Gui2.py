@@ -20,7 +20,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	QtCore.QObject.connect(self.ui.pb_load, QtCore.SIGNAL("released()"),self.Load)
 	QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save)
 	QtCore.QObject.connect(self.ui.pb_export, QtCore.SIGNAL("released()"),self.export)
-	self.ui.city_combo.currentIndexChanged['QString'].connect(self.cityChanged)#QtCore.QObject.connect(self.ui.city_combo, QtCore.SIGNAL("valueChanged()"),self.cityChanged)
+	self.ui.city_combo.currentIndexChanged['QString'].connect(self.cityChanged)
 	QtCore.QObject.connect(self.ui.pb_clipboard, QtCore.SIGNAL("released()"),self.copyToClipboard)
 	self.ui.vol_combo.currentIndexChanged['QString'].connect(self.volChanged)
 	self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
@@ -93,16 +93,34 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 
     def cityChanged(self):
 	if self.ui.city_combo.currentIndex() == 0:
-		self.ui.spb_city.setValue(520)
+		self.ui.spb_city.setValue(1149)
+		self.ui.le_rainsoil.setText("120")
+		self.ui.le_rainfield.setText("80")
 	elif self.ui.city_combo.currentIndex() == 1:
-		self.ui.spb_city.setValue(1200)
+		self.ui.spb_city.setValue(1212)
+		self.ui.le_rainsoil.setText("200")
+		self.ui.le_rainfield.setText("170")
 	elif self.ui.city_combo.currentIndex() == 2:
-		self.ui.spb_city.setValue(650)
+		self.ui.spb_city.setValue(632)
+		self.ui.le_rainsoil.setText("40")
+		self.ui.le_rainfield.setText("25")
 	elif self.ui.city_combo.currentIndex() == 3:
-		self.ui.spb_city.setValue(790)
+		self.ui.spb_city.setValue(649)
+		self.ui.le_rainsoil.setText("30")
+		self.ui.le_rainfield.setText("20")
 	elif self.ui.city_combo.currentIndex() == 4:
-		self.ui.spb_city.setValue(1175)
+		self.ui.spb_city.setValue(614)
+		self.ui.le_rainsoil.setText("30")
+		self.ui.le_rainfield.setText("20")
 	elif self.ui.city_combo.currentIndex() == 5:
+		self.ui.spb_city.setValue(545)
+		self.ui.le_rainsoil.setText("40")
+		self.ui.le_rainfield.setText("30")
+	elif self.ui.city_combo.currentIndex() == 6:
+		self.ui.spb_city.setValue(730)
+		self.ui.le_rainsoil.setText("250")
+		self.ui.le_rainfield.setText("23")
+	elif self.ui.city_combo.currentIndex() == 7:
 		self.ui.spb_city.setValue(0)
 
     def volChanged(self):

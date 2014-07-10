@@ -261,12 +261,14 @@ class Ui_ReadTableSecondary_GUI2(object):
 
     def retranslateUi(self, ReadTableSecondary_GUI2):
         
-        self.city_combo.setItemText(0,"Adelaide")
-        self.city_combo.setItemText(1,"Brisbane")   
-        self.city_combo.setItemText(2,"Melbourne")
-        self.city_combo.setItemText(3,"Perth")
-        self.city_combo.setItemText(4,"Sydney")
-        self.city_combo.setItemText(5,"User Value")
+        self.city_combo.setItemText(0,"Brisbane")
+        self.city_combo.setItemText(1,"Sydney")   
+        self.city_combo.setItemText(2,"Canberra")
+        self.city_combo.setItemText(3,"Melbourne")
+        self.city_combo.setItemText(4,"Hobart")
+        self.city_combo.setItemText(5,"Adelaide")
+        self.city_combo.setItemText(6,"Perth")
+        self.city_combo.setItemText(7,"User Defined")
 
         self.vol_combo.setItemText(0,"Limited potential for recovery")
         self.vol_combo.setItemText(1,"Considerable potential for recovery")
