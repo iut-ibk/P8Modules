@@ -40,6 +40,7 @@ p8microclimate_heat_gui::p8microclimate_heat_gui(Microclimate_heat * p8, QWidget
     ui->le_map->setText(p8microclimate->mapPic.c_str());
     ui->le_shape->setText(p8microclimate->shapefile.c_str());
     //ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
+    ui->le_techFile->setText(p8microclimate->techFile.c_str());
 
 }
 
@@ -187,10 +188,12 @@ void p8microclimate_heat_gui::on_pb_techFile_released()
         }
     }
     settings.setValue("dataPath",finfo.absolutePath());
+    if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
+        QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
 }
 void p8microclimate_heat_gui::on_bBox_accepted()
 {
-    this->p8microclimate->setParameterValue("mapPic",ui->le_map->text().toStdString());
+    this->p8microclimate->setParameterValue("MapPic",ui->le_map->text().toStdString());
     int index = ui->cmb_perc->currentIndex();
     this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
     if(index == 0)
@@ -205,6 +208,7 @@ void p8microclimate_heat_gui::on_bBox_accepted()
     {
         this->p8microclimate->setParameterValue("Percentile","80");
     }
+    this->p8microclimate->setParameterValue("Techfile",ui->le_techFile->text().toStdString());
 }
 
 void p8microclimate_heat_gui::on_pb_placeTech_released()

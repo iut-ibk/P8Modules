@@ -177,109 +177,20 @@ void Microclimate_heat::run()
     QList<double> wsudline;
 
 
-    QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
-    if(WsudTech.isEmpty())
-    {
-        if(this->techFile != "")
-        {
-            DM::RasterData * techs = readRasterFile(QString(workingDir.c_str()) + QString("/") + QString(this->techFile.c_str()));
-            for(int i = 0;i<height;i++)
-            {
-                for(int j =0; j<width; j++)
-                {
+    DM::RasterData * techs = readRasterFile(QString(workingDir.c_str()) + QString("/") + QString(this->techFile.c_str()));
 
-                    treeCover = 0;
-                    waterCover = 0;
-                    pondCover = 0;
-                    wetlandCover = 0;
-                    nonIrrGrassCover = 0;
-                    swaleCover = 0;
-                    grassCover = 0;
-                    bioCover = 0;
-                    infilCover = 0;
-                    greenRoofCover = 0;
-                    greenWallCover = 0;
-                    roofCover = 0;
-                    roadCover = 0;
-                    pavementCover = 0;
-                    concreteCover = 0;
-                    vector<QPointF> cells = getCoveringCells(j*gridsize,i*gridsize,gridsize,techs->getCellSizeX());
-
-                    while(!cells.empty())
-                    {
-                        QPointF p = cells.back();
-                        switch((int)techs->getCell(p.x(),p.y()))
-                        {
-                        case 1:
-                            treeCover++;
-                            break;
-                        case 2:
-                            waterCover++;
-                            break;
-                        case 3:
-                            pondCover++;
-                            break;
-                        case 4:
-                            wetlandCover++;
-                            break;
-                        case 5:
-                            nonIrrGrassCover++;
-                            break;
-                        case 6:
-                            swaleCover++;
-                            break;
-                        case 7:
-                            grassCover++;
-                            break;
-                        case 8:
-                            bioCover++;
-                            break;
-                        case 9:
-                            infilCover++;
-                            break;
-                        case 10:
-                            greenRoofCover++;
-                            break;
-                        case 11:
-                            greenWallCover++;
-                            break;
-                        case 12:
-                            roofCover++;
-                            break;
-                        case 13:
-                            roadCover++;
-                            break;
-                        case 14:
-                            pavementCover++;
-                            break;
-                        case 15:
-                            concreteCover++;
-                            break;
-                        }
-
-
-
-                        cells.pop_back();
-                    }
-                    coverCounter = treeCover + waterCover + pondCover + wetlandCover + nonIrrGrassCover + swaleCover + grassCover
-                            + bioCover + infilCover + greenRoofCover + greenWallCover + roofCover + roadCover + pavementCover + concreteCover;
-                    wsudline.clear();
-                    wsudline << i*width+j << treeCover *100/coverCounter << waterCover*100/coverCounter << pondCover*100/coverCounter << wetlandCover*100/coverCounter
-                             << nonIrrGrassCover*100/coverCounter << swaleCover*100/coverCounter << grassCover*100/coverCounter << bioCover*100/coverCounter
-                             << infilCover*100/coverCounter << greenRoofCover*100/coverCounter << greenWallCover*100/coverCounter << roofCover*100/coverCounter
-                             << roadCover*100/coverCounter << pavementCover*100/coverCounter << concreteCover*100/coverCounter;
-                    WsudTech.append(wsudline);
-                    wsudline.clear();
-                }
-            }
-        }
-    }
 
 
     int tree,water,grass,irrGrass,roof,road,concrete;
     //variables for temp calculation
     //variables for tech % covering
     QList<QList<double> > readTechs;
+    QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
+    bool wsudempty;
+    if(WsudTech.isEmpty())
+        wsudempty = true;
+    else
+        wsudempty = false;
 
     // two for loops over the rasterdata array
     for(int i = 0;i<height;i++)
@@ -406,10 +317,126 @@ void Microclimate_heat::run()
             //save value
             lst->setCell(j,i,tmpInCurrentCell);
 
+            //convert techcouters to percentages
+            tree = tree * 100 / totalcounter;
+            water = water * 100 / totalcounter;
+            grass = grass * 100 / totalcounter;
+            irrGrass = irrGrass * 100 / totalcounter;
+            roof = roof * 100 / totalcounter;
+            road = road * 100 / totalcounter;
+            concrete = concrete * 100 / totalcounter;
 
-            //Qlist of all wsud techs in cell
-            if(!WsudTech.isEmpty())
+
+            if(wsudempty)
             {
+
+
+                if(this->techFile != "")
+                {
+
+
+                    treeCover = 0;
+                    waterCover = 0;
+                    pondCover = 0;
+                    wetlandCover = 0;
+                    nonIrrGrassCover = 0;
+                    swaleCover = 0;
+                    grassCover = 0;
+                    bioCover = 0;
+                    infilCover = 0;
+                    greenRoofCover = 0;
+                    greenWallCover = 0;
+                    roofCover = 0;
+                    roadCover = 0;
+                    pavementCover = 0;
+                    concreteCover = 0;
+                    vector<QPointF> cells = getCoveringCells(j*gridsize,i*gridsize,gridsize,techs->getCellSizeX());
+
+                    while(!cells.empty())
+                    {
+                        QPointF p = cells.back();
+                        switch((int)techs->getCell(p.x(),p.y()))
+                        {
+                        case 1:
+                            tree++;
+                            treeCover++;
+                            break;
+                        case 2:
+                            water++;
+                            waterCover++;
+                            break;
+                        case 3:
+                            water++;
+                            pondCover++;
+                            break;
+                        case 4:
+                            water++;
+                            wetlandCover++;
+                            break;
+                        case 5:
+                            grass++;
+                            nonIrrGrassCover++;
+                            break;
+                        case 6:
+                            grass++;
+                            swaleCover++;
+                            break;
+                        case 7:
+                            irrGrass++;
+                            grassCover++;
+                            break;
+                        case 8:
+                            irrGrass++;
+                            bioCover++;
+                            break;
+                        case 9:
+                            irrGrass++;
+                            infilCover++;
+                            break;
+                        case 10:
+                            irrGrass++;
+                            greenRoofCover++;
+                            break;
+                        case 11:
+                            irrGrass++;
+                            greenWallCover++;
+                            break;
+                        case 12:
+                            roof++;
+                            roofCover++;
+                            break;
+                        case 13:
+                            road++;
+                            roadCover++;
+                            break;
+                        case 14:
+                            road++;
+                            pavementCover++;
+                            break;
+                        case 15:
+                            concrete++;
+                            concreteCover++;
+                            break;
+                        }
+
+
+
+                        cells.pop_back();
+                    }
+                    coverCounter = treeCover + waterCover + pondCover + wetlandCover + nonIrrGrassCover + swaleCover + grassCover
+                            + bioCover + infilCover + greenRoofCover + greenWallCover + roofCover + roadCover + pavementCover + concreteCover;
+                    wsudline.clear();
+                    wsudline << i*width+j << treeCover *100/coverCounter << waterCover*100/coverCounter << pondCover*100/coverCounter << wetlandCover*100/coverCounter
+                             << nonIrrGrassCover*100/coverCounter << swaleCover*100/coverCounter << grassCover*100/coverCounter << bioCover*100/coverCounter
+                             << infilCover*100/coverCounter << greenRoofCover*100/coverCounter << greenWallCover*100/coverCounter << roofCover*100/coverCounter
+                             << roadCover*100/coverCounter << pavementCover*100/coverCounter << concreteCover*100/coverCounter;
+                    WsudTech.append(wsudline);
+                    wsudline.clear();
+
+                }
+            }else
+            {
+
                 wsudline = getTechAreasForCell(i,j,width,WsudTech);
 
                 //tree=0;water=0;grass=0;irrGrass=0;roof=0;road=0;concrete=0;
@@ -486,10 +513,10 @@ void Microclimate_heat::run()
     lstReductionAir = calcReductionAirTemp(lstReductionAir);
     std::cout << "NEWGRID:" << endl;
     printRaster(newgrid);
-    */
+
     std::cout << "LST" << endl;
     printRaster(lst);
-    /*
+
     std::cout << "imp area before wsud" << endl;
     printRaster(impAreabeforeWSUD);
     std::cout << "new perv Frac" << endl;
