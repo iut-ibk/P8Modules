@@ -45,11 +45,11 @@ class Analyser2_Gui(QtGui.QDialog):
 		self.colorarr = ['#1f99d0','#8fcce7','#abcd88', '#cf33e1','#ffff00','#896161','#e5e5e5','#d81417','#FF4500','#000000','#FFFFFF']#'#1f99d0','#8fcce7','#abcd8',
 	def delete(self):
 		if os.path.exists(self.TPRFile):
-			os.remove(self.TPRFile)
+			os.remove(str(self.TPRFile))
 		if os.path.exists(self.UtilFile):
-			os.remove(self.UtilFile)
+			os.remove(str(self.UtilFile))
 		if os.path.exists(self.EBRFile):
-			os.remove(self.EBRFile)
+			os.remove(str(self.EBRFile))
 	def plotEBR(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
