@@ -231,7 +231,7 @@ void Microclimate_heat::run()
             while(!cells.empty())
             {
                 QPointF p = cells.back();
-                std::cout << imp->getCell(p.x(),p.y()) << endl;
+                std::cout << "input: "<< imp->getCell(p.x(),p.y()) << endl;
                 switch((int)imp->getCell(p.x(),p.y()))
                 {
                     case 1:
@@ -333,7 +333,14 @@ void Microclimate_heat::run()
 
                 if(this->techFile != "")
                 {
-
+                    //variables for temp calculation
+                    tree = 0;
+                    water = 0;
+                    grass = 0;
+                    irrGrass = 0;
+                    roof = 0;
+                    road = 0;
+                    concrete = 0;
 
                     treeCover = 0;
                     waterCover = 0;
@@ -355,6 +362,7 @@ void Microclimate_heat::run()
                     while(!cells.empty())
                     {
                         QPointF p = cells.back();
+                        std::cout <<"techfile "<< techs->getCell(p.x(),p.y()) << endl;
                         switch((int)techs->getCell(p.x(),p.y()))
                         {
                         case 1:
@@ -439,7 +447,7 @@ void Microclimate_heat::run()
 
                 wsudline = getTechAreasForCell(i,j,width,WsudTech);
 
-                //tree=0;water=0;grass=0;irrGrass=0;roof=0;road=0;concrete=0;
+                tree=0;water=0;grass=0;irrGrass=0;roof=0;road=0;concrete=0;
                 treeCover = 0;waterCover = 0;pondCover = 0;wetlandCover = 0;nonIrrGrassCover = 0;swaleCover = 0;grassCover = 0;bioCover = 0;infilCover = 0;greenRoofCover = 0;greenWallCover = 0;roofCover = 0;roadCover = 0;pavementCover = 0;concreteCover = 0;
 
                 //add the new technologies and covers
@@ -926,7 +934,6 @@ DM::RasterData * Microclimate_heat::readRasterFile(QString FileName)
 
     QTextStream stream(&file);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        DM::Logger(DM::Error) << "warning, read input file ";
         return r;
     }
 
@@ -997,7 +1004,7 @@ DM::RasterData * Microclimate_heat::readRasterFile(QString FileName)
             for ( int i = 0; i < list.size(); i++ ) {
                 QString s = QString(list[i]);
                 s.replace(",", ".");
-                r->setCell(i, nrows-rowCounter-1, s.toDouble());
+                r->setCell(i, rowCounter, s.toDouble());
             }
             rowCounter++;
 
@@ -1096,10 +1103,10 @@ std::vector<QPointF> Microclimate_heat::getCoveringCells(double x, double y, dou
     std::vector<QPointF> res;
     QRectF * cell = new QRectF(x,y,g1,g1);
 
-    int leftX = cell->left() / g2;
-    int topY = cell->top() / g2;
-    int rightX = cell->right() / g2;
-    int botY = cell->bottom() / g2;
+    int leftX = cell->left();
+    int topY = cell->top();
+    int rightX = cell->right();
+    int botY = cell->bottom();
 
     int columns = (rightX - leftX) / g2;
     int rows = (botY - topY) / g2;
@@ -1116,7 +1123,7 @@ std::vector<QPointF> Microclimate_heat::getCoveringCells(double x, double y, dou
     {
         for(int j = 0; j < rows + correction;j++)
         {
-            QPointF p = QPointF(leftX + i * g2,topY + j * g2);
+            QPointF p = QPointF(leftX/g2 + i,topY/g2 + j);
             res.push_back(p);
         }
     }
