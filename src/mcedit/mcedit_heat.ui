@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
-    <height>793</height>
+    <width>984</width>
+    <height>892</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -356,16 +356,6 @@
            </property>
           </widget>
          </item>
-         <item row="13" column="0">
-          <widget class="QLabel" name="label_32">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v4.png</pixmap>
-           </property>
-          </widget>
-         </item>
          <item row="14" column="1">
           <widget class="QLabel" name="label_33">
            <property name="text">
@@ -377,16 +367,6 @@
           <widget class="QLabel" name="label_34">
            <property name="text">
             <string>Water</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v3.png</pixmap>
            </property>
           </widget>
          </item>
@@ -453,16 +433,6 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_37">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v5.png</pixmap>
-           </property>
-          </widget>
-         </item>
          <item row="5" column="1">
           <widget class="QLabel" name="label">
            <property name="sizePolicy">
@@ -493,16 +463,6 @@
            </property>
           </widget>
          </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_28">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v0.png</pixmap>
-           </property>
-          </widget>
-         </item>
          <item row="7" column="1">
           <widget class="QLabel" name="label_2">
            <property name="sizePolicy">
@@ -513,16 +473,6 @@
            </property>
            <property name="text">
             <string>Bioretention</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v1.png</pixmap>
            </property>
           </widget>
          </item>
@@ -539,30 +489,10 @@
            </property>
           </widget>
          </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_11">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v2.png</pixmap>
-           </property>
-          </widget>
-         </item>
          <item row="9" column="1">
           <widget class="QLabel" name="label_26">
            <property name="text">
             <string>Green roof</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="label_31">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v3.png</pixmap>
            </property>
           </widget>
          </item>
@@ -604,26 +534,6 @@
           <widget class="QLabel" name="label_29">
            <property name="text">
             <string>Road</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="0">
-          <widget class="QLabel" name="label_39">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v3.png</pixmap>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="0">
-          <widget class="QLabel" name="label_40">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="images.qrc">:/images/v3.png</pixmap>
            </property>
           </widget>
          </item>
@@ -871,6 +781,96 @@
            </property>
           </widget>
          </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v4.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_28">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v0.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v2.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v2.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="label_31">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v2.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="label_37">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v2.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="0">
+          <widget class="QLabel" name="label_32">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v6.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="0">
+          <widget class="QLabel" name="label_39">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v6.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QLabel" name="label_40">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/v7.png</pixmap>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -951,7 +951,7 @@
         <widget class="QComboBox" name="cb_mode">
          <item>
           <property name="text">
-           <string>Edit technologies</string>
+           <string>Edit Lancover</string>
           </property>
          </item>
          <item>
