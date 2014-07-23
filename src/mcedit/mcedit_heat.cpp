@@ -441,62 +441,68 @@ void mcedit_heat::tecSaveAs()
 
 void mcedit_heat::tecSave(QString filename)
 {
-    QFile file;
-    file.setFileName(filename);
-    file.open(QIODevice::WriteOnly|QIODevice::Text);
-    QTextStream stream;
-    stream.setDevice(&file);
-    QList<Cell_heat*> sortlist=cellmap.values();
-    qSort(sortlist.begin(),sortlist.end(),cellCompare);
-    foreach (Cell_heat *cell, sortlist)
+    if(QFile::exists(workpath + "/WSUDtech.mcd"))
     {
-        stream << cell->getNo() << ","
-               << cell->getV(0) << ","
-               << cell->getV(1) << ","
-               << cell->getV(2) << ","
-               << cell->getV(3) << ","
-               << cell->getV(4) << ","
-               << cell->getV(5) << ","
-               << cell->getV(6) << ","
-               << cell->getV(7) << ","
-               << cell->getV(8) << ","
-               << cell->getV(9) << ","
-               << cell->getV(10) << ","
-               << cell->getV(11) << ","
-               << cell->getV(12) << ","
-               << cell->getV(13) << ","
-               << cell->getV(14) << "\n";
+        QFile file;
+        file.setFileName(filename);
+        file.open(QIODevice::WriteOnly|QIODevice::Text);
+        QTextStream stream;
+        stream.setDevice(&file);
+        QList<Cell_heat*> sortlist=cellmap.values();
+        qSort(sortlist.begin(),sortlist.end(),cellCompare);
+        foreach (Cell_heat *cell, sortlist)
+        {
+            stream << cell->getNo() << ","
+                   << cell->getV(0) << ","
+                   << cell->getV(1) << ","
+                   << cell->getV(2) << ","
+                   << cell->getV(3) << ","
+                   << cell->getV(4) << ","
+                   << cell->getV(5) << ","
+                   << cell->getV(6) << ","
+                   << cell->getV(7) << ","
+                   << cell->getV(8) << ","
+                   << cell->getV(9) << ","
+                   << cell->getV(10) << ","
+                   << cell->getV(11) << ","
+                   << cell->getV(12) << ","
+                   << cell->getV(13) << ","
+                   << cell->getV(14) << "\n";
+        }
+        file.close();
     }
-    file.close();
 }
 
 void mcedit_heat::tecSave(p8microclimate_heat_gui *parent)
 {
-    QList<Cell_heat*> sortlist=cellmap.values();
-    qSort(sortlist.begin(),sortlist.end(),cellCompare);
-    QList<QList<double> > qsortlist;
-    foreach (Cell_heat *cell, sortlist)
+    if(QFile::exists(workpath + "/WSUDtech.mcd"))
     {
-        QList<double> line;
-        line << cell->getV(0)
-             << cell->getV(1)
-             << cell->getV(2)
-             << cell->getV(3)
-             << cell->getV(4)
-             << cell->getV(5)
-             << cell->getV(6)
-             << cell->getV(7)
-             << cell->getV(8)
-             << cell->getV(9)
-             << cell->getV(10)
-             << cell->getV(11)
-             << cell->getV(12)
-             << cell->getV(13)
-             << cell->getV(14);
+        QList<Cell_heat*> sortlist=cellmap.values();
+        qSort(sortlist.begin(),sortlist.end(),cellCompare);
+        QList<QList<double> > qsortlist;
+        foreach (Cell_heat *cell, sortlist)
+        {
+            QList<double> line;
+            line << cell->getV(0)
+                 << cell->getV(1)
+                 << cell->getV(2)
+                 << cell->getV(3)
+                 << cell->getV(4)
+                 << cell->getV(5)
+                 << cell->getV(6)
+                 << cell->getV(7)
+                 << cell->getV(8)
+                 << cell->getV(9)
+                 << cell->getV(10)
+                 << cell->getV(11)
+                 << cell->getV(12)
+                 << cell->getV(13)
+                 << cell->getV(14);
 
-        qsortlist << line;
+            qsortlist << line;
+        }
+        parent->setTec(qsortlist);
     }
-    parent->setTec(qsortlist);
 }
 
 void mcedit_heat::tecLoad(p8microclimate_heat_gui *parent)
@@ -627,6 +633,7 @@ void mcedit_heat::on_pb_edit_clicked()
         }
     }
 
+    //get all selected cells
     if (!selectedCells.isEmpty())
     {
         double v1=0;
@@ -644,6 +651,45 @@ void mcedit_heat::on_pb_edit_clicked()
         double v13=0;
         double v14=0;
         double v15=0;
+
+        // sum up all the values in the cells
+        foreach(Cell_heat *cell,selectedCells)
+        {
+            v1 += cell->getV(0);
+            v2 += cell->getV(1);
+            v3 += cell->getV(2);
+            v4 += cell->getV(3);
+            v5 += cell->getV(4);
+            v6 += cell->getV(5);
+            v7 += cell->getV(6);
+            v8 += cell->getV(7);
+            v9 += cell->getV(8);
+            v10 += cell->getV(9);
+            v11 += cell->getV(10);
+            v12 += cell->getV(11);
+            v13 += cell->getV(12);
+            v14 += cell->getV(13);
+            v15 += cell->getV(14);
+        }
+
+        // and take the average to show inthe cell dialog
+        v1 /= selectedCells.size();
+        v2 /= selectedCells.size();
+        v3 /= selectedCells.size();
+        v4 /= selectedCells.size();
+        v5 /= selectedCells.size();
+        v6 /= selectedCells.size();
+        v7 /= selectedCells.size();
+        v8 /= selectedCells.size();
+        v9 /= selectedCells.size();
+        v10 /= selectedCells.size();
+        v11 /= selectedCells.size();
+        v12 /= selectedCells.size();
+        v13 /= selectedCells.size();
+        v14 /= selectedCells.size();
+        v15 /= selectedCells.size();
+
+
 
         CellDialog_heat *dia=new CellDialog_heat(NULL,&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8,&v9,&v10,&v11,&v12,&v13,&v14,&v15);
         dia->exec();
