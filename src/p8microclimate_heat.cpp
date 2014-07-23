@@ -13,7 +13,7 @@
 #include <QSettings>
 
 //DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
-DM_DECLARE_CUSTOM_NODE_NAME(Microclimate_heat,"Microclimate Heat", "Scenario Simulation and Assessment")
+DM_DECLARE_CUSTOM_NODE_NAME(Microclimate_heat,"Microclimate Extreme Heat", "Scenario Simulation and Assessment")
 Microclimate_heat::Microclimate_heat()
 {
     gridsize = 30;
@@ -495,6 +495,8 @@ void Microclimate_heat::run()
             roadTemp = (road / totalcounter) * getTempForSurface(6,this->percentile);
             concreteTemp  = (concrete / totalcounter) * getTempForSurface(7,this->percentile);
 
+            if(totalcounter != 0)
+            {
             //recalc temp of cell
             tmpInCurrentCell = (treeTemp + waterTemp + grassTemp + irrGrassTemp + roofTemp + roadTemp + concreteTemp);
             //save value
@@ -502,15 +504,22 @@ void Microclimate_heat::run()
 
             //calc temp reduction
             lstReduction->setCell(j,i,lst->getCell(j,i) - lstAfterWsud->getCell(j,i));
-
+            }
             //calc percentages for cover
             coverCounter = treeCover + waterCover + pondCover + wetlandCover + nonIrrGrassCover + swaleCover + grassCover
                     + bioCover + infilCover + greenRoofCover + greenWallCover + roofCover + roadCover + pavementCover + concreteCover;
             wsudline.clear();
-            wsudline << i*width+j << treeCover *100/coverCounter << waterCover*100/coverCounter << pondCover*100/coverCounter << wetlandCover*100/coverCounter
-                     << nonIrrGrassCover*100/coverCounter << swaleCover*100/coverCounter << grassCover*100/coverCounter << bioCover*100/coverCounter
-                     << infilCover*100/coverCounter << greenRoofCover*100/coverCounter << greenWallCover*100/coverCounter << roofCover*100/coverCounter
-                     << roadCover*100/coverCounter << pavementCover*100/coverCounter << concreteCover*100/coverCounter;
+            if(coverCounter == 0)
+            {
+                wsudline << i*width+j << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0;
+            }
+            else
+            {
+                wsudline << i*width+j << treeCover *100/coverCounter << waterCover*100/coverCounter << pondCover*100/coverCounter << wetlandCover*100/coverCounter
+                         << nonIrrGrassCover*100/coverCounter << swaleCover*100/coverCounter << grassCover*100/coverCounter << bioCover*100/coverCounter
+                         << infilCover*100/coverCounter << greenRoofCover*100/coverCounter << greenWallCover*100/coverCounter << roofCover*100/coverCounter
+                         << roadCover*100/coverCounter << pavementCover*100/coverCounter << concreteCover*100/coverCounter;
+            }
             readTechs.append(wsudline);
             wsudline.clear();
 
