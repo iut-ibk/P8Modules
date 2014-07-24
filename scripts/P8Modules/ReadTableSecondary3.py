@@ -9,6 +9,7 @@ from subprocess import call
 import ubeats_music_interface as umusic
 import platform
 import ntpath
+import math
 
 
 class StreamHydrologyandWaterquality(Module):
@@ -485,6 +486,8 @@ class StreamHydrologyandWaterquality(Module):
 		fluxinfl_list = []
 		fluxinfl_list2 = []
 		tanklist = []
+		pipelist = []
+		baseflowlist = []
 		readcatchmentlist = False
 		writetop = True
 		writebot = False
@@ -649,6 +652,13 @@ class StreamHydrologyandWaterquality(Module):
 				SW = False
 				EtFlux_list.append(linearr[1])
 				fluxinfl_list.append(linearr[1])
+
+			# get all pipeflow
+			if(linearr[0] == "Secondary Outflow Components" and linearr[1].find("Pipe Flow")):
+				pipelist.append(source_id)
+			# get all baseflow
+			if(linearr[0] == "Secondary Outflow Components" and linearr[1].find("Impervious Storm Flow")):
+				baseflowlist.append(source_id)
 		fileIn.close()
 		fileOut.write("\n")
 		print splitlist2
@@ -739,6 +749,33 @@ class StreamHydrologyandWaterquality(Module):
 			print "didnt find any receiving nodes!!!"
 		for l in tanklist:
 			umusic.writeTankLinkReuse(fileOut,l,areaSumID + 3)
+
+		# SEI links from predeveloped and urbanised catchmens
+		L = math.sqrt( 2 *totalarea)
+		Ku = L * 0.75 / 60
+		Kp = L * 0.2 /60
+
+		#make Pipeflow and baseflow node
+		umusic.writeMUSICjunction2(fileOut, "Pipe Flow Node",areaSumID+8,0,0)
+		umusic.writeMUSICjunction2(fileOut, "Base Flow Node",areaSumID+9,0,0)
+
+		print "pipe and base lists"
+		print pipelist
+		print baseflowlist
+		#make links
+		for p in pipelist:
+			umusic.writeMUSIClinkSEI(fileOut,p,areaSumID+8,Kp)
+		for b in baseflowlist:
+			umusic.writeMUSIClinkSEI(fileOut,b,areaSumID+9,Ku)
+		if(receivingnodeid != 0):
+			umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
+			umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
+		else:
+			umusic.writeMUSIClink(fileOut, areaSumID+8,int(OutBasId))
+			umusic.writeMUSIClink(fileOut, areaSumID+9,int(OutBasId))		
+
+
+
 		umusic.writeMUSICfooter(fileOut)
 		fileOut.close()
 		retvals = []
