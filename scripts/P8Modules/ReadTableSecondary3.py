@@ -487,6 +487,7 @@ class StreamHydrologyandWaterquality(Module):
 		fluxinfl_list2 = []
 		tanklist = []
 		pipelist = []
+		infillist = []
 		baseflowlist = []
 		readcatchmentlist = False
 		writetop = True
@@ -532,6 +533,7 @@ class StreamHydrologyandWaterquality(Module):
 					splitlist.append(str(tmpID))
 					splitlist2.append([str(tmpID) + "99","0"])
 					NodeIDToType[str(tmpID) + "99"] = NodeIDToType[str(tmpID)]
+					baseflowlist.append(str(tmpID) + "99")
 					
 					print splitlist2
 				urbfirst = ""
@@ -644,21 +646,30 @@ class StreamHydrologyandWaterquality(Module):
 			if (IS and linearr[0] == "Node ID"):
 				IS = False
 				EtFlux_list.append(linearr[1])
-				fluxinfl_list2.append(linearr[1])
-			if (linearr[0] == "Node ID" and (WSUR or PB or BF or SW)):
+				pipelist.append(linearr[1])
+				#fluxinfl_list2.append(linearr[1])
+			if(linearr[0] == "Node ID" and (WSUR or PB or BF)):
+				EtFlux_list.append(linearr[1])
+				infillist.append(linearr[1])
+				pipelist.append(linearr[1])
 				WSUR = False
 				PB = False
 				BF = False
+			if (linearr[0] == "Node ID" and (SW)):
 				SW = False
 				EtFlux_list.append(linearr[1])
-				fluxinfl_list.append(linearr[1])
-
+				#fluxinfl_list.append(linearr[1])
+			'''
 			# get all pipeflow
 			if(linearr[0] == "Secondary Outflow Components" and linearr[1].find("Pipe Flow")):
-				pipelist.append(source_id)
+				pipelist.append(source_id)			
+			# get all fluxes
+			if(linearr[0] == "Secondary Outflow Components" and linearr[1].find("Infiltration")):
+				infillist.append(source_id)
 			# get all baseflow
 			if(linearr[0] == "Secondary Outflow Components" and linearr[1].find("Impervious Storm Flow")):
 				baseflowlist.append(source_id)
+			'''
 		fileIn.close()
 		fileOut.write("\n")
 		print splitlist2
@@ -678,18 +689,22 @@ class StreamHydrologyandWaterquality(Module):
 		print fluxinfl_list
 		print fluxinfl_list2
 		areaSumID = sumID + 1
-		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, area,1, catchment_paramter_list2)
+		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, totalarea,1, catchment_paramter_list2)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Baseflows", areaSumID+1, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID,areaSumID+1)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Runoff Frequency", areaSumID+2, 0, 0)
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID,areaSumID+2)
 		umusic.writeMUSICjunction2(fileOut, "Reuse and ET fluxes",areaSumID+3,0,0)
 		umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0)
-		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, area,1, catchment_paramter_list)
+		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, totalarea,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Ignore", areaSumID+6, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
 		umusic.writeMUSICjunction2(fileOut, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID+5,areaSumID+7)
+
+		umusic.writeMUSICjunction2(fileOut,"Baseflow",areaSumID+8,0,0)
+		umusic.writeMUSICjunction2(fileOut,"Pipe Flow",areaSumID+9,0,0)
+
 		if(foundDetention):
 			for nodeid in detIds:
 				umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
@@ -733,9 +748,9 @@ class StreamHydrologyandWaterquality(Module):
 					print "SwaleNode Found"
 					continue				
 			print "writing link for " + str(j)
-			umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
-		for k in fluxinfl_list2:
-		    umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
+			#umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
+		#for k in fluxinfl_list2:
+		    #umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
 		if(OutBasId == 0 and receivingnodeid != 0):
 			umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
@@ -755,24 +770,20 @@ class StreamHydrologyandWaterquality(Module):
 		Ku = L * 0.75 / 60
 		Kp = L * 0.2 /60
 
-		#make Pipeflow and baseflow node
-		umusic.writeMUSICjunction2(fileOut, "Pipe Flow Node",areaSumID+8,0,0)
-		umusic.writeMUSICjunction2(fileOut, "Base Flow Node",areaSumID+9,0,0)
 
-		print "pipe and base lists"
+
+		print "pipe ,infil and base list"
 		print pipelist
+		print infillist
 		print baseflowlist
+
 		#make links
 		for p in pipelist:
-			umusic.writeMUSIClinkSEI(fileOut,p,areaSumID+8,Kp)
+			umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)
+		for i in infillist:
+			umusic.writeMUSIClink(fileOut,i,areaSumID+4)
 		for b in baseflowlist:
-			umusic.writeMUSIClinkSEI(fileOut,b,areaSumID+9,Ku)
-		if(receivingnodeid != 0):
-			umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
-			umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
-		else:
-			umusic.writeMUSIClink(fileOut, areaSumID+8,int(OutBasId))
-			umusic.writeMUSIClink(fileOut, areaSumID+9,int(OutBasId))		
+			umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
 
 
 
