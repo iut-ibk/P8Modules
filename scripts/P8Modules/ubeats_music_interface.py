@@ -558,6 +558,17 @@ def writeMUSIClinkToInfilFlux2(f, upN, downN):
     f.write("------------------------------------------------------------------------------------\n")
     return True
 
+def writeMUSIClinkPipe(f, upN, downN):
+    f.write("Link Name,Drainage Link,\n")
+    f.write("Source Node ID,"+str(upN)+",{The is the ID of the upstream node}\n")
+    f.write("Target Node ID,"+str(downN)+",{This is the ID of the downstream node}\n")
+    f.write("Routing,Not Routed,{either \"Not Routed\" or \"Routed\"}\n")
+    f.write("Muskingum K,30,{no value required for no routing or \"numerical value\" for routed}\n")
+    f.write("Muskingum Theta,0.25,{no value required for no routing or \"numerical value\" for routed. Must be between 0.1 and 0.49}\n")
+    f.write("Secondary Outflow Components,Pipe Flow,{for secondary drainage link only}\n")
+    f.write("------------------------------------------------------------------------------------\n")
+    return True
+
 def writeMUSIClinkToIgnore(f,upN,downN):
     f.write("Link Name,Drainage Link,\n")
     f.write("Source Node ID,"+str(upN)+",{The is the ID of the upstream node}\n")
@@ -577,6 +588,17 @@ def writeMUSIClinkToFrequenzy(f,upN,downN):
     f.write("Muskingum K,30,{no value required for no routing or \"numerical value\" for routed}\n")
     f.write("Muskingum Theta,0.25,{no value required for no routing or \"numerical value\" for routed. Must be between 0.1 and 0.49}\n")
     f.write("Secondary Outflow Components,Pervious Storm Flow; Impervious Storm Flow,{for secondary drainage link only}\n")
+    f.write("------------------------------------------------------------------------------------\n")
+    return True
+
+def writeMUSIClinkBase(f,upN,downN):
+    f.write("Link Name,Drainage Link,\n")
+    f.write("Source Node ID,"+str(upN)+",{The is the ID of the upstream node}\n")
+    f.write("Target Node ID,"+str(downN)+",{This is the ID of the downstream node}\n")
+    f.write("Routing,Not Routed,{either \"Not Routed\" or \"Routed\"}\n")
+    f.write("Muskingum K,30,{no value required for no routing or \"numerical value\" for routed}\n")
+    f.write("Muskingum Theta,0.25,{no value required for no routing or \"numerical value\" for routed. Must be between 0.1 and 0.49}\n")
+    f.write("Secondary Outflow Components,Base Flow,{for secondary drainage link only}\n")
     f.write("------------------------------------------------------------------------------------\n")
     return True
 
