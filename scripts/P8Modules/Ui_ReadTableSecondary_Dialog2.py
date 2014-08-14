@@ -18,7 +18,7 @@ except AttributeError:
 class Ui_ReadTableSecondary_GUI2(object):
     def setupUi(self, ReadTableSecondary_GUI2):
         ReadTableSecondary_GUI2.setObjectName(_fromUtf8("ReadTableSecondary_GUI2"))
-        ReadTableSecondary_GUI2.setWindowTitle(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "QWEASDStream Hydrology and Water quality", None, QtGui.QApplication.UnicodeUTF8))
+        ReadTableSecondary_GUI2.setWindowTitle(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Stream Hydrology and Water quality", None, QtGui.QApplication.UnicodeUTF8))
         ReadTableSecondary_GUI2.setGeometry(QtCore.QRect(400,100,800,600))
         self.verticalLayout = QtGui.QVBoxLayout(ReadTableSecondary_GUI2)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
@@ -37,10 +37,16 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
 
+        fontB = QtGui.QFont()
+        fontB.setBold(True)
+
+        fontI = QtGui.QFont()
+        fontI.setItalic(True)
 
         self.label_head = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label_head.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Mean annual rainfall [ mm ]", None, QtGui.QApplication.UnicodeUTF8))
         self.label_head.setObjectName(_fromUtf8("lbl_head"))
+        self.label_head.setFont(fontB)
         self.gridLayout.addWidget(self.label_head, 0, 0, 1, 1)
 
         self.city_combo  = QtGui.QComboBox(self.scrollAreaWidgetContents)
@@ -58,15 +64,17 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.spb_city.setObjectName(_fromUtf8("city_spin"))
         self.spb_city.setRange(0,2000)
         self.gridLayout.addWidget(self.spb_city, 1, 1, 1, 1)
-
+        '''
         self.label_head3 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label_head3.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Natural catchment properties", None, QtGui.QApplication.UnicodeUTF8))
         self.label_head3.setObjectName(_fromUtf8("lbl_head3"))
+        self.label_head3.setFont(font)
         self.gridLayout.addWidget(self.label_head3, 2, 0, 1, 1)
-
+        '''
         self.label_base = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_base.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "    Baseflow allowed in the WSUD catchment[m³/day] (Leave zero for default value.)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_base.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Baseflow allowed in the WSUD catchment[m³/day] (Leave zero for default value.)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_base.setObjectName(_fromUtf8("lbl_base"))
+        self.label_base.setFont(fontB)
         self.gridLayout.addWidget(self.label_base, 3, 0, 1, 1)
 
         self.spb_base = QtGui.QDoubleSpinBox(self.scrollAreaWidgetContents)
@@ -77,8 +85,9 @@ class Ui_ReadTableSecondary_GUI2(object):
 
 
         self.label_head4 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_head4.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Catchment parameters", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_head4.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Natural catchment properties", None, QtGui.QApplication.UnicodeUTF8))
         self.label_head4.setObjectName(_fromUtf8("lbl_head4"))
+        self.label_head4.setFont(fontB)
         self.gridLayout.addWidget(self.label_head4, 4, 0, 1, 1)
 
         self.label_rainthres = QtGui.QLabel(self.scrollAreaWidgetContents)
@@ -174,12 +183,23 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.label_head2 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label_head2.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Targets - hydrology and water quality", None, QtGui.QApplication.UnicodeUTF8))
         self.label_head2.setObjectName(_fromUtf8("lbl_head2"))
+        self.label_head2.setFont(fontB)
         self.gridLayout.addWidget(self.label_head2, 15, 0, 1, 1)
 
         self.label_vol = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_vol.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "    Total volume reduction [%]", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_vol.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Total volume reduction [%]", None, QtGui.QApplication.UnicodeUTF8))
         self.label_vol.setObjectName(_fromUtf8("lbl_vol"))
+        self.label_vol.setFont(fontI)
         self.gridLayout.addWidget(self.label_vol, 16, 0, 1, 1)
+
+        self.label_flux = QtGui.QLabel(self.scrollAreaWidgetContents)
+        self.label_flux.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "       Consider infiltration fluxes?", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_flux.setObjectName(_fromUtf8("lbl_flux"))
+        self.gridLayout.addWidget(self.label_flux, 17, 0, 1, 1)
+
+        self.chkb_flux = QtGui.QCheckBox(self.scrollAreaWidgetContents)
+        self.chkb_flux.setObjectName(_fromUtf8("chkb_flux"))
+        self.gridLayout.addWidget(self.chkb_flux, 17, 1, 1, 1)
 
         self.vol_combo = QtGui.QComboBox(self.scrollAreaWidgetContents)
         self.vol_combo.setGeometry(QtCore.QRect(250, 39, 141, 22))
@@ -187,56 +207,58 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.vol_combo.addItem(_fromUtf8(""))
         self.vol_combo.addItem(_fromUtf8(""))
         self.vol_combo.addItem(_fromUtf8(""))
-        self.gridLayout.addWidget(self.vol_combo, 17,0,1,1)
+        self.gridLayout.addWidget(self.vol_combo, 18,0,1,1)
 
         self.spb_vol = QtGui.QSpinBox(self.scrollAreaWidgetContents)
         self.spb_vol.setObjectName(_fromUtf8("vol_spin"))
-        self.gridLayout.addWidget(self.spb_vol, 17, 1, 1, 1)
+        self.gridLayout.addWidget(self.spb_vol, 18, 1, 1, 1)
         
         self.label_vol = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_vol.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "    Frequency of runoff days [days/year]", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_vol.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Frequency of runoff days [days/year]", None, QtGui.QApplication.UnicodeUTF8))
         self.label_vol.setObjectName(_fromUtf8("lbl_vol"))
-        self.gridLayout.addWidget(self.label_vol, 18, 0, 1, 1)
+        self.label_vol.setFont(fontI)
+        self.gridLayout.addWidget(self.label_vol, 19, 0, 1, 1)
 
         self.spb_freq = QtGui.QSpinBox(self.scrollAreaWidgetContents)
         self.spb_freq.setObjectName(_fromUtf8("freq_spin"))
-        self.gridLayout.addWidget(self.spb_freq, 18, 1, 1, 1)
+        self.gridLayout.addWidget(self.spb_freq, 19, 1, 1, 1)
 
 
         self.label_pol = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_pol.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "    Pollutant concentration [mg/l]", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_pol.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Pollutant concentration [mg/l]", None, QtGui.QApplication.UnicodeUTF8))
         self.label_pol.setObjectName(_fromUtf8("lbl_pol"))
-        self.gridLayout.addWidget(self.label_pol, 19, 0, 1, 1)
+        self.label_pol.setFont(fontI)
+        self.gridLayout.addWidget(self.label_pol, 20, 0, 1, 1)
 
         self.label_tss = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label_tss.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "          TSS concentration", None, QtGui.QApplication.UnicodeUTF8))
         self.label_tss.setObjectName(_fromUtf8("lbl_tss"))
-        self.gridLayout.addWidget(self.label_tss, 20, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_tss, 21, 0, 1, 1)
         self.le_tss = QtGui.QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.le_tss.setObjectName(_fromUtf8("le_tss"))
-        self.gridLayout.addWidget(self.le_tss, 20, 1, 1, 1)
+        self.gridLayout.addWidget(self.le_tss, 21, 1, 1, 1)
 
         self.label_tp = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label_tp.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "           TP concentration", None, QtGui.QApplication.UnicodeUTF8))
         self.label_tp.setObjectName(_fromUtf8("lbl_tp"))
-        self.gridLayout.addWidget(self.label_tp, 21, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_tp, 22, 0, 1, 1)
         self.le_tp = QtGui.QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.le_tp.setObjectName(_fromUtf8("le_tp"))
-        self.gridLayout.addWidget(self.le_tp, 21, 1, 1, 1)
+        self.gridLayout.addWidget(self.le_tp, 22, 1, 1, 1)
 
         self.label_tn = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label_tn.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "           TN concentration", None, QtGui.QApplication.UnicodeUTF8))
         self.label_tn.setObjectName(_fromUtf8("lbl_tn"))
-        self.gridLayout.addWidget(self.label_tn, 22, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_tn, 23, 0, 1, 1)
         self.le_tn = QtGui.QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.le_tn.setObjectName(_fromUtf8("le_tn"))
-        self.gridLayout.addWidget(self.le_tn, 22, 1, 1, 1)
+        self.gridLayout.addWidget(self.le_tn, 23, 1, 1, 1)
         
 
         self.pb_load = QtGui.QPushButton(self.scrollAreaWidgetContents)
         self.pb_load.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Load results", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_load.setObjectName(_fromUtf8("pb_load"))
-        self.gridLayout.addWidget(self.pb_load, 23, 0, 1, 1)
+        self.gridLayout.addWidget(self.pb_load, 24, 0, 1, 1)
 
 
         self.verticalLayout.addWidget(self.scrollArea)

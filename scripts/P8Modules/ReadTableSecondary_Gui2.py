@@ -32,6 +32,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.le_tss.setValue(float(self.module.getParameterAsString("TssTarget")))
 	self.ui.le_tp.setValue(float(self.module.getParameterAsString("TpTarget")))
 	self.ui.le_tn.setValue(float(self.module.getParameterAsString("TnTarget")))
+	self.ui.chkb_flux.setChecked(int(self.module.getParameterAsString("ConsiderFluxes")))
 	self.ui.le_rainthres.setText((self.module.getParameterAsString("RainThres")))
 	self.ui.le_rainsoil.setText((self.module.getParameterAsString("RainSoil")))
 	self.ui.le_raininitial.setText((self.module.getParameterAsString("RainInitial")))
@@ -42,9 +43,21 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.le_rainrecharge.setText((self.module.getParameterAsString("RainRecharge")))
 	self.ui.le_rainbaseflow.setText((self.module.getParameterAsString("RainBaseflow")))
 	self.ui.le_raindeep.setText((self.module.getParameterAsString("RainDeep")))
+	#self.setMouseTracking(True)
+	#self.ui.label_base.installEventFilter(self)
 
-
-
+	'''
+    def eventFilter(self, source, event):
+	if source is self.ui.label_base:
+		if event.type() == QtCore.QEvent.MouseMove:
+			pos = event.globalPos()
+			print('pos: %d, %d' % (pos.x(), pos.y()))
+		elif event.type() == QtCore.QEvent.Enter:
+			#print('ENTER')
+		elif event.type() == QtCore.QEvent.Leave:
+			#print('LEAVE')
+		return QtGui.QWidget.eventFilter(self, source, event)
+	'''
     def save(self):
 	city = self.ui.city_combo.currentIndex()
 	self.module.setParameterValue("AnnualUserRain",str(self.ui.spb_city.value()))
