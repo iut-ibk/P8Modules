@@ -58,6 +58,8 @@ class StreamHydrologyandWaterquality(Module):
 		self.RainBaseflow = 5
 		self.createParameter("RainDeep" , DOUBLE , "")
 		self.RainDeep = 0
+		self.createParameter("ConsiderFluxes", BOOL , "")
+		self.ConsiderFluxes = 0
 
 
 		#Views
@@ -80,6 +82,7 @@ class StreamHydrologyandWaterquality(Module):
 	def run(self):
 		self.ReceivBas = ""
 		realstring = ""
+		self.ImpAreaToTreatment = 0.0
 		settings = QSettings()
 		workpath = settings.value("workPath").toString()
 		workpath += "/"
@@ -164,6 +167,9 @@ class StreamHydrologyandWaterquality(Module):
 		list6 = self.readFileToList(workpath + "Exfiltration"+str(number)+".TXT")
 		list7 = self.readFileToList(workpath + "WQ"+str(number)+".TXT")
 		list8 = self.readFileToList(workpath + "PredevelopBaseflowFrequency"+str(number)+".TXT")
+		list9 = self.readFileToList(workpath + "Baseflow"+str(number)+".TXT")
+		list10 = self.readFileToList(workpath + "Pipe Flow"+str(number)+".TXT")
+
 
 		vec1 = []
 		vec2 = []
@@ -174,6 +180,8 @@ class StreamHydrologyandWaterquality(Module):
 		vec8 = []
 		vec9 = []
 		vec10 = []
+		vecBase = []
+		vecPipe = []
 		tssVec = []
 		tnVec = []
 		tpVec = []
@@ -191,6 +199,8 @@ class StreamHydrologyandWaterquality(Module):
 			vec4.append(list4[i])
 			vec6.append(list6[i])
 			vec10.append(list3[i])
+			vecBase.append(list9[i])
+			vecPipe.append(list10[i])
 
 		for i in range(len(list7)):
 			if i<4 or ((i)%4==0):
@@ -269,9 +279,20 @@ class StreamHydrologyandWaterquality(Module):
 			if i%2==1:
 				vec9.append(list3[i])
 
+#       ## we need to calculated the impervious area of the treated areas (sum of impervious areas going to some treatment)
+#       treatimparea = sum of impervious areas going to some treatment
+#      ###### for each day in the timeseries 	i = 1 to end of infiltration fluxes 	
+		Filtflow = []
+		for i in range(len(vecBase)):
+			Filtflow.append(float(vec6[i]) + float(vecPipe[i]) + float(vecBase[i]))
+			print Filtflow[i]
+			if(Filtflow[i] > cin):
+				Filtflow[i] = 0
+		print "super summe of DOOOOOMMM: "+str(math.fsum(Filtflow))
 
-		TreatFiltVol = self.SumAllValues(vec9)* 60*60*24*1000/1000000
-		FVg = (VolumeInf+TreatFiltVol)*1000 / (imparea*10000*AnnualRain/1000)
+		TreatFiltVol = math.fsum(Filtflow)* 60*60*24*1000/1000000
+		FVg=TreatFiltVol *1000 /(self.ImpAreaToTreatment*10000*AnnualRain/1000)
+
 		VolImpArea = (imparea*10000*AnnualRain/1000)/1000
 		print "TreatFiltVol: " +str(TreatFiltVol)
 		print "VolImpArea: " +str(VolImpArea)
@@ -323,6 +344,8 @@ class StreamHydrologyandWaterquality(Module):
 		tmpWQ = (tss+tn+tp)/3
 		print "tmp WQ: " + str(tmpWQ)
 
+
+		print "ImpAreaToTreatment: " + str(self.ImpAreaToTreatment) 
 		#for numbers with only value after the comma
 		self.FF.append(float(int(tmpFF*1))/1) 
 		self.VR.append(float(int(tmpVR*1000))/10) 
@@ -422,6 +445,8 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Baseflow, Outflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Pipe Flow, Outflow, \"Pipe Flow"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS ("+str(name)+", Inflow, \"TreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(number)+".TXT\",1d)\n")
 		f.close()
@@ -489,6 +514,7 @@ class StreamHydrologyandWaterquality(Module):
 		pipelist = []
 		infillist = []
 		baseflowlist = []
+		reclist = []
 		readcatchmentlist = False
 		writetop = True
 		writebot = False
@@ -497,6 +523,8 @@ class StreamHydrologyandWaterquality(Module):
 		j = -1
 		i = 0
 		
+		impnodes =[]
+		ImpIDtoImpArea = {}
 		NodeIDToType = {}
 		StartNodeConnectionsPrimary = {}
 		currentNodeType = ""
@@ -559,6 +587,8 @@ class StreamHydrologyandWaterquality(Module):
 				if(linearr[0] == "Areas - Impervious (%)"):
 					urbtmp += line
 					imp = float(linearr[1])
+					ImpIDtoImpArea[str(tmpID)] = imp * tmparea / 100
+					impnodes.append(tmpID)
 					#if(imp == 100):
 						#EtFlux_list.append(tmpID)
 				if(writetop):
@@ -580,7 +610,10 @@ class StreamHydrologyandWaterquality(Module):
 					if is_primary_connection:
 						StartNodeConnectionsPrimary[source_id] = str(linearr[1])
 					print "j = " + str(j)
-					splitlist2[j][1] = str(linearr[1])
+					if((NodeIDToType[linearr[1]] == "BioRetentionNodeV4") or (NodeIDToType[linearr[1]] == "SwaleNode") or (NodeIDToType[linearr[1]] == "WetlandNode") or (NodeIDToType[linearr[1]] == "PondNode") or (NodeIDToType[linearr[1]] == "InfiltrationSystemNodeV4")):
+						reclist.append(str(source_id) + "99")
+					else:
+						splitlist2[j][1] = str(linearr[1])
 					idfound = False
 			if(linearr[0] == "Link Name"):
 				is_primary_connection = False
@@ -670,6 +703,31 @@ class StreamHydrologyandWaterquality(Module):
 			if(linearr[0] == "Secondary Outflow Components" and linearr[1].find("Impervious Storm Flow")):
 				baseflowlist.append(source_id)
 			'''
+
+
+		for ID in impnodes:
+			if(ID in StartNodeConnectionsPrimary):
+				end_node = StartNodeConnectionsPrimary[ID]
+				if NodeIDToType[end_node] == "PondNode":
+					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
+					continue
+				if NodeIDToType[end_node] == "WetlandNode":
+					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
+					continue
+				if NodeIDToType[end_node] == "DetentionBasinNode":
+					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
+					continue
+				if NodeIDToType[end_node] == "InfiltrationSystemNodeV4":
+					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
+					continue				
+				if NodeIDToType[end_node] == "BioRetentionNodeV4":
+					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
+					continue
+				if NodeIDToType[end_node] == "SwaleNode":
+					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
+					continue
+
+
 		fileIn.close()
 		fileOut.write("\n")
 		print splitlist2
@@ -712,7 +770,8 @@ class StreamHydrologyandWaterquality(Module):
 		i = 0
 
 		for IDs in splitlist:
-			umusic.writeMUSIClink(fileOut,str(splitlist2[i][0]),splitlist2[i][1])
+			if(splitlist2[i][1] != "0"):
+				umusic.writeMUSIClink(fileOut,str(splitlist2[i][0]),splitlist2[i][1])
 			i = i + 1
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
@@ -751,14 +810,22 @@ class StreamHydrologyandWaterquality(Module):
 			#umusic.writeMUSIClinkToInfilFlux1(fileOut, j, areaSumID+4)
 		#for k in fluxinfl_list2:
 		    #umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
+
+		#linknig infilflux baseflow and pipeflow nodes to receiving or outbasin node
 		if(OutBasId == 0 and receivingnodeid != 0):
-			umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
+			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
+			umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
+			umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
 		if(OutBasId != 0 and receivingnodeid == 0):
-			umusic.writeMUSIClink(fileOut, areaSumID+4,int(OutBasId))
+			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(OutBasId))
+			umusic.writeMUSIClink(fileOut, areaSumID+8,int(OutBasId))
+			umusic.writeMUSIClink(fileOut, areaSumID+9,int(OutBasId))
 			self.ReceivBas = receiveBasName
 		if(OutBasId != 0 and receivingnodeid != 0):
-			umusic.writeMUSIClink(fileOut, areaSumID+4,int(receivingnodeid))
+			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
+			umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
+			umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
 		if (OutBasId == 0 and receivingnodeid == 0):
 			print "didnt find any receiving nodes!!!"
@@ -784,7 +851,12 @@ class StreamHydrologyandWaterquality(Module):
 			umusic.writeMUSIClink(fileOut,i,areaSumID+4)
 		for b in baseflowlist:
 			umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
-
+		if(receivingnodeid != 0):
+			for r in reclist:
+				umusic.writeMUSIClink(fileOut,r,int(receivingnodeid))
+		else:
+			for r in reclist:
+				umusic.writeMUSIClink(fileOut,r,int(OutBasId))
 
 
 		umusic.writeMUSICfooter(fileOut)
