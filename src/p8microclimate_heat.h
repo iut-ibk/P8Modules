@@ -46,6 +46,7 @@ public:
     double getCoef();
     double getTempForSurface(int surface, int percentile);
     void writeTechs(QList<QList<double> > techs);
+    void writeTechsToRaster(QList<QList<double> > techs,QString filename,double xoffset,double yoffset, double noDataValue);
     DM::RasterData * readRasterFile(QString FileName);
 
 };

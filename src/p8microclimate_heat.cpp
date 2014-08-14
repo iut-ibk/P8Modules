@@ -934,6 +934,31 @@ void Microclimate_heat::writeTechs(QList<QList<double> > techs)
     file.close();
 }
 
+void Microclimate_heat::writeTechsToRaster(QList<QList<double> > techs,QString filename, double xoffset, double yoffset, double noDataValue)
+{
+    QFile file (filename);
+    if(file.open(QIODevice::WriteOnly))
+    {
+        QTextStream outstream (&file);
+        outstream << "ncols" << "\t" << techs[0].size() << endl;
+        outstream << "nrows" << "\t" << techs.size() << endl;
+        outstream << "xllcorner" << "\t" << xoffset << endl;
+        outstream << "yllcorner" << "\t" << yoffset << endl;
+        outstream << "cellsize" << "\t" << this->gridsize << endl;
+        outstream << "NODATA_value" << "\t" << noDataValue << endl;
+
+        for(int i = 0; i<techs.size();i++)
+        {
+            for(int j = 0; j< techs[0].size(); j++)
+            {
+                outstream << techs[j][i] << " ";
+            }
+            outstream << endl;
+        }
+    }
+    file.close();
+}
+
 DM::RasterData * Microclimate_heat::readRasterFile(QString FileName)
 {
 

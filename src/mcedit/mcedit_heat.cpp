@@ -32,17 +32,34 @@ mcedit_heat::mcedit_heat(p8microclimate_heat_gui *parent, QString bgimage, QStri
     this->workpath=workpath;
 
 
+    // rgb codes of pixmaps in gui
+
+    // v0 new QColor(4,224,23,255)
+    // v1 new QColor(179,209,23,255)
+    // v2 new QColor(7,224,126,255)
+    // v3 new QColor(181,90,30,255)
+    // v4 new QColor(9,0,173,255)
+    // v5 new QColor(140,176,135,255)
+    // v6 new QColor(81,49,36,255)
+    // v7 new QColor(35,24,19,255)
+
+    //add colors according to the techs in list
     teccol.append(new QColor(4,224,23,255));
-    teccol.append(new QColor(179,209,56,255));
+    teccol.append(new QColor(179,209,23,255));
+    teccol.append(new QColor(179,209,23,255));
+    teccol.append(new QColor(179,209,23,255));
     teccol.append(new QColor(7,224,126,255));
-    teccol.append(new QColor(181,90,29,255));
-    teccol.append(new QColor(9,0,173,255));
-    teccol.append(new QColor(140,176,135,255));
-    teccol.append(new QColor(4,224,23,255));
-    teccol.append(new QColor(179,209,56,255));
     teccol.append(new QColor(7,224,126,255));
-    teccol.append(new QColor(181,90,29,255));
+    teccol.append(new QColor(181,90,30,255));
+    teccol.append(new QColor(181,90,30,255));
+    teccol.append(new QColor(181,90,30,255));
+    teccol.append(new QColor(181,90,30,255));
+    teccol.append(new QColor(181,90,30,255));
     teccol.append(new QColor(9,0,173,255));
+    teccol.append(new QColor(81,49,36,255));
+    teccol.append(new QColor(81,49,36,255));
+    teccol.append(new QColor(35,24,19,255));
+
 
 
     this->cx=cx;
@@ -570,7 +587,7 @@ void mcedit_heat::cellupdate()
         }
         if (mode==1)
         {
-            setScale(-5,5,0);
+            setScale(-15,15,0);
         }
         if (mode==2)
         {
