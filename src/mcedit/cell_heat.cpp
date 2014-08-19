@@ -116,7 +116,7 @@ void Cell_heat::update(int mode,int viewmode)
     }
     if (mode==1) // lst change
     {
-        double maxdt=5;
+        double maxdt=15;
         int col=255.0*fabs((res[0])/maxdt);
         if (res[0]>0)
             brush.setColor(QColor(255,255-col,255-col,127));
