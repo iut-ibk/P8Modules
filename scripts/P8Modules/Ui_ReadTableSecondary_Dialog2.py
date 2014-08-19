@@ -75,6 +75,7 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.label_base.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Baseflow allowed in the WSUD catchment[m³/day] (Leave zero for default value.)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_base.setObjectName(_fromUtf8("lbl_base"))
         self.label_base.setFont(fontB)
+        self.label_base.setToolTip("Leave zero for default equal to\n3 times the median of the baseflow\n in the natural catchment.")
         self.gridLayout.addWidget(self.label_base, 3, 0, 1, 1)
 
         self.spb_base = QtGui.QDoubleSpinBox(self.scrollAreaWidgetContents)
