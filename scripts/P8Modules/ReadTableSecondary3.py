@@ -845,18 +845,19 @@ class StreamHydrologyandWaterquality(Module):
 		print baseflowlist
 
 		#make links
-		for p in pipelist:
-			umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)
-		for i in infillist:
-			umusic.writeMUSIClink(fileOut,i,areaSumID+4)
-		for b in baseflowlist:
-			umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
 		if(receivingnodeid != 0):
 			for r in reclist:
 				umusic.writeMUSIClink(fileOut,r,int(receivingnodeid))
 		else:
 			for r in reclist:
 				umusic.writeMUSIClink(fileOut,r,int(OutBasId))
+		for p in pipelist:
+			umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)
+		for i in infillist:
+			umusic.writeMUSIClinkToInfilFlux2(fileOut,i,areaSumID+4)
+		for b in baseflowlist:
+			umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
+
 
 
 		umusic.writeMUSICfooter(fileOut)
