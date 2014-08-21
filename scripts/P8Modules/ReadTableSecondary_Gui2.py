@@ -80,6 +80,10 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.module.setParameterValue("RainRecharge",str(self.ui.le_rainrecharge.text()))
 	self.module.setParameterValue("RainBaseflow",str(self.ui.le_rainbaseflow.text()))
 	self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
+	if(self.ui.chkb_flux.isChecked):
+		self.module.setParameterValue("ConsiderFluxes",str(1))
+	else:
+		self.module.setParameterValue("ConsiderFluxes",str(0))
 	pass
 	
     def Load(self):
@@ -91,7 +95,10 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.table.setCellWidget(1,0,QtGui.QLineEdit(str("Frequency of Runoff Days (days/year)")))
 	self.ui.table.setCellWidget(2,0,QtGui.QLineEdit(str("Proportion of Total Volume Reduction (%)")))
 	self.ui.table.setCellWidget(3,0,QtGui.QLineEdit(str("Proportion of Filtered Flow Volume  (%)")))
-	self.ui.table.setCellWidget(4,0,QtGui.QLineEdit(str("Water Quality Index (%)")))
+	self.ui.table.setCellWidget(4,0,QtGui.QLineEdit(str("TSS mean concentration (mg/L)")))
+	self.ui.table.setCellWidget(5,0,QtGui.QLineEdit(str("TP mean concentration (mg/L)")))
+	self.ui.table.setCellWidget(6,0,QtGui.QLineEdit(str("TN mean concentration (mg/L)")))
+
 	for i in range(len(self.module.FF)):
 	    i = i + 1
 	    widget2 = QtGui.QLineEdit(str("Realisation"))# + str(i))
@@ -102,7 +109,10 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	    self.ui.table.setCellWidget(1,i,QtGui.QLineEdit(str(self.module.FF[i-1])))
 	    self.ui.table.setCellWidget(2,i,QtGui.QLineEdit(str(self.module.VR[i-1])))
 	    self.ui.table.setCellWidget(3,i,QtGui.QLineEdit(str(self.module.FV[i-1])))
-	    self.ui.table.setCellWidget(4,i,QtGui.QLineEdit(str(self.module.WQ[i-1])))
+	    self.ui.table.setCellWidget(4,i,QtGui.QLineEdit(str(self.module.tableTSS[i-1])))
+   	    self.ui.table.setCellWidget(5,i,QtGui.QLineEdit(str(self.module.tableTP[i-1])))
+	    self.ui.table.setCellWidget(6,i,QtGui.QLineEdit(str(self.module.tableTN[i-1])))
+
 
     def cityChanged(self):
 	if self.ui.city_combo.currentIndex() == 0:
