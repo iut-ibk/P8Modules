@@ -836,6 +836,8 @@ void Microclimate_heat::exportMCtemp(DM::RasterData *r, QString filename, double
     if(file.open(QIODevice::WriteOnly))
     {
         QTextStream outstream(&file);
+        //headers
+        outstream << "Block Tree Water Pond and basin Wetland Dry Grass Swale Irrigated Grass Biofilter Inf system Green roof Green wall Roof Road Porous Pav Concrete" << endl;
         for(int i = 0; i<r->getHeight(); i++)
         {
             for(int j = 0; j<r->getWidth();j++)
@@ -918,7 +920,8 @@ void Microclimate_heat::writeTechs(QList<QList<double> > techs)
     if(file.open(QIODevice::WriteOnly))
     {
         QTextStream outstream (&file);
-
+        //headers
+        outstream << "Block Tree Water Pond and basin Wetland Dry Grass Swale Irrigated Grass Biofilter Inf system Green roof Green wall Roof Road Porous Pav Concrete" << endl;
         for(int i = 0; i<techs.size();i++)
         {
             for(int j = 0; j< techs[i].size(); j++)
