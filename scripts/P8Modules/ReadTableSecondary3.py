@@ -250,11 +250,12 @@ class StreamHydrologyandWaterquality(Module):
 		tn = 1-max((float(tn)-self.TnTarget)/(2.2-self.TnTarget),0)
 
 
-		freqVec = self.getNotZeroDays(vec1,vec2,vec2,0)
+		freqVec = self.getNotZeroDays(vec1,vec2,vec8,0)
 		FreqPredev = freqVec[0]
 		FreqUntreated = freqVec[1]
 		vec8 = sorted(vec8)
 		cin = 3 * float(vec8[len(vec8)/2])
+		print "len(vec8): " +str(len(vec8))		
 		if(float(self.Base) != float(0.0)):
 			print "using user defined cin"
 			cin = self.Base
@@ -267,13 +268,16 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i]) * EIF <cin):
+			if (float(list3[i]) <cin):
 				continue
 			if i%2==1:
 				vec3.append(list3[i])
 
+
 		FreqTreated = len(vec3)
-		print "FreqTreated: " +str(FreqTreated)
+		print "FreqPredev: " +str(FreqPredev)
+		print "FreqUntreated: " +str(FreqUntreated)
+		print "FreqTreated: " +str(FreqTreated)		
 		RunoffVol = self.SumAllValues(vec3)		
 		ETsum = self.SumAllValues(vec4)
 		VolumeET = ETsum * 60*60*24*1000/1000000
@@ -300,7 +304,7 @@ class StreamHydrologyandWaterquality(Module):
 		Filtflow = []
 		for i in range(len(vecBase)):
 			Filtflow.append(float(vec6[i]) + float(vecPipe[i]) + float(vecBase[i]))
-			print Filtflow[i]
+#			print Filtflow[i]
 			if(Filtflow[i] > cin):
 				Filtflow[i] = 0
 		print "super summe of DOOOOOMMM: "+str(math.fsum(Filtflow))
@@ -466,8 +470,8 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
-		f.write("Export_TS (Baseflow, Outflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
-		f.write("Export_TS (Pipe Flow, Outflow, \"Pipe Flow"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Baseflow, Inflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Pipe Flow, Inflow, \"Pipe Flow"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS ("+str(name)+", Inflow, \"TreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(number)+".TXT\",1d)\n")
 		f.close()
