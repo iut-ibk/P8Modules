@@ -58,6 +58,8 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
         self.gridLayout.addWidget(self.city_combo, 1,0,1,1)
 
         self.spb_city = QtGui.QSpinBox(self.scrollAreaWidgetContents)
@@ -264,7 +266,7 @@ class Ui_ReadTableSecondary_GUI2(object):
 
         self.verticalLayout.addWidget(self.scrollArea)
         self.table = QtGui.QTableWidget(ReadTableSecondary_GUI2)
-        self.table.setRowCount(5)
+        self.table.setRowCount(7)
         self.table.setColumnCount(4)
         self.table.setColumnWidth(0,210)
         self.verticalLayout.addWidget(self.table)
