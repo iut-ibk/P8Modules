@@ -134,6 +134,12 @@ class StreamHydrologyandWaterquality(Module):
 		self.FV = []
 		self.tmpFile = workpath + "EBRtable.txt"
 		self.WQtable = workpath + "WQtable.txt"
+
+		self.tableTSS = []
+		self.tableTP = []
+		self.tableTN = []
+		
+		'''		t
 		if self.SimulationCity == 0:
 			AnnualRain = 520
 		elif self.SimulationCity == 1:
@@ -146,6 +152,10 @@ class StreamHydrologyandWaterquality(Module):
 			AnnualRain = 1175
 		elif self.SimulationCity == 5:
 			AnnualRain = self.AnnualUserRain
+		'''
+		# his code is no longer used because we set the  the annualUserRain when the user selects a city in the GUI
+		# no need to check which value the simulation city has 
+		AnnualRain = self.AnnualUserRain
 		print "AnnualRain : " + str(AnnualRain)
 
 		'''version with musicnr
@@ -230,6 +240,11 @@ class StreamHydrologyandWaterquality(Module):
 			f = open(self.WQtable,'w')
 			f.write(ntpath.basename(realstring) + ","+str(tss)+","+str(tp)+","+str(tn) + "," + str(self.TssTarget) + "," + str(self.TpTarget) + "," +str(self.TnTarget) + "\n")
 			f.close()
+
+		self.tableTN.append(float(tn))
+		self.tableTP.append(float(tp))
+		self.tableTSS.append(float(tss))
+
 		tss = 1-max((float(tss)-self.TssTarget)/(150-self.TssTarget),0)
 		tp = 1-max((float(tp)-self.TpTarget)/(0.35-self.TpTarget),0)
 		tn = 1-max((float(tn)-self.TnTarget)/(2.2-self.TnTarget),0)
@@ -330,6 +345,7 @@ class StreamHydrologyandWaterquality(Module):
 		FvPasture = np.abs(1-(((Px2-Px1)*(Py2-AnnualRain))/(Py2-Py1))-Px2)
 		print "FvForest: " + str(FvForest)
 		print "FvPasture: " + str(FvPasture)
+
 		#if FVg < FvForest:
 		#	tmpFV = FVg/FvForest
 		#elif FVg > FvPasture:
@@ -339,7 +355,12 @@ class StreamHydrologyandWaterquality(Module):
 
 		print "tmpFV: " + str(tmpFV)
 		tmpFF = FreqTreated
-		tmpVR = ((VolumeET+VolumeInf)*1000)/((imparea*10000*AnnualRain/1000))
+
+		if(self.ConsiderFluxes):
+			tmpVR = ((VolumeET+VolumeInf)*1000)/((imparea*10000*AnnualRain/1000))
+		else:
+			tmpVR = ((VolumeET)*1000)/((imparea*10000*AnnualRain/1000))		
+
 		print "tmp VR: " + str(tmpVR)
 		tmpWQ = (tss+tn+tp)/3
 		print "tmp WQ: " + str(tmpWQ)
