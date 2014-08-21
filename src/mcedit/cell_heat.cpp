@@ -87,7 +87,7 @@ void Cell_heat::update(int mode,int viewmode)
         double g=0;
         double b=0;
         double techcover=0;
-        for (int i=0;i<11;i++)
+        for (int i=0;i<15;i++)
         {
             r+=(*teccol)[i]->redF()*v[i]/100.0;
             g+=(*teccol)[i]->greenF()*v[i]/100.0;
