@@ -43,22 +43,25 @@ mcedit_heat::mcedit_heat(p8microclimate_heat_gui *parent, QString bgimage, QStri
     // v6 new QColor(81,49,36,255)
     // v7 new QColor(35,24,19,255)
 
+
+
+
     //add colors according to the techs in list
-    teccol.append(new QColor(4,224,23,255));
-    teccol.append(new QColor(179,209,23,255));
-    teccol.append(new QColor(179,209,23,255));
-    teccol.append(new QColor(179,209,23,255));
-    teccol.append(new QColor(7,224,126,255));
-    teccol.append(new QColor(7,224,126,255));
-    teccol.append(new QColor(181,90,30,255));
-    teccol.append(new QColor(181,90,30,255));
-    teccol.append(new QColor(181,90,30,255));
-    teccol.append(new QColor(181,90,30,255));
-    teccol.append(new QColor(181,90,30,255));
+    teccol.append(new QColor(140,176,135,255));    //v5
+    teccol.append(new QColor(9,0,173,255));  //v4
     teccol.append(new QColor(9,0,173,255));
+    teccol.append(new QColor(9,0,173,255));
+    teccol.append(new QColor(4,224,23,255));   //v0
+    teccol.append(new QColor(4,224,23,255));
+    teccol.append(new QColor(7,224,126,255));   //v2
+    teccol.append(new QColor(7,224,126,255));
+    teccol.append(new QColor(7,224,126,255));
+    teccol.append(new QColor(7,224,126,255));
+    teccol.append(new QColor(7,224,126,255));
+    teccol.append(new QColor(181,90,30,255));     //v3
+    teccol.append(new QColor(81,49,36,255));    //v6
     teccol.append(new QColor(81,49,36,255));
-    teccol.append(new QColor(81,49,36,255));
-    teccol.append(new QColor(35,24,19,255));
+    teccol.append(new QColor(35,24,19,255));    //v7
 
 
 
@@ -363,6 +366,7 @@ void mcedit_heat::tecLoad(QString tfilename)
         {
             QTextStream stream;
             stream.setDevice(&file);
+            stream.readLine(); //skip first line because of headers
             QList<Cell_heat*> sortlist=cellmap.values();
             qSort(sortlist.begin(),sortlist.end(),cellCompare);
 
@@ -465,6 +469,8 @@ void mcedit_heat::tecSave(QString filename)
         file.open(QIODevice::WriteOnly|QIODevice::Text);
         QTextStream stream;
         stream.setDevice(&file);
+        //headers
+        stream << "Block Tree Water Pond and basin Wetland Dry Grass Swale Irrigated Grass Biofilter Inf system Green roof Green wall Roof Road Porous Pav Concrete" << endl;
         QList<Cell_heat*> sortlist=cellmap.values();
         qSort(sortlist.begin(),sortlist.end(),cellCompare);
         foreach (Cell_heat *cell, sortlist)
