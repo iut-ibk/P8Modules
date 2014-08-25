@@ -1,6 +1,6 @@
 #include "celldialog_heat.h"
 #include "ui_celldialog_heat.h"
-
+#include <QMessageBox>
 
 #include <QCloseEvent>
 
@@ -42,6 +42,7 @@ CellDialog_heat::CellDialog_heat(QWidget *parent,double *v1,double *v2,double *v
     ui->v13->setValue(*v13);
     ui->v14->setValue(*v14);
     ui->v15->setValue(*v15);
+    this->total = 0;
 
 }
 
@@ -81,6 +82,15 @@ void CellDialog_heat::closeEvent(QCloseEvent *ev)
         *v6=ui->v6->value();
     }
     */
+    if(this->total < 100.0)
+    {
+        QMessageBox::warning(this,"Warning","The sum of the land cover fractions should be 100%");
+        ev->ignore();
+    }
+    else
+    {
+        ev->accept();
+    }
 }
 
 void CellDialog_heat::getValues(double *v1,double *v2,double *v3,double *v4,double *v5,double *v6,double *v7,double *v8,double *v9,double *v10,double *v11,double *v12,double *v13,double *v14,double *v15)
@@ -102,3 +112,77 @@ void CellDialog_heat::getValues(double *v1,double *v2,double *v3,double *v4,doub
     *v15=ui->v15->value();
 
 }
+
+void CellDialog_heat::on_v1_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v2_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v3_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v4_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v5_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v6_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v7_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v8_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v9_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v10_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v11_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v12_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v13_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v14_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+void CellDialog_heat::on_v15_valueChanged(double arg1)
+{
+    this->getTotal();
+}
+
+void CellDialog_heat::getTotal()
+{
+    this->total = ui->v1->value() + ui->v2->value() + ui->v3->value() + ui->v4->value() + ui->v5->value() +
+            ui->v6->value() + ui->v7->value() + ui->v8->value() + ui->v9->value() + ui->v10->value() +
+            ui->v11->value() + ui->v12->value() + ui->v13->value() + ui->v14->value() + ui->v15->value();
+    if(this->total > 100.0)
+        QMessageBox::warning(this,"Warning","The sum of the land cover fractions should be 100%");
+    ui->le_total->setText(QString::number(this->total)+"%");
+
+}
+
+
