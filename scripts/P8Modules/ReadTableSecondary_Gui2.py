@@ -80,7 +80,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.module.setParameterValue("RainRecharge",str(self.ui.le_rainrecharge.text()))
 	self.module.setParameterValue("RainBaseflow",str(self.ui.le_rainbaseflow.text()))
 	self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
-	if(self.ui.chkb_flux.isChecked):
+	if(self.ui.chkb_flux.isChecked()):
 		self.module.setParameterValue("ConsiderFluxes",str(1))
 	else:
 		self.module.setParameterValue("ConsiderFluxes",str(0))
@@ -163,7 +163,9 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	f.write("Frequency of Runoff Days (days/year)," + str(self.module.FF) + "\n")
 	f.write("Proportion of Total Volume Reduction (%)," + str(self.module.VR) + "\n")
 	f.write("Proportion of Filtered Flow Volume  (%)," +str(self.module.FV) + "\n")
-	f.write("Water Quality Index," + str(self.module.WQ) + "\n")
+	f.write("TSS mean concentration (mg/L)," + str(self.module.tableTSS)+"\n")
+	f.write("TP mean concentration (mg/L)," + str(self.module.tableTP)+"\n")
+	f.write("TN mean concentration (mg/L)," + str(self.module.tableTN)+"\n")
 	f.close()
     def plot(self):
 	'''mpl.rcParams['toolbar'] = 'None'
@@ -224,4 +226,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	r.clipboard_append("Stream Hydrology and Water quality\t%\nFrequency of Runoff Days (days/year)\t" + str(self.module.FF) + 
 	"\nProportion of Total Volume Reduction (%)\t" + str(self.module.VR) + 
 	"\nProportion of Filtered Flow Volume \t" +str(self.module.FV) + 
-	"\nWater Quality Index\t" + str(self.module.WQ) + "\n")
+	"\nWater Quality Index\t" + str(self.module.WQ) +
+	"\nTSS mean concentration (mg/L)\t" + str(self.module.tableTSS) + 
+	"\nTP mean concentration (mg/L)\t" + str(self.module.tableTP) + 
+	"\nTN mean concentration (mg/L)\t" + str(self.module.tableTN)+"\n")
