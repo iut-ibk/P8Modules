@@ -81,6 +81,9 @@ class StreamHydrologyandWaterquality(Module):
 
 	def run(self):
 		self.ReceivBas = ""
+		self.hasBase = False
+		self.hasPipe = False
+		self.hasInfil = False
 		realstring = ""
 		self.ImpAreaToTreatment = 0.0
 		settings = QSettings()
@@ -177,8 +180,10 @@ class StreamHydrologyandWaterquality(Module):
 		list6 = self.readFileToList(workpath + "Exfiltration"+str(number)+".TXT")
 		list7 = self.readFileToList(workpath + "WQ"+str(number)+".TXT")
 		list8 = self.readFileToList(workpath + "PredevelopBaseflowFrequency"+str(number)+".TXT")
-		list9 = self.readFileToList(workpath + "Baseflow"+str(number)+".TXT")
-		list10 = self.readFileToList(workpath + "Pipe Flow"+str(number)+".TXT")
+		if(self.hasBase):
+			list9 = self.readFileToList(workpath + "Baseflow"+str(number)+".TXT")
+		if(self.hasPipe):
+			list10 = self.readFileToList(workpath + "Pipe Flow"+str(number)+".TXT")
 
 
 		vec1 = []
@@ -209,8 +214,16 @@ class StreamHydrologyandWaterquality(Module):
 			vec4.append(list4[i])
 			vec6.append(list6[i])
 			vec10.append(list3[i])
-			vecBase.append(list9[i])
-			vecPipe.append(list10[i])
+
+			#if no base or pipe in msf file, there wont be any output from music so we just fill with zeros
+			if(self.hasBase):
+				vecBase.append(list9[i])
+			else:
+				vecBase.append(0)
+			if(self.hasPipe):
+				vecPipe.append(list10[i])
+			else:
+				vecPipe.append(0)
 
 		for i in range(len(list7)):
 			if i<4 or ((i)%4==0):
@@ -241,10 +254,9 @@ class StreamHydrologyandWaterquality(Module):
 			f.write(ntpath.basename(realstring) + ","+str(tss)+","+str(tp)+","+str(tn) + "," + str(self.TssTarget) + "," + str(self.TpTarget) + "," +str(self.TnTarget) + "\n")
 			f.close()
 
-		self.tableTN.append(float(tn))
-		self.tableTP.append(float(tp))
-		self.tableTSS.append(float(tss))
-
+		self.tableTN.append(round(float(tn),2))
+		self.tableTP.append(round(float(tp),2))
+		self.tableTSS.append(round(float(tss),2))
 		tss = 1-max((float(tss)-self.TssTarget)/(150-self.TssTarget),0)
 		tp = 1-max((float(tp)-self.TpTarget)/(0.35-self.TpTarget),0)
 		tn = 1-max((float(tn)-self.TnTarget)/(2.2-self.TnTarget),0)
@@ -309,6 +321,7 @@ class StreamHydrologyandWaterquality(Module):
 				Filtflow[i] = 0
 		print "super summe of DOOOOOMMM: "+str(math.fsum(Filtflow))
 
+		print self.ImpAreaToTreatment
 		TreatFiltVol = math.fsum(Filtflow)* 60*60*24*1000/1000000
 		FVg=TreatFiltVol *1000 /(self.ImpAreaToTreatment*10000*AnnualRain/1000)
 
@@ -470,8 +483,10 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
-		f.write("Export_TS (Baseflow, Inflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
-		f.write("Export_TS (Pipe Flow, Inflow, \"Pipe Flow"+str(number)+".TXT\",1d)\n")
+		if(self.hasBase):
+			f.write("Export_TS (Baseflow, Inflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
+		if(self.hasPipe):
+			f.write("Export_TS (Pipe Flow, Inflow, \"Pipe Flow"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS ("+str(name)+", Inflow, \"TreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(number)+".TXT\",1d)\n")
 		f.close()
@@ -729,7 +744,6 @@ class StreamHydrologyandWaterquality(Module):
 				baseflowlist.append(source_id)
 			'''
 
-
 		for ID in impnodes:
 			if(ID in StartNodeConnectionsPrimary):
 				end_node = StartNodeConnectionsPrimary[ID]
@@ -785,8 +799,16 @@ class StreamHydrologyandWaterquality(Module):
 		umusic.writeMUSICjunction2(fileOut, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID+5,areaSumID+7)
 
-		umusic.writeMUSICjunction2(fileOut,"Baseflow",areaSumID+8,0,0)
-		umusic.writeMUSICjunction2(fileOut,"Pipe Flow",areaSumID+9,0,0)
+
+
+		if(len(baseflowlist) != 0):
+			self.hasBase = True
+			umusic.writeMUSICjunction2(fileOut,"Baseflow",areaSumID+8,0,0)
+		if(len(pipelist) != 0):
+			self.hasPipe = True
+			umusic.writeMUSICjunction2(fileOut,"Pipe Flow",areaSumID+9,0,0)
+		if(len(infillist) != 0):
+			self.hasInfil = True
 
 		if(foundDetention):
 			for nodeid in detIds:
@@ -839,18 +861,24 @@ class StreamHydrologyandWaterquality(Module):
 		#linknig infilflux baseflow and pipeflow nodes to receiving or outbasin node
 		if(OutBasId == 0 and receivingnodeid != 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
-			umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
-			umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
+			if(self.hasBase):
+				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
+			if(self.hasPipe):
+				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
 		if(OutBasId != 0 and receivingnodeid == 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(OutBasId))
-			umusic.writeMUSIClink(fileOut, areaSumID+8,int(OutBasId))
-			umusic.writeMUSIClink(fileOut, areaSumID+9,int(OutBasId))
+			if(self.hasBase):
+				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
+			if(self.hasPipe):
+				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
 			self.ReceivBas = receiveBasName
 		if(OutBasId != 0 and receivingnodeid != 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
-			umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
-			umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
+			if(self.hasBase):
+				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
+			if(self.hasPipe):
+				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
 		if (OutBasId == 0 and receivingnodeid == 0):
 			print "didnt find any receiving nodes!!!"
@@ -876,12 +904,15 @@ class StreamHydrologyandWaterquality(Module):
 		else:
 			for r in reclist:
 				umusic.writeMUSIClink(fileOut,r,int(OutBasId))
-		for p in pipelist:
-			umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)
-		for i in infillist:
-			umusic.writeMUSIClinkToInfilFlux2(fileOut,i,areaSumID+4)
-		for b in baseflowlist:
-			umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
+		if(self.hasPipe):
+			for p in pipelist:
+				umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)
+		if(self.hasInfil):
+			for i in infillist:
+				umusic.writeMUSIClinkToInfilFlux2(fileOut,i,areaSumID+4)
+		if(self.hasBase):
+			for b in baseflowlist:
+				umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
 
 
 
