@@ -869,9 +869,9 @@ class StreamHydrologyandWaterquality(Module):
 		if(OutBasId != 0 and receivingnodeid == 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(OutBasId))
 			if(self.hasBase):
-				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
+				umusic.writeMUSIClink(fileOut, areaSumID+8,int(OutBasId))
 			if(self.hasPipe):
-				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
+				umusic.writeMUSIClink(fileOut, areaSumID+9,int(OutBasId))
 			self.ReceivBas = receiveBasName
 		if(OutBasId != 0 and receivingnodeid != 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
