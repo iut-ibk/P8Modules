@@ -231,7 +231,7 @@ void Microclimate_heat::run()
             while(!cells.empty())
             {
                 QPointF p = cells.back();
-                std::cout << "input: "<< imp->getCell(p.x(),p.y()) << endl;
+                //std::cout << "input: "<< imp->getCell(p.x(),p.y()) << endl;
                 switch((int)imp->getCell(p.x(),p.y()))
                 {
                     case 1:
@@ -317,7 +317,8 @@ void Microclimate_heat::run()
             //save value
             lst->setCell(j,i,tmpInCurrentCell);
 
-            //convert techcouters to percentages
+            /*
+            //convert techcounters to percentages
             tree = tree * 100 / totalcounter;
             water = water * 100 / totalcounter;
             grass = grass * 100 / totalcounter;
@@ -325,7 +326,7 @@ void Microclimate_heat::run()
             roof = roof * 100 / totalcounter;
             road = road * 100 / totalcounter;
             concrete = concrete * 100 / totalcounter;
-
+            */
 
             if(wsudempty)
             {
@@ -734,7 +735,7 @@ QList<double> Microclimate_heat::getTechAreasForCell(int x, int y,double w, QLis
     }*/
     if (pos > table.size()-1)
         return zero;
-    return table[pos];
+    return table[pos + 1]; // +1 because of the header line in the mcd file
 }
 
 double Microclimate_heat::calcDeltaLst(QList<double> t, double frac)
