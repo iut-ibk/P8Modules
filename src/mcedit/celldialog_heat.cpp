@@ -43,29 +43,13 @@ CellDialog_heat::CellDialog_heat(QWidget *parent,double *v1,double *v2,double *v
     ui->v14->setValue(*v14);
     ui->v15->setValue(*v15);
     this->total = 0;
-
+    this->canceled = false;
 }
 
 
 
 CellDialog_heat::~CellDialog_heat()
 {
-    *v1=ui->v1->value();
-    *v2=ui->v2->value();
-    *v3=ui->v3->value();
-    *v4=ui->v4->value();
-    *v5=ui->v5->value();
-    *v6=ui->v6->value();
-    *v7=ui->v7->value();
-    *v8=ui->v8->value();
-    *v9=ui->v9->value();
-    *v10=ui->v10->value();
-    *v11=ui->v11->value();
-    *v12=ui->v12->value();
-    *v13=ui->v13->value();
-    *v14=ui->v14->value();
-    *v15=ui->v15->value();
-
     delete ui;
 }
 
@@ -82,13 +66,15 @@ void CellDialog_heat::closeEvent(QCloseEvent *ev)
         *v6=ui->v6->value();
     }
     */
-    if(this->total < 100.0)
+
+    if(this->total != 100.0)
     {
         QMessageBox::warning(this,"Warning","The sum of the land cover fractions should be 100%");
         ev->ignore();
     }
     else
     {
+        this->saveValues();
         ev->accept();
     }
 }
@@ -179,10 +165,38 @@ void CellDialog_heat::getTotal()
     this->total = ui->v1->value() + ui->v2->value() + ui->v3->value() + ui->v4->value() + ui->v5->value() +
             ui->v6->value() + ui->v7->value() + ui->v8->value() + ui->v9->value() + ui->v10->value() +
             ui->v11->value() + ui->v12->value() + ui->v13->value() + ui->v14->value() + ui->v15->value();
-    if(this->total > 100.0)
-        QMessageBox::warning(this,"Warning","The sum of the land cover fractions should be 100%");
-    ui->le_total->setText(QString::number(this->total)+"%");
+    ui->le_total->setText(QString::number(100.0 - this->total)+"%");
 
 }
 
 
+
+void CellDialog_heat::on_pb_ok_released()
+{
+    this->close();
+}
+
+void CellDialog_heat::on_pb_cancel_released()
+{
+    this->canceled = true;
+    this->close();
+}
+
+void CellDialog_heat::saveValues()
+{
+    *v1=ui->v1->value();
+    *v2=ui->v2->value();
+    *v3=ui->v3->value();
+    *v4=ui->v4->value();
+    *v5=ui->v5->value();
+    *v6=ui->v6->value();
+    *v7=ui->v7->value();
+    *v8=ui->v8->value();
+    *v9=ui->v9->value();
+    *v10=ui->v10->value();
+    *v11=ui->v11->value();
+    *v12=ui->v12->value();
+    *v13=ui->v13->value();
+    *v14=ui->v14->value();
+    *v15=ui->v15->value();
+}

@@ -34,6 +34,7 @@ private:
      double *v14;
      double *v15;
      double total;
+     bool canceled;
      Ui::CellDialog_heat *ui;
 
 
@@ -55,7 +56,9 @@ private slots:
      void on_v14_valueChanged(double arg1);
      void on_v15_valueChanged(double arg1);
      void getTotal();
-     void on_buttonBox_accepted();
+     void on_pb_ok_released();
+     void on_pb_cancel_released();
+     void saveValues();
 };
 
 #endif // CELLDIALOG_HEAT_H
