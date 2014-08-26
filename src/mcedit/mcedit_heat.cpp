@@ -409,6 +409,7 @@ void mcedit_heat::resLoad(int no, QString tfilename)
         QList<Cell_heat*> sortlist=cellmap.values();
         qSort(sortlist.begin(),sortlist.end(),cellCompare);
         int linecount=0;
+        stream.readLine();  //skip the headers line
         while (!stream.atEnd())
         {
             stream.readLine();
@@ -418,6 +419,7 @@ void mcedit_heat::resLoad(int no, QString tfilename)
         if (linecount==sortlist.size())
         {
             stream.seek(0);
+            stream.readLine(); //skip the headers line again
             foreach (Cell_heat *cell, sortlist)
             {
                 QStringList linelist=stream.readLine().split(",");
