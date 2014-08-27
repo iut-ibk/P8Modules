@@ -172,7 +172,7 @@ void Microclimate_heat::run()
     testgrid->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(testgrid);
 
-    int treeCover,waterCover,pondCover,wetlandCover,nonIrrGrassCover,swaleCover,grassCover,bioCover,infilCover,greenRoofCover,greenWallCover,roofCover,roadCover,pavementCover,concreteCover;
+    double treeCover,waterCover,pondCover,wetlandCover,nonIrrGrassCover,swaleCover,grassCover,bioCover,infilCover,greenRoofCover,greenWallCover,roofCover,roadCover,pavementCover,concreteCover;
     double totalcounter,coverCounter;
     QList<double> wsudline;
 
@@ -181,7 +181,7 @@ void Microclimate_heat::run()
 
 
 
-    int tree,water,grass,irrGrass,roof,road,concrete;
+    double tree,water,grass,irrGrass,roof,road,concrete;
     //variables for temp calculation
     //variables for tech % covering
     QList<QList<double> > readTechs;
@@ -504,7 +504,9 @@ void Microclimate_heat::run()
             lstAfterWsud->setCell(j,i,tmpInCurrentCell);
 
             //calc temp reduction
-            lstReduction->setCell(j,i,lst->getCell(j,i) - lstAfterWsud->getCell(j,i));
+            double reduction = lst->getCell(j,i) - lstAfterWsud->getCell(j,i);
+            reduction = QString::number(reduction,'f',2).toDouble();  // apparently the best way to round doubles ....
+            lstReduction->setCell(j,i,reduction);
             }
             //calc percentages for cover
             coverCounter = treeCover + waterCover + pondCover + wetlandCover + nonIrrGrassCover + swaleCover + grassCover
