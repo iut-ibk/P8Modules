@@ -1,7 +1,7 @@
 #include "celldialog_heat.h"
 #include "ui_celldialog_heat.h"
 #include <QMessageBox>
-
+#include <math.h>
 #include <QCloseEvent>
 
 CellDialog_heat::CellDialog_heat(QWidget *parent,double *v1,double *v2,double *v3,double *v4,double *v5,double *v6,double *v7,double *v8,double *v9,double *v10,double *v11,double *v12,double *v13,double *v14,double *v15) :
@@ -44,6 +44,7 @@ CellDialog_heat::CellDialog_heat(QWidget *parent,double *v1,double *v2,double *v
     ui->v15->setValue(*v15);
     this->total = 0;
     this->canceled = false;
+    this->getTotal();
 }
 
 
@@ -67,7 +68,7 @@ void CellDialog_heat::closeEvent(QCloseEvent *ev)
     }
     */
 
-    if(this->total != 100.0)
+    if(QString::number(this->total,'f',1).toDouble() != 100.0)
     {
         QMessageBox::warning(this,"Warning","The sum of the land cover fractions should be 100%");
         ev->ignore();
@@ -162,10 +163,11 @@ void CellDialog_heat::on_v15_valueChanged(double arg1)
 
 void CellDialog_heat::getTotal()
 {
+
     this->total = ui->v1->value() + ui->v2->value() + ui->v3->value() + ui->v4->value() + ui->v5->value() +
             ui->v6->value() + ui->v7->value() + ui->v8->value() + ui->v9->value() + ui->v10->value() +
             ui->v11->value() + ui->v12->value() + ui->v13->value() + ui->v14->value() + ui->v15->value();
-    ui->le_total->setText(QString::number(100.0 - this->total)+"%");
+    ui->le_total->setText(QString::number(100.0 - this->total,'f',1)+"%");
 
 }
 
