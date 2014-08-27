@@ -116,12 +116,18 @@ void Cell_heat::update(int mode,int viewmode)
     }
     if (mode==1) // lst change
     {
-        double maxdt=15;
+        double maxdt=20;
         int col=255.0*fabs((res[0])/maxdt);
+        int alpha = 127;
+        if(col > 255)
+        {
+            col = 255;
+            alpha = 220;
+        }
         if (res[0]>0)
-            brush.setColor(QColor(255,255-col,255-col,127));
+            brush.setColor(QColor(255,255-col,255-col,alpha));
         if (res[0]<0)
-            brush.setColor(QColor(255-col,255-col,255,127));
+            brush.setColor(QColor(255-col,255-col,255,alpha));
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
     }
