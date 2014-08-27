@@ -595,7 +595,7 @@ void mcedit_heat::cellupdate()
         }
         if (mode==1)
         {
-            setScale(-15,15,0);
+            setScale(-20,20,0);
         }
         if (mode==2)
         {
