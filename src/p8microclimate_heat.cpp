@@ -558,6 +558,7 @@ void Microclimate_heat::run()
     exportMCtemp(lstAfterWsud,QString::fromStdString(workingDir)+"/LST after WSUD.mcd",1);
     //exportRasterData(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.txt");
     exportMCtemp(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.mcd",-1);
+    exportRasterData(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.TXT",-1);
     /*exportRasterData(lstReductionAir,QString::fromStdString(workingDir)+"/Reduction in Air Temperature.txt");
     exportMCtemp(lstReductionAir,QString::fromStdString(workingDir)+"/Reduction in Air Temperature.mcd",1);
     */
@@ -808,7 +809,7 @@ double Microclimate_heat::calcDeltaLst(QList<double> t, double frac)
     return res;
 }
 
-void Microclimate_heat::exportRasterData(DM::RasterData *r, QString filename)
+void Microclimate_heat::exportRasterData(DM::RasterData *r, QString filename,double scale)
 {
     QFile file (filename);
     if(file.open(QIODevice::WriteOnly))
@@ -825,7 +826,7 @@ void Microclimate_heat::exportRasterData(DM::RasterData *r, QString filename)
         {
             for(int j = 0; j< r->getWidth(); j++)
             {
-                outstream << r->getCell(j,i) << " ";
+                outstream << r->getCell(j,i)*scale << " ";
             }
             outstream << endl;
         }
@@ -840,7 +841,7 @@ void Microclimate_heat::exportMCtemp(DM::RasterData *r, QString filename, double
     {
         QTextStream outstream(&file);
         //headers
-        outstream << "Block Tree Water Pond and basin Wetland Dry Grass Swale Irrigated Grass Biofilter Inf system Green roof Green wall Roof Road Porous Pav Concrete" << endl;
+        outstream << "Block, Tree, Water, Pond and basin, Wetland dry grass, Swale, Irrigated grass, Biofilter, Inf system, Green roof, Green wall, Roof, Road, Porous pav, Concrete" << endl;
         for(int i = 0; i<r->getHeight(); i++)
         {
             for(int j = 0; j<r->getWidth();j++)

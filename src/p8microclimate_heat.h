@@ -39,7 +39,7 @@ public:
     QList<QList<double> > readWsud(QString filename);
     QList<double> getTechAreasForCell(int x, int y,double width, QList<QList<double> >table);
     double calcDeltaLst(QList<double> t, double frac);
-    void exportRasterData(DM::RasterData * r, QString filename);
+    void exportRasterData(DM::RasterData * r, QString filename,double scale);
     bool isleft(DM::Node a,DM::Node b,DM::Node c);
     DM::RasterData * calcReductionAirTemp(DM::RasterData * r);
     void exportMCtemp(DM::RasterData *r, QString filename, double scale);
