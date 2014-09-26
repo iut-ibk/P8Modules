@@ -101,7 +101,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 			datapath = datapath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Csv File", datapath, self.tr("Csv Files (*.csv)"))
 		if(filename != ""):
-			self.module.setParameterValue("CsvFile", str(QFileInfo(filename).fileName()))
+			self.module.setParameterValue("Csvfile", str(QFileInfo(filename).fileName()))
 			self.ui.le_r.setText(QFileInfo(filename).fileName())
 			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
 			copyfile(filename,workpath + QFileInfo(filename).fileName())
@@ -115,7 +115,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 			datapath = datapath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Select ET File", datapath, self.tr("Text Files (*.txt)"))
 		if(filename != ""):
-			self.module.setParameterValue("ETFile", str(QFileInfo(filename).fileName()))
+			self.module.setParameterValue("ETfile", str(QFileInfo(filename).fileName()))
 			self.ui.le_r2.setText(QFileInfo(filename).fileName())
 			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
 			copyfile(filename,workpath + QFileInfo(filename).fileName())
