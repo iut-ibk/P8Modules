@@ -5,7 +5,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pydynamind import *
 import math
-import ubeats_music_interface as umusic
 from operator import itemgetter
 import numpy as np
 import os
@@ -297,6 +296,10 @@ class StreamErosionIndex(Module):
         f.close()
     def changeMusicFile(self,filename):
         settings = QSettings()
+        if (settings.value("Music").toString().contains("MUSIC 5")):
+            import ubeats_music_interface_5 as umusic
+        else:
+            import ubeats_music_interface as umusic
         workpath = settings.value("workPath").toString() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")

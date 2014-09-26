@@ -6,7 +6,6 @@ import shlex
 import numpy as np
 import os.path
 from subprocess import call
-import ubeats_music_interface as umusic
 import platform
 import ntpath
 import math
@@ -510,6 +509,11 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(nr)+".TXT\",1d)\n")
 		f.close()
 	def convertToSecondaryMusic(self, filename):
+		settings = QSettings()
+		if (settings.value("Music").toString().contains("MUSIC 5")):
+			import ubeats_music_interface_5 as umusic
+		else:
+			import ubeats_music_interface as umusic
 		fileIn = open(filename,"r")
 		filearr = filename.split(".")
 		fileOut = open(filearr[0] + "Secondary." + filearr[1] ,"w")
