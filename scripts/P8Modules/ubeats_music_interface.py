@@ -25,7 +25,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 def createMUSICmsf(path, name):
     f = open(str(path)+str(name)+".msf", 'w')
     return f
-
+def version():
+    print "music version 6"
+    return True
 def writeMUSICheader(f,climatepath):
     path = "C:\\Program Files (x86)\\eWater\\MUSIC 6 6.0.1.547 SL\\Template\\Melbourne 1959 6 Minute.mlb"
     #path = climatepath
