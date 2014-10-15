@@ -43,7 +43,7 @@ class Ui_ReadTable_GUI(object):
 	self.gridLayout.addWidget(self.pb_del, 1,0,1,1)
         self.verticalLayout.addWidget(self.groupBox)
 	self.table = QtGui.QTableWidget(ReadTable_GUI)
-	self.table.setRowCount(6)
+	self.table.setRowCount(7)
 	self.table.setColumnCount(4)
 	self.table.setColumnWidth(0,210)
 	self.table.setColumnWidth(2,110)
