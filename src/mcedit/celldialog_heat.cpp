@@ -67,7 +67,10 @@ void CellDialog_heat::closeEvent(QCloseEvent *ev)
         *v6=ui->v6->value();
     }
     */
-
+    if (canceled)
+    {
+        ev->accept();
+    }
     if(QString::number(this->total,'f',1).toDouble() != 100.0)
     {
         QMessageBox::warning(this,"Warning","The sum of the land cover fractions should be 100%");
