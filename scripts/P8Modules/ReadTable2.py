@@ -106,12 +106,45 @@ class TreatmentPerformanceResultsModule(Module):
 				if(linearr[1].find("OUT_Bas") != -1):
 					receiveBasName = linearr[1]
 					foundOutBas = 1
+		name = ""
+		outid = 0
 		if(OutBasId == 0 and receivingnodeid != 0):
-			return "Receiving Node"
+			name =  "Receiving Node"
+			outid = receivingnodeid
 		if(OutBasId != 0 and receivingnodeid == 0):
-			return receiveBasName
+			name = receiveBasName
+			outid = OutBasId
 		if(OutBasId != 0 and receivingnodeid != 0):
-			return "Receiving Node"
+			name = "Receiving Node"
+			outid = receivingnodeid
+
+		infile = open(filename,"r")
+		found = False
+		techid = 0
+		for line in infile:
+			linearr = line.strip("\n").split(",")
+			if(linearr[0] == "Source Node ID"):
+				if(linearr[1] == outid):
+					found = True
+			if(found):      
+				if(linearr[0] == "Target Node ID"):
+					techid = linearr[1]
+					break
+		infile.close()
+		# get name of tech
+		infile = open(filename,"r")
+		for line in infile:
+			linearr = line.strip("\n").split(",")
+			if(linearr[0] == "Node Name"):
+				tmpname = linearr[1]
+			if(linearr[0] == "Node ID" and linearr[1] == techid):
+				name = tmpname
+				break
+		infile.close()      
+		print "techname: " + name
+		return name
+
+
 	def writeBatFile(self,file):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"

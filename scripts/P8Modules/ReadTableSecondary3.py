@@ -863,6 +863,7 @@ class StreamHydrologyandWaterquality(Module):
 		    #umusic.writeMUSIClinkToInfilFlux2(fileOut, k, areaSumID+4)
 
 		#linknig infilflux baseflow and pipeflow nodes to receiving or outbasin node
+		outid = 0
 		if(OutBasId == 0 and receivingnodeid != 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
 			if(self.hasBase):
@@ -870,6 +871,7 @@ class StreamHydrologyandWaterquality(Module):
 			if(self.hasPipe):
 				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
+			outid = receivingnodeid
 		if(OutBasId != 0 and receivingnodeid == 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(OutBasId))
 			if(self.hasBase):
@@ -877,6 +879,7 @@ class StreamHydrologyandWaterquality(Module):
 			if(self.hasPipe):
 				umusic.writeMUSIClink(fileOut, areaSumID+9,int(OutBasId))
 			self.ReceivBas = receiveBasName
+			outid = OutBasId
 		if(OutBasId != 0 and receivingnodeid != 0):
 			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
 			if(self.hasBase):
@@ -884,6 +887,7 @@ class StreamHydrologyandWaterquality(Module):
 			if(self.hasPipe):
 				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
+			outid = receivingnodeid
 		if (OutBasId == 0 and receivingnodeid == 0):
 			print "didnt find any receiving nodes!!!"
 		for l in tanklist:
@@ -919,7 +923,35 @@ class StreamHydrologyandWaterquality(Module):
 				umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
 
 
-
+		#check if outbas last node or if its connected to another technology
+		found = False
+		techid = 0
+		#get tech id from successor
+		fileIn = open(filename,"r")
+		for line in fileIn:
+			linearr = line.strip("\n").split(",")
+			if(linearr[0] == "Source Node ID"):
+				if(linearr[1] == outid):
+					found = True
+			if(found):		
+				if(linearr[0] == "Target Node ID"):
+					techid = linearr[1]
+					break
+		fileIn.close()
+		# get name of tech
+		name = ""
+		fileIn = open(filename,"r")
+		for line in fileIn:
+			linearr = line.strip("\n").split(",")
+			if(linearr[0] == "Node Name"):
+				tmpname = linearr[1]
+			if(linearr[0] == "Node ID" and linearr[1] == techid):
+				name = tmpname
+				break
+		fileIn.close()		
+		if(name != ""):
+			self.ReceivBas = name
+		print "techname: " + self.ReceivBas
 		umusic.writeMUSICfooter(fileOut)
 		fileOut.close()
 		retvals = []

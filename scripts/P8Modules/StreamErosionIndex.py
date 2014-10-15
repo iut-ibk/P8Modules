@@ -430,12 +430,49 @@ class StreamErosionIndex(Module):
         outfile.close()
         print "Impervious Area: " + str(impArea)
         print "Pervious Area: " + str(perArea)
+
+
+        #check for tech after out receiving
+        name = ""
+        outid = 0
         if(OutBasId == 0 and receivingnodeid != 0):
-            self.writeMusicConfigFile(routed,"Receiving Node")
+            outid = receivingnodeid
+            name = "Receiving Node"
         if(OutBasId != 0 and receivingnodeid == 0):
-            self.writeMusicConfigFile(routed,receiveBasName)
+            outid = OutBasId
+            name = receiveBasName
         if(OutBasId != 0 and receivingnodeid != 0):
-            self.writeMusicConfigFile(routed,"Receiving Node")
+            outid = receivingnodeid
+            name = "Receiving Node"
+
+
+        infile = open(filename,"r")
+        found = False
+        techid = 0
+        for line in infile:
+            linearr = line.strip("\n").split(",")
+            if(linearr[0] == "Source Node ID"):
+                if(linearr[1] == outid):
+                    found = True
+            if(found):      
+                if(linearr[0] == "Target Node ID"):
+                    techid = linearr[1]
+                    break
+        infile.close()
+        # get name of tech
+        infile = open(filename,"r")
+        for line in infile:
+            linearr = line.strip("\n").split(",")
+            if(linearr[0] == "Node Name"):
+                tmpname = linearr[1]
+            if(linearr[0] == "Node ID" and linearr[1] == techid):
+                name = tmpname
+                break
+        infile.close()      
+
+
+        print "tech name: " + name
+        self.writeMusicConfigFile(routed,name)
     def getRainEtFile(self):
         settings = QSettings()
         workpath = settings.value("workPath").toString() + "/"
