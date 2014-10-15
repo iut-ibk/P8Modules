@@ -116,7 +116,7 @@ class RainGui(QtGui.QDialog):
             datapath = datapath.replace("/","\\")
         filename = QtGui.QFileDialog.getOpenFileName(self, "Open Rain File", datapath, self.tr("Rain Files (*.nc)"))
         if(filename != ""):
-            self.module.setParameterValue("NetFile", str(QFileInfo(filename).fileName()))
+            self.module.setParameterValue("Netfile", str(QFileInfo(filename).fileName()))
             self.ui.le_r.setText(QFileInfo(filename).fileName())
             settings.setValue("dataPath",QFileInfo(filename).absolutePath())
             copyfile(filename,workpath + QFileInfo(filename).fileName())
