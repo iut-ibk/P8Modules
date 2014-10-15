@@ -105,6 +105,12 @@ class ReadTable_Gui(QtGui.QDialog):
 	    f.write("2,"+str(bars3[0])+","+str(bars3[1])+","+str(bars3[2])+","+str(bars3[3])+"\n")
 	f.close()
 	'''
+	settings = QSettings()
+	if (settings.value("Music").toString().contains("MUSIC 5")):
+		music5 = True
+	else:
+		music5 = False
+
 	f = open(filename,'r')
 	text = shlex.shlex(f.read(),posix = True)
 	text.whitespace = ','
@@ -112,14 +118,25 @@ class ReadTable_Gui(QtGui.QDialog):
 	text.whitespace_split = True
 	liste = list(text)
 	i = 0
-	for rows in range(self.ui.table.rowCount()):
-	    for cols in range(self.ui.table.columnCount()):
-		widget = QtGui.QLineEdit(str(liste[i]))
-		if rows == 0:
-			font = QtGui.QFont()
-			font.setBold(True)		
-			widget.setFont(font)
-		elif cols !=0:
-			widget = QtGui.QLineEdit(str(float(liste[i])))
-		self.ui.table.setCellWidget(rows,cols,widget)
-		i = i + 1
+	colnr = 0
+	rownr = 0
+	rowcounter = self.ui.table.rowCount()
+	colcounter = self.ui.table.columnCount()
+	for rows in range(rowcounter):
+		if rows == 2:
+			if(music5):
+				i = i + 4
+				continue
+		for cols in range(colcounter):
+			widget = QtGui.QLineEdit(str(liste[i]))
+			if rows == 0:
+				font = QtGui.QFont()
+				font.setBold(True)		
+				widget.setFont(font)
+			elif cols !=0:
+				widget = QtGui.QLineEdit(str(float(liste[i])))
+			self.ui.table.setCellWidget(rownr,colnr,widget)
+			colnr = colnr + 1
+			i = i + 1
+		rownr = rownr + 1
+		colnr = 0
