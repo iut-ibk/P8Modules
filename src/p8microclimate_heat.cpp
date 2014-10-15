@@ -1,4 +1,4 @@
-#include "p8microclimate_heat.h".h"
+#include "p8microclimate_heat.h"
 #include "p8microclimate_heat_gui.h"
 #include "math.h"
 #include <QWidget>
@@ -11,6 +11,8 @@
 #include <QStringList>
 #include <QFileDialog>
 #include <QSettings>
+#include <boost/random.hpp>
+#include <boost/random/normal_distribution.hpp>
 
 //DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
 DM_DECLARE_CUSTOM_NODE_NAME(Microclimate_heat,"Microclimate Extreme Heat", "Scenario Simulation and Assessment")
@@ -43,9 +45,11 @@ void Microclimate_heat::init()
 {
     //DM::View shape("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);
+    DM::View MCDs("MCDs",DM::COMPONENT,DM::READ);
     std::vector<DM::View> vdata;
     //vdata.push_back(shape);
     vdata.push_back(raster);
+    vdata.push_back(MCDs);
     this->addData("City", vdata);
 }
 
@@ -56,20 +60,31 @@ void Microclimate_heat::run()
 
     //DM::View topo("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);
+    DM::View MCDs("MCDs",DM::COMPONENT,DM::READ);
     DM::System * data = this->getData("City");
     DM::RasterData * tmpimp = this->getRasterData("City",raster);
     DM::RasterData * imp = new DM::RasterData(tmpimp->getWidth(),tmpimp->getHeight(),0,0,tmpimp->getXOffset(),tmpimp->getYOffset());
     imp->setSize(tmpimp->getWidth(),tmpimp->getHeight(),tmpimp->getCellSizeX(),tmpimp->getCellSizeY(),tmpimp->getXOffset(),tmpimp->getYOffset());
+    std::map<std::string, DM::Component*> cmps = data->getAllComponentsInView(MCDs);
+    std::cout << cmps.size() << std::endl;
+    DM::Component * comp = cmps.begin()->second;
+    bool useMCD;
+    if(comp->getAttribute("useMCD")->getString() == "false")
+        useMCD = false;
+    else
+        useMCD = true;
+    QList<QList<double> > input = readWsud(QString(this->workingDir.c_str()) + "/" + QString(comp->getAttribute("MCDFilename")->getString().c_str()));
 
-
-    for(int i = 0;i<imp->getHeight();i++)
+    if(!useMCD)
     {
-        for(int j = 0;j<imp->getWidth();j++)
+        for(int i = 0;i<imp->getHeight();i++)
         {
-            imp->setCell(j,i,tmpimp->getCell(j,imp->getHeight()-1-i));
+            for(int j = 0;j<imp->getWidth();j++)
+            {
+                imp->setCell(j,i,tmpimp->getCell(j,imp->getHeight()-1-i));
+            }
         }
     }
-
 
     //getting x and y edges of the shapefile
     //with that information and the cellsize we can build the grid
@@ -224,82 +239,122 @@ void Microclimate_heat::run()
             pavementCover = 0;
             concreteCover = 0;
 
-            //get all smaller cells in the new big cell
-            vector<QPointF> cells = getCoveringCells(j*gridsize,i*gridsize,gridsize,imp->getCellSizeX());
-
-            //loop through all smaller cells and check what landcover it has
-            while(!cells.empty())
+            if(!useMCD)
             {
-                QPointF p = cells.back();
-                //std::cout << "input: "<< imp->getCell(p.x(),p.y()) << endl;
-                switch((int)imp->getCell(p.x(),p.y()))
+                //get all smaller cells in the new big cell
+                vector<QPointF> cells = getCoveringCells(j*gridsize,i*gridsize,gridsize,imp->getCellSizeX());
+
+                //loop through all smaller cells and check what landcover it has
+                while(!cells.empty())
                 {
-                    case 1:
-                        tree++;
-                        treeCover++;
-                        break;
-                    case 2:
-                        water++;
-                        waterCover++;
-                        break;
-                    case 3:
-                        water++;
-                        pondCover++;
-                        break;
-                    case 4:
-                        water++;
-                        wetlandCover++;
-                        break;
-                    case 5:
-                        grass++;
-                        nonIrrGrassCover++;
-                        break;
-                    case 6:
-                        grass++;
-                        swaleCover++;
-                        break;
-                    case 7:
-                        irrGrass++;
-                        grassCover++;
-                        break;
-                    case 8:
-                        irrGrass++;
-                        bioCover++;
-                        break;
-                    case 9:
-                        irrGrass++;
-                        infilCover++;
-                        break;
-                    case 10:
-                        irrGrass++;
-                        greenRoofCover++;
-                        break;
-                    case 11:
-                        irrGrass++;
-                        greenWallCover++;
-                        break;
-                    case 12:
-                        roof++;
-                        roofCover++;
-                        break;
-                    case 13:
-                        road++;
-                        roadCover++;
-                        break;
-                    case 14:
-                        road++;
-                        pavementCover++;
-                        break;
-                    case 15:
-                        concrete++;
-                        concreteCover++;
-                        break;
+                    QPointF p = cells.back();
+                    //std::cout << "input: "<< imp->getCell(p.x(),p.y()) << endl;
+                    switch((int)imp->getCell(p.x(),p.y()))
+                    {
+                        case 1:
+                            tree++;
+                            treeCover++;
+                            break;
+                        case 2:
+                            water++;
+                            waterCover++;
+                            break;
+                        case 3:
+                            water++;
+                            pondCover++;
+                            break;
+                        case 4:
+                            water++;
+                            wetlandCover++;
+                            break;
+                        case 5:
+                            grass++;
+                            nonIrrGrassCover++;
+                            break;
+                        case 6:
+                            grass++;
+                            swaleCover++;
+                            break;
+                        case 7:
+                            irrGrass++;
+                            grassCover++;
+                            break;
+                        case 8:
+                            irrGrass++;
+                            bioCover++;
+                            break;
+                        case 9:
+                            irrGrass++;
+                            infilCover++;
+                            break;
+                        case 10:
+                            irrGrass++;
+                            greenRoofCover++;
+                            break;
+                        case 11:
+                            irrGrass++;
+                            greenWallCover++;
+                            break;
+                        case 12:
+                            roof++;
+                            roofCover++;
+                            break;
+                        case 13:
+                            road++;
+                            roadCover++;
+                            break;
+                        case 14:
+                            road++;
+                            pavementCover++;
+                            break;
+                        case 15:
+                            concrete++;
+                            concreteCover++;
+                            break;
+                    }
+
+
+                    cells.pop_back();
                 }
-
-
-                cells.pop_back();
             }
+            else
+            {
+                int linenr = imp->getCellSizeX() * i + j;
+                linenr /= gridsize;
+                QList<double> line = input[linenr+1];
+                //add the new technologies and covers
+                tree += line[1];
+                treeCover += line[1];
+                water += line[2];
+                waterCover += line[2];
+                water += line[3];
+                pondCover += line[3];
+                water += line[4];
+                wetlandCover += line[4];
+                grass += line[5];
+                nonIrrGrassCover += line[5];
+                grass += line[6];
+                swaleCover += line[6];
+                irrGrass += line[7];
+                grassCover += line[7];
+                irrGrass += line[8];
+                bioCover += line[8];
+                irrGrass += line[9];
+                infilCover += line[9];
+                irrGrass += line[10];
+                greenRoofCover += line[10];
+                irrGrass += line[11];
+                greenWallCover += line[11];
+                roof += line[12];
+                roofCover += line[12];
+                road += line[13];
+                roadCover += line[13];
+                road += line[14];
+                pavementCover += line[14];
+                concrete += line[15];
+                concreteCover += line[15];
 
+            }
             //get the total number
             totalcounter = tree + water + grass + irrGrass + roof + road + concrete;
 
@@ -841,7 +896,7 @@ void Microclimate_heat::exportMCtemp(DM::RasterData *r, QString filename, double
     {
         QTextStream outstream(&file);
         //headers
-        outstream << "Block, Tree, Water, Pond and basin, Wetland dry grass, Swale, Irrigated grass, Biofilter, Inf system, Green roof, Green wall, Roof, Road, Porous pav, Concrete" << endl;
+        outstream << "Block, LST reduction" << endl;
         for(int i = 0; i<r->getHeight(); i++)
         {
             for(int j = 0; j<r->getWidth();j++)
@@ -916,6 +971,31 @@ double Microclimate_heat::getTempForSurface(int surface, int percentile)
         return alltemps[4][surface-1];
     if(percentile == 80)
         return alltemps[7][surface-1];
+    //when this code reached user selected the 4th percentile option
+    double median = (alltemps[4][surface-1] + alltemps[5][surface-1])/2; // since the numbers are already sorted and the amount is even.
+                                                                        // take 5th and 6th and calc average
+    double variance;
+    double diff;
+    for(int i = 0; i < 10;i++)
+    {
+        diff = alltemps[i][surface-1] - median;
+        if(diff < 0)
+            diff *= -1;
+        variance += diff * diff;
+    }
+    variance /= 10;
+    double stdev = sqrt(variance);
+    //todo
+    boost::mt19937 *rng = new boost::mt19937();
+    rng->seed(time(NULL));
+
+    boost::normal_distribution<> distribution(median, stdev);
+    boost::variate_generator< boost::mt19937, boost::normal_distribution<> > dist(*rng, distribution);
+    double number = dist();
+    //std::cout << "Super random number: ";
+    //std::cout << number << std::endl;
+    return number;
+
 }
 
 void Microclimate_heat::writeTechs(QList<QList<double> > techs)
@@ -1054,6 +1134,8 @@ DM::RasterData * Microclimate_heat::readRasterFile(QString FileName)
     file.close();
     return r;
 }
+
+
 bool Microclimate_heat::isleft(DM::Node a, DM::Node b, DM::Node c)
 {
     return ((b.getX() - a.getX()) * (c.getY() - a.getY()) - (b.getY() - a.getY()) * (c.getX() - a.getX())) > 0;

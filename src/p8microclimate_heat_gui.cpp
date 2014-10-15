@@ -33,6 +33,10 @@ p8microclimate_heat_gui::p8microclimate_heat_gui(Microclimate_heat * p8, QWidget
     {
         ui->cmb_perc->setCurrentIndex(2);
     }
+    if(p8microclimate->percentile == 4)
+    {
+        ui->cmb_perc->setCurrentIndex(3);
+    }
     ostringstream tmp;
     tmp << p8microclimate->gridsize;
     ui->le_gridsize->setText(tmp.str().c_str());
@@ -207,6 +211,10 @@ void p8microclimate_heat_gui::on_bBox_accepted()
     if(index == 2)
     {
         this->p8microclimate->setParameterValue("Percentile","80");
+    }
+    if(index == 3)
+    {
+        this->p8microclimate->setParameterValue("Percentile","4");
     }
     this->p8microclimate->setParameterValue("Techfile",ui->le_techFile->text().toStdString());
 }
