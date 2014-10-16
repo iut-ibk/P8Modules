@@ -24,6 +24,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.ui.city_combo.setCurrentIndex(int(self.module.getParameterAsString("SimulationCity")))
 		self.ui.chkb_music.setChecked(int(self.module.getParameterAsString("useMusic")))
 		self.ui.chkb_defaults.setChecked(int(self.module.getParameterAsString("useDefaults")))
+		self.ui.chkb_UB.setChecked(int(self.module.getParameterAsString("useUB")))
 		QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
 		QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
 		QtCore.QObject.connect(self.ui.pb_r2, QtCore.SIGNAL("released()"), self.load2)
@@ -65,6 +66,10 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.module.setParameterValue("RainRecharge",str(self.ui.le_rainrecharge.text()))
 		self.module.setParameterValue("RainBaseflow",str(self.ui.le_rainbaseflow.text()))
 		self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
+		if(self.ui.chkb_UB.isChecked()):
+			self.module.setParameterValue("useUB",str(1))
+		else:
+			self.module.setParameterValue("useUB",str(0))
 	def cityChanged(self):
 		'''
 		if self.ui.city_combo.currentIndex() == 0:

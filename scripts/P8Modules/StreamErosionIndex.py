@@ -35,6 +35,8 @@ class StreamErosionIndex(Module):
         self.useMusic = 0
         self.createParameter("useDefaults",BOOL,"")
         self.useDefaults = 0
+        self.createParameter("useUB",BOOL,"")
+        self.useUB =
         self.createParameter("RainThres" , DOUBLE , "")
         self.RainThres = 1
         self.createParameter("RainSoil" , DOUBLE , "")
@@ -296,10 +298,13 @@ class StreamErosionIndex(Module):
         f.close()
     def changeMusicFile(self,filename):
         settings = QSettings()
-        if (settings.value("Music").toString().contains("MUSIC 5")):
+        if(self.useUB):
             import ubeats_music_interface_5 as umusic
         else:
-            import ubeats_music_interface as umusic
+            if (settings.value("Music").toString().contains("MUSIC 5")):
+                import ubeats_music_interface_5 as umusic
+            else:
+                import ubeats_music_interface as umusic
         workpath = settings.value("workPath").toString() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")

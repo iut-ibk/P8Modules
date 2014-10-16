@@ -263,6 +263,14 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.pb_load.setObjectName(_fromUtf8("pb_load"))
         self.gridLayout.addWidget(self.pb_load, 24, 0, 1, 1)
 
+        self.label_ub = QtGui.QLabel(self.scrollAreaWidgetContents)
+        self.label_ub.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Inputs from UrbanBeats?", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_ub.setObjectName(_fromUtf8("lbl_ub"))
+        self.gridLayout.addWidget(self.label_ub, 25, 0, 1, 1)
+
+        self.chkb_ub = QtGui.QCheckBox(self.scrollAreaWidgetContents)
+        self.chkb_ub.setObjectName(_fromUtf8("chkb_ub"))
+        self.gridLayout.addWidget(self.chkb_ub, 25, 1, 1, 1)
 
         self.verticalLayout.addWidget(self.scrollArea)
         self.table = QtGui.QTableWidget(ReadTableSecondary_GUI2)

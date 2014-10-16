@@ -59,6 +59,8 @@ class StreamHydrologyandWaterquality(Module):
 		self.RainDeep = 0
 		self.createParameter("ConsiderFluxes", BOOL , "")
 		self.ConsiderFluxes = 0
+		self.createParameter("useUB", BOOL, "")
+		self.useUB = 0
 
 
 		#Views
@@ -510,10 +512,13 @@ class StreamHydrologyandWaterquality(Module):
 		f.close()
 	def convertToSecondaryMusic(self, filename):
 		settings = QSettings()
-		if (settings.value("Music").toString().contains("MUSIC 5")):
+		if(self.useUB):
 			import ubeats_music_interface_5 as umusic
 		else:
-			import ubeats_music_interface as umusic
+			if (settings.value("Music").toString().contains("MUSIC 5")):
+				import ubeats_music_interface_5 as umusic
+			else:
+				import ubeats_music_interface as umusic
 		fileIn = open(filename,"r")
 		filearr = filename.split(".")
 		fileOut = open(filearr[0] + "Secondary." + filearr[1] ,"w")

@@ -33,6 +33,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.le_tp.setValue(float(self.module.getParameterAsString("TpTarget")))
 	self.ui.le_tn.setValue(float(self.module.getParameterAsString("TnTarget")))
 	self.ui.chkb_flux.setChecked(int(self.module.getParameterAsString("ConsiderFluxes")))
+	self.ui.chkb_ub.setChecked(int(self.module.getParameterAsString("useUB")))
 	self.ui.le_rainthres.setText((self.module.getParameterAsString("RainThres")))
 	self.ui.le_rainsoil.setText((self.module.getParameterAsString("RainSoil")))
 	self.ui.le_raininitial.setText((self.module.getParameterAsString("RainInitial")))
@@ -84,6 +85,10 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 		self.module.setParameterValue("ConsiderFluxes",str(1))
 	else:
 		self.module.setParameterValue("ConsiderFluxes",str(0))
+	if(self.ui.chkb_ub.isChecked()):
+		self.module.setParameterValue("useUB",str(1))
+	else:
+		self.module.setParameterValue("useUB",str(0))
 	pass
 	
     def Load(self):

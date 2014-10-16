@@ -227,6 +227,14 @@ class Ui_StreamErosionIndexDialog(object):
         self.le_A.setObjectName(_fromUtf8("le_A"))
         self.gridLayout.addWidget(self.le_A, 23, 2, 1, 1)
 
+        self.labelUB = QtGui.QLabel(self.scrollAreaWidgetContents)
+        self.labelUB.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "Inputs from UrbanBeats?", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelUB.setObjectName(_fromUtf8("label"))
+        self.gridLayout.addWidget(self.labelUB, 24, 0, 1, 1) 
+        self.chkb_UB = QtGui.QCheckBox(self.scrollAreaWidgetContents)
+        self.chkb_UB.setObjectName(_fromUtf8("chkb_UB"))
+        self.gridLayout.addWidget(self.chkb_UB, 24, 2, 1, 1)
+
         
         self.buttonBox = QtGui.QDialogButtonBox(StreamErosionIndexguic)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
