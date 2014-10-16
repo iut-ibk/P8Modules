@@ -36,7 +36,7 @@ class StreamErosionIndex(Module):
         self.createParameter("useDefaults",BOOL,"")
         self.useDefaults = 0
         self.createParameter("useUB",BOOL,"")
-        self.useUB =
+        self.useUB = 0
         self.createParameter("RainThres" , DOUBLE , "")
         self.RainThres = 1
         self.createParameter("RainSoil" , DOUBLE , "")
