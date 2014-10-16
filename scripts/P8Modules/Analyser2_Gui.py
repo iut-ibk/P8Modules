@@ -653,7 +653,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		fig.canvas.set_window_title('SEI Peak flows')
 		plt.ylabel(u"Flow m³/s")
 		plt.xlabel("Plotting Position (ARI)")
-		plt.text(0.01,ax.get_ylim()[1]/5,"SEI Urbanised = " + str(round(self.module.SEIurb,2)) + "\nSEI WSUD = " + str(round(self.module.SEIwsud,2)), backgroundcolor = "white")
+		#plt.text(0.01,ax.get_ylim()[1]/5,"SEI Urbanised = " + str(round(self.module.SEIurb,2)) + "\nSEI WSUD = " + str(round(self.module.SEIwsud,2)), backgroundcolor = "white")
 		#plt.text(0.3,maxi,"~1 in 3 months >> Stormwater quality improvement",size = "small")#,backgroundcolor = "b",color = "white", picker = True)
 		#plt.text(0.6,maxi/10,"~1 in 6 months >> Managing stormwater as a resource",size = "small")#,backgroundcolor = "y", picker = True)
 		#plt.text(1,maxi/100,"~1 in 12 months >> Reducing hydrological\ndisturbance in urban waterway",size = "small")#,backgroundcolor = "brown", picker = True)
