@@ -28,6 +28,7 @@ public:
     void mousemove(QGraphicsSceneMouseEvent* event);
     void mousepress(QGraphicsSceneMouseEvent* event);
     void mouserelease(QGraphicsSceneMouseEvent* event);
+    void mousedoubleclick(QGraphicsSceneMouseEvent* event);
     void tecLoad();
     void tecSave();
     void tecSaveAs();

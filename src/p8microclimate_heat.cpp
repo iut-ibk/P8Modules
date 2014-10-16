@@ -986,6 +986,7 @@ double Microclimate_heat::getTempForSurface(int surface, int percentile)
     variance /= 10;
     double stdev = sqrt(variance);
     //todo
+
     boost::mt19937 *rng = new boost::mt19937();
     rng->seed(time(NULL));
 
@@ -994,6 +995,8 @@ double Microclimate_heat::getTempForSurface(int surface, int percentile)
     double number = dist();
     //std::cout << "Super random number: ";
     //std::cout << number << std::endl;
+//    double number=0;
+
     return number;
 
 }

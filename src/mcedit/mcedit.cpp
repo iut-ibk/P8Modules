@@ -219,6 +219,10 @@ void mcedit::mouserelease(QGraphicsSceneMouseEvent *event)
     cellupdate();
 }
 
+void mcedit::mousedoubleclick(QGraphicsSceneMouseEvent *event)
+{
+    on_pb_edit_clicked();
+}
 
 
 void mcedit::on_pb_zoomin_clicked()
