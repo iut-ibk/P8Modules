@@ -41,3 +41,11 @@ void McGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     else
         parent_heat->mouserelease(event);
 }
+
+void McGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(parent != 0)
+        parent->mousedoubleclick(event);
+    else
+        parent_heat->mousedoubleclick(event);
+}
