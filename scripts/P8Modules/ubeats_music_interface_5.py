@@ -512,7 +512,7 @@ def writeMUSIClinkToFlux(f, upN, downN):
     f.write("Routing,Not Routed,{either \"Not Routed\" or \"Routed\"}\n")
     f.write("Muskingum K,30,{no value required for no routing or \"numerical value\" for routed}\n")
     f.write("Muskingum Theta,0.25,{no value required for no routing or \"numerical value\" for routed. Must be between 0.1 and 0.49}\n")
-    f.write("Secondary Outflow Components,Evapotranspiration,{for secondary drainage link only}\n")
+    f.write("Secondary Outflow Components,Reuse; Evapotranspiration,{for secondary drainage link only}\n")
     f.write("------------------------------------------------------------------------------------\n")
     return True
 
