@@ -3,6 +3,7 @@ from PyQt4.QtGui import *
 from pydynamind import *
 from Analyser2_Gui import *
 import ntpath
+import Tkinter, tkFileDialog
 
 class AnalyserModule(Module):
 	def __init__(self):
@@ -56,7 +57,7 @@ class AnalyserModule(Module):
 
 		self.calcEBR(workpath)
 		self.calcTPR(workpath)
-		#self.calcUTIL(workpath)
+		self.calcUTIL(workpath)
 		self.calcSEI(workpath)
 	def createInputDialog(self):
 		form = Analyser2_Gui(self, QApplication.activeWindow())
@@ -129,54 +130,19 @@ class AnalyserModule(Module):
 		else:
 			print "no TP file found"
 	def calcUTIL(self,workPath):
+		ResultVec = []
 		if(os.path.exists(self.UtilFile)):
 			ResultVec = self.loadUtilFile()
-		if(os.path.exists(workpath + "UB_BasinStrategy No 1-" + str(self.module.musicnr) + ".csv")):
-			f = open(workpath + "UB_BasinStrategy No 1-" + str(self.module.musicnr) + ".csv",'r')
-			j = 0
-			serviceVec = []
-			lines = []
-			BFsum = 0
-			PBsum = 0
-			ISsum = 0
-			WSURsum = 0
-			SWsum = 0
-			for line in f:
-				j = j + 1
-				text = shlex.shlex(line,posix = False)
-				text.whitespace += ','
-				text.whitespace_split = True
-				liste = list(text)
-				if (j >11):
-					lines.append(liste)
-			for k in range(len(lines)):
-				serviceVec.append((lines[k][1],float(lines[k][3])*float(lines[k][4])*float(lines[k][5])/100))
-				serviceVec.append((lines[k][6],float(lines[k][8])))
-				serviceVec.append((lines[k][9],float(lines[k][11])))
-				serviceVec.append((lines[k][12],float(lines[k][14])))
-			for k in range(len(serviceVec)):
-				if (serviceVec[k][0] == "BF"):
-					BFsum += serviceVec[k][1]
-				elif (serviceVec[k][0] == "PB"):
-					PBsum += serviceVec[k][1]
-				elif (serviceVec[k][0] == "IS"):
-					ISsum += serviceVec[k][1]
-				elif (serviceVec[k][0] == "WSUR"):
-					WSURsum += serviceVec[k][1]
-				elif (serviceVec[k][0] == "SW"):
-					SWsum += serviceVec[k][1]
-			allsums = BFsum + PBsum + ISsum + WSURsum + SWsum
-			BF = BFsum *100/allsums
-			PB = PBsum *100/allsums
-			IS = ISsum *100/allsums
-			WSUR = WSURsum *100/allsums
-			SW = SWsum *100/allsums
-			print BF
-			print PB
-			print IS
-			print WSUR
-			print SW
-			ResultVec.append((self.module.musicnr,allsums*100,BF,PB,IS,WSUR,SW))
+		dbfFile = ""
+		dbfFile = self.findDBFfile()
+		if(dbfFile != ""):
+			print dbfFile
+			simnr = 0
+			simnr = self.getSimNr(self.musicfile)
+			print simnr
+			tmpvec = self.readUtilDataFromDBF(dbfFile,simnr)
+																#zeros are		IS          SW
+			ResultVec.append((ntpath.basename(self.musicfile),tmpvec[0],tmpvec[2],tmpvec[3],0,tmpvec[1],0))
 			BFvec =[]
 			PBvec = []
 			ISvec = []
@@ -205,8 +171,6 @@ class AnalyserModule(Module):
 					WsurFlag = True
 				if(ResultVec[i][6] > 0):
 					SwFlag = True
-			ind = np.arange(len(ResultVec))
-			width = 0.9 / len(ResultVec)
 			BFvec = np.array(BFvec)
 			PBvec = np.array(PBvec)
 			ISvec = np.array(ISvec)
@@ -250,6 +214,7 @@ class AnalyserModule(Module):
 			f.write(str(outtxt) + "\n")
 			f.write("\n------------------------------------------\n\n")
 			f.close()
+			self.writeUtilFile(ResultVec)
 		else:
 			print "Util file not found"
 
@@ -258,7 +223,7 @@ class AnalyserModule(Module):
 		f = open(self.UtilFile,"r")
 		for line in f:
 			linearr = line.strip('\n').split(',')
-			tmpbar = (round(float(linearr[0]),2),round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[4]),2),round(float(linearr[5]),2),round(float(linearr[6]),2))
+			tmpbar = (linearr[0],round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[4]),2),round(float(linearr[5]),2),round(float(linearr[6]),2))
 			vec.append(tmpbar)
 		f.close()
 		return vec
@@ -293,3 +258,52 @@ class AnalyserModule(Module):
 		return "Analyser"
 	def getFileName(self):
 		return "Scenario Simulation and Assessment"
+	def writeUtilFile(self,vec):
+		f = open(self.UtilFile,"w")
+		for i in range(len(vec)):
+			f.write(str(vec[i][0])+","+str(vec[i][1])+","+str(vec[i][2])+","+str(vec[i][3])+","+str(vec[i][4])+","+str(vec[i][5])+","+str(vec[i][6])+"\n")
+		f.close()
+	def findDBFfile(self):
+		root = Tkinter.Tk()
+		root.withdraw()
+		self.file_opt = options = {}
+		options['defaultextension'] = '.dbf'
+		options['filetypes'] = [('dbf files', '.dbf')]
+		options['title'] = 'Please select the DBF file to load for Utilisation calculations'
+		file_path = tkFileDialog.askopenfilename(**self.file_opt)
+		return file_path
+	def getSimNr(self,filename):
+		splitfile = filename.split("-")
+		return splitfile[2]
+	def readUtilDataFromDBF(self,dbfFile, simnr):
+		total = 0.0
+		wsur = 0.0
+		bf = 0.0
+		pb = 0.0
+		f = open(dbfFile,"r")
+		for line in f:
+			linearr = line.strip("\n").split("\t")
+			#check for current sim nr
+			if(linearr[3] == simnr):
+				total += float(linearr[13])
+				if(linearr[6] == "WSUR"):
+					wsur += float(linearr[13])
+				if(linearr[6] == "BF"):
+					bf += float(linearr[13])
+				if(linearr[6] == "PB"):
+					pb += float(linearr[13])
+			else:
+				continue
+		wsur /= total
+		bf /= total
+		pb /= total
+		print "wsur " + str(wsur)
+		print "bf " + str(bf)
+		print "pb " + str(pb)
+		print "sum " + str(wsur+bf+pb)
+		recVec = []
+		recVec.append(total)
+		recVec.append(wsur)
+		recVec.append(bf)
+		recVec.append(pb)
+		return recVec

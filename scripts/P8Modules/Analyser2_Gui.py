@@ -13,7 +13,7 @@ import math
 from operator import itemgetter
 import platform
 import ntpath
-
+import Tkinter, tkFileDialog
 
 
 class Analyser2_Gui(QtGui.QDialog):
@@ -409,11 +409,12 @@ class Analyser2_Gui(QtGui.QDialog):
 			workpath = workpath.replace("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
 		ResultVec = []
-		#if(os.path.exists(self.UtilFile)):
-			#ResultVec = self.loadUtilFile()
+		if(os.path.exists(self.UtilFile)):
+			ResultVec = self.loadUtilFile()
 		print len(ResultVec)
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
+		'''
 		f = open(self.module.musicfile,'r')
 		j = 0
 		serviceVec = []
@@ -484,6 +485,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		print WSUR
 		print SW
 		ResultVec.append((ntpath.basename(self.module.musicfile),allsums*100,BF,PB,IS,WSUR,SW))
+		'''
 		BFvec =[]
 		PBvec = []
 		ISvec = []
@@ -728,7 +730,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		f = open(self.UtilFile,"r")
 		for line in f:
 			linearr = line.strip('\n').split(',')
-			tmpbar = (round(float(linearr[0]),2),round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[4]),2),round(float(linearr[5]),2),round(float(linearr[6]),2))
+			tmpbar = (linearr[0],round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[4]),2),round(float(linearr[5]),2),round(float(linearr[6]),2))
 			vec.append(tmpbar)
 		f.close()
 		return vec
