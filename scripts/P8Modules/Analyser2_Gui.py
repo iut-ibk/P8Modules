@@ -90,6 +90,9 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax.set_title('Stream Hydrology and Water Quality')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
+			for j in range(len(tmpbar)):
+				ax.text(ind[j] + (width*i)*0.75,tmpbar[j],str(tmpbar[j]))
+
 			ax.text(0,FreqUn,"Urbanised catchment")
 			plt.plot(ax.get_xlim(),[FreqUn,FreqUn], color = 'red',linestyle = '--', lw=2)#, label = "Urbanised catchment")
 			ax.text(0,FreqRun,"Target")
@@ -142,6 +145,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax.set_title('Stream Hydrology and Water Quality')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
+			for j in range(len(tmpbar)):
+				ax.text(ind[j] + (width*i)*0.75,tmpbar[j],str(tmpbar[j]))
 			ax.text(0,100,"Natural catchment")
 			plt.plot(ax.get_xlim(),[100,100], color = 'blue',linestyle = '--', lw=2)#, label = "Natural catchment")
 			ax.text(0,1,"Impervious catchment")
@@ -197,6 +202,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax.set_title('Stream Hydrology and Water Quality')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
+			for j in range(len(tmpbar)):
+				ax.text(ind[j] + (width*i)*0.75,tmpbar[j],str(tmpbar[j]))
 			ax.text(0,FvF,"Upper limit (area of forest)")
 			plt.plot(ax.get_xlim(),[FvF,FvF], color = 'blue',linestyle = '--', lw=2)#, label = "Upper limit (area of forest)")
 			ax.text(0,FvP,"Lower limit (area of pasture)")
@@ -257,6 +264,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax.set_title('Stream Hydrology and Water Quality')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
+			for j in range(len(tss)):
+				ax.text(ind[j] + (width*i)*0.75,tss[j],str(tss[j]))
 			ax.text(0,tsstop,"Untreadted stormwater")
 			ax.plot(ax.get_xlim(),[tsstop,tsstop], color = 'red',linestyle = '--', lw=2)
 			ax.text(0,tsstarget,"Target")
@@ -274,6 +283,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax1.set_title('Stream Hydrology and Water Quality')
 			ax1.set_xticks(ind+(width*i)*0.75)
 			ax1.set_xticklabels(xlabel)
+			for j in range(len(tp)):
+				ax1.text(ind[j] + (width*i)*0.75,tp[j],str(tp[j]))
 			ax1.text(0,tptop,"Untreadted stormwater")
 			ax1.plot(ax.get_xlim(),[tptop,tptop], color = 'red',linestyle = '--', lw=2)
 			ax1.text(0,tptarget,"Target")
@@ -291,6 +302,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax2.set_title('Stream Hydrology and Water Quality')
 			ax2.set_xticks(ind+(width*i)*0.75)
 			ax2.set_xticklabels(xlabel)
+			for j in range(len(tn)):
+				ax2.text(ind[j] + (width*i)*0.75,tn[j],str(tn[j]))
 			ax2.text(0,tntop,"Untreadted stormwater")
 			ax2.plot(ax.get_xlim(),[tntop,tntop], color = 'red',linestyle = '--', lw=2)
 			ax2.text(0,tntarget,"Target")
@@ -709,7 +722,10 @@ class Analyser2_Gui(QtGui.QDialog):
 			ax.set_title('Stream Erosion Index')
 			ax.set_xticks(ind+(width*i)*0.75)
 			ax.set_xticklabels(xlabel)
-
+			
+			for j in range(len(bars)):
+				ax.text(ind[j]+(width*(i)*0.75),bars[j], str(bars[j]))
+			
 			plt.plot(ax.get_xlim(),[1,1], color = 'brown',linestyle = '--', lw=2)#, label = "SEI strech limit")
 			plt.plot(ax.get_xlim(),[3,3], 'b--', lw=2)#, label = "SEI lower limit")
 			plt.plot(ax.get_xlim(),[5,5], 'k--', lw=2)#, label = "SEI upper limit")
