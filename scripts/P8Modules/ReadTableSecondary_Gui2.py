@@ -97,12 +97,15 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	font.setBold(True)
 	widget.setFont(font)
 	self.ui.table.setCellWidget(0,0,widget)
-	self.ui.table.setCellWidget(1,0,QtGui.QLineEdit(str("Frequency of Runoff Days (days/year)")))
-	self.ui.table.setCellWidget(2,0,QtGui.QLineEdit(str("Proportion of Total Volume Reduction (%)")))
-	self.ui.table.setCellWidget(3,0,QtGui.QLineEdit(str("Proportion of Filtered Flow Volume  (%)")))
-	self.ui.table.setCellWidget(4,0,QtGui.QLineEdit(str("TSS mean concentration (mg/L)")))
-	self.ui.table.setCellWidget(5,0,QtGui.QLineEdit(str("TP mean concentration (mg/L)")))
-	self.ui.table.setCellWidget(6,0,QtGui.QLineEdit(str("TN mean concentration (mg/L)")))
+	self.ui.table.setCellWidget(1,0,QtGui.QLineEdit(str("Considered infiltration fluxes?")))
+	self.ui.table.setCellWidget(2,0,QtGui.QLineEdit(str("Number of runoff days in the natural catchement (days/year)")))
+	self.ui.table.setCellWidget(3,0,QtGui.QLineEdit(str("Baseflow rate allowed in the WSUD catchment(m3/s)")))
+	self.ui.table.setCellWidget(4,0,QtGui.QLineEdit(str("Frequency of Runoff Days (days/year)")))
+	self.ui.table.setCellWidget(5,0,QtGui.QLineEdit(str("Proportion of Total Volume Reduction (%)")))
+	self.ui.table.setCellWidget(6,0,QtGui.QLineEdit(str("Proportion of Filtered Flow Volume  (%)")))
+	self.ui.table.setCellWidget(7,0,QtGui.QLineEdit(str("TSS mean concentration (mg/L)")))
+	self.ui.table.setCellWidget(8,0,QtGui.QLineEdit(str("TP mean concentration (mg/L)")))
+	self.ui.table.setCellWidget(9,0,QtGui.QLineEdit(str("TN mean concentration (mg/L)")))
 
 	for i in range(len(self.module.FF)):
 	    i = i + 1
@@ -111,12 +114,18 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	    font2.setBold(True)
 	    widget2.setFont(font)
 	    self.ui.table.setCellWidget(0,i,widget2)
-	    self.ui.table.setCellWidget(1,i,QtGui.QLineEdit(str(self.module.FF[i-1])))
-	    self.ui.table.setCellWidget(2,i,QtGui.QLineEdit(str(self.module.VR[i-1])))
-	    self.ui.table.setCellWidget(3,i,QtGui.QLineEdit(str(self.module.FV[i-1])))
-	    self.ui.table.setCellWidget(4,i,QtGui.QLineEdit(str(self.module.tableTSS[i-1])))
-   	    self.ui.table.setCellWidget(5,i,QtGui.QLineEdit(str(self.module.tableTP[i-1])))
-	    self.ui.table.setCellWidget(6,i,QtGui.QLineEdit(str(self.module.tableTN[i-1])))
+	    if(int(self.module.getParameterAsString("ConsiderFluxes"))):
+	    	self.ui.table.setCellWidget(1,i,QtGui.QLineEdit(str("Yes")))
+	    else:
+	    	self.ui.table.setCellWidget(1,i,QtGui.QLineEdit(str("No")))
+	    self.ui.table.setCellWidget(2,i,QtGui.QLineEdit(str(self.module.FreqPredev)))
+	    self.ui.table.setCellWidget(3,i,QtGui.QLineEdit(str(self.module.cin)))
+	    self.ui.table.setCellWidget(4,i,QtGui.QLineEdit(str(self.module.FF[i-1])))
+	    self.ui.table.setCellWidget(5,i,QtGui.QLineEdit(str(self.module.VR[i-1])))
+	    self.ui.table.setCellWidget(6,i,QtGui.QLineEdit(str(self.module.FV[i-1])))
+	    self.ui.table.setCellWidget(7,i,QtGui.QLineEdit(str(self.module.tableTSS[i-1])))
+	    self.ui.table.setCellWidget(8,i,QtGui.QLineEdit(str(self.module.tableTP[i-1])))
+	    self.ui.table.setCellWidget(9,i,QtGui.QLineEdit(str(self.module.tableTN[i-1])))
 
 
     def cityChanged(self):
@@ -165,6 +174,12 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 		workpath = workpath.replace("/","\\")
 	f = open(workpath + 'EnvironmentalBenefit.csv','w')
 	f.write("Stream Hydrology and Water quality,%\n")
+	if(int(self.module.getParameterAsString("ConsiderFluxes"))):
+		f.write("Considered infiltration fluxes?," + str("Yes") + "\n")
+	else:
+		f.write("Considered infiltration fluxes?," + str("No") + "\n")
+	f.write("Number of runoff days in the natural catchement (days/year)," + str(self.module.FreqPredev) + "\n")
+	f.write("Baseflow rate allowed in the WSUD catchment(m3/s)," + str(self.module.cin) + "\n")
 	f.write("Frequency of Runoff Days (days/year)," + str(self.module.FF) + "\n")
 	f.write("Proportion of Total Volume Reduction (%)," + str(self.module.VR) + "\n")
 	f.write("Proportion of Filtered Flow Volume  (%)," +str(self.module.FV) + "\n")
