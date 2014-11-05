@@ -6,6 +6,10 @@ from PyQt4.QtCore import QSettings, QFileInfo
 from importMSFgui import Ui_importMSFDialog
 import platform
 from shutil import copyfile
+from Tkinter import *
+import tkMessageBox
+import os.path
+
 
 
 class activateimportMSFGUI(QtGui.QDialog):
@@ -23,6 +27,7 @@ class activateimportMSFGUI(QtGui.QDialog):
 		Filename = str(self.ui.le_r.text())
 		self.module.setParameterValue("Filename", Filename)
 	def load(self):
+
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		datapath = settings.value("dataPath").toString() + "/"
@@ -31,7 +36,27 @@ class activateimportMSFGUI(QtGui.QDialog):
 			datapath = datapath.replace("/","\\")
 		filename = QtGui.QFileDialog.getOpenFileName(self, "Select Music File",  datapath, self.tr("Text Files (*.msf)"))
 		if(filename != ""):
-			self.module.setParameterValue("Filename", str(QFileInfo(filename).fileName()))
-			self.ui.le_r.setText(QFileInfo(filename).fileName())
-			settings.setValue("dataPath",QFileInfo(filename).absolutePath())
-			copyfile(filename,workpath + QFileInfo(filename).fileName())
+			window = Tk()
+			window.wm_withdraw()
+			window.geometry("1x1+"+str(window.winfo_screenwidth()/2)+"+"+str(window.winfo_screenheight()/2))
+			if(self.checkForFile(filename)):
+				self.module.setParameterValue("Filename", str(QFileInfo(filename).fileName()))
+				self.ui.le_r.setText(QFileInfo(filename).fileName())
+				settings.setValue("dataPath",QFileInfo(filename).absolutePath())
+				copyfile(filename,workpath + QFileInfo(filename).fileName())
+				tkMessageBox.showinfo(title="File load", message="MUSIC project loaded successfully")
+			else:
+				tkMessageBox.showinfo(title="File load", message="Climate data was not found, please ......")
+			window.destroy()
+	def checkForFile(self,filename):
+		fileToCheck = ""
+		f = open(filename,"r")
+		for line in f:
+			linearr = line.strip("\n").split(",")
+			if(linearr[0] == "MeteorologicalTemplate"):
+				fileToCheck = str(linearr[1])
+				break
+		if(os.path.exists(fileToCheck)):
+			return True
+		else:
+			return False
