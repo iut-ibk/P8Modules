@@ -136,6 +136,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.VR = [] 
 		self.WQ = [] 
 		self.FV = []
+		self.cin = 0.0
 		self.tmpFile = workpath + "EBRtable.txt"
 		self.WQtable = workpath + "WQtable.txt"
 
@@ -264,31 +265,31 @@ class StreamHydrologyandWaterquality(Module):
 
 
 		freqVec = self.getNotZeroDays(vec1,vec2,vec8,0)
-		FreqPredev = freqVec[0]
+		self.FreqPredev = freqVec[0]
 		FreqUntreated = freqVec[1]
 		vec8 = sorted(vec8)
-		cin = 3 * float(vec8[len(vec8)/2])
+		self.cin = 3 * float(vec8[len(vec8)/2])
 		print "len(vec8): " +str(len(vec8))		
 		if(float(self.Base) != float(0.0)):
 			print "using user defined cin"
-			cin = self.Base
-			print "cin: " +str(cin)
+			self.cin = self.Base
+			print "cin: " +str(self.cin)
 		else:
 			print "using default cin"
-			print "cin: " +str(cin)
+			print "cin: " +str(self.cin)
 
 
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i]) <cin):
+			if (float(list3[i]) <self.cin):
 				continue
 			if i%2==1:
 				vec3.append(list3[i])
 
 
 		FreqTreated = len(vec3)
-		print "FreqPredev: " +str(FreqPredev)
+		print "FreqPredev: " +str(self.FreqPredev)
 		print "FreqUntreated: " +str(FreqUntreated)
 		print "FreqTreated: " +str(FreqTreated)		
 		RunoffVol = self.SumAllValues(vec3)		
@@ -306,7 +307,7 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i]) * EIF >cin):
+			if (float(list3[i]) * EIF >self.cin):
 				continue
 			if i%2==1:
 				vec9.append(list3[i])
@@ -318,7 +319,7 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(vecBase)):
 			Filtflow.append(float(vec6[i]) + float(vecPipe[i]) + float(vecBase[i]))
 #			print Filtflow[i]
-			if(Filtflow[i] > cin):
+			if(Filtflow[i] > self.cin):
 				Filtflow[i] = 0
 		print "super summe of DOOOOOMMM: "+str(math.fsum(Filtflow))
 
@@ -398,12 +399,12 @@ class StreamHydrologyandWaterquality(Module):
 				linearr = line.strip("\n").split(",")
 				if(nr < linearr[0]):
 					nr = linearr[0]
-			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(FreqPredev) +"\n")		
+			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "\n")		
 			f.close()
 		else:
 			f = open(self.tmpFile,'w')
 			#f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
-			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(FreqPredev) +"\n")
+			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes())+"\n")
 			f.close()
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
@@ -980,3 +981,8 @@ class StreamHydrologyandWaterquality(Module):
 		return "Stream Hydrology and Water Quality"
 	def getFileName(self):
 		return "Scenario Simulation and Assessment"
+	def getConsiderFluxes(self):
+		if(int(self.ConsiderFluxes)):
+			return "Yes"
+		else:
+			return "No"
