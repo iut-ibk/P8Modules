@@ -70,12 +70,12 @@ class AnalyserModule(Module):
 			f = open(self.EBRFile,'r')
 			for line in f:
 				linearr = line.strip('\n').split(',')
-				tmp = (linearr[5],round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])))
+				tmp = (linearr[5],round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])),round(float(linearr[11])),round(float(linearr[12])),str(linearr[13]))
 				output.append(tmp)
 			#writing information into summary file
 			f = open(self.summaryFile, 'w')
 			f.write("------------ Analyzer Summary ------------\n\n")
-			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction (%),Proportion of filtered flows (%),Water quality (%)\n")
+			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction (%),Proportion of filtered flows (%),Water quality (%),Number of runoff days in the natural catchement (days/year),Baseflow rate allowed in the WSUD catchment(m3/s),Considered infiltration fluxes?\n")
 
 			for line in output:
 				tmp = str(line)
