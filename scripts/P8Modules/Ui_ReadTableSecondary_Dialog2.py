@@ -274,7 +274,7 @@ class Ui_ReadTableSecondary_GUI2(object):
 
         self.verticalLayout.addWidget(self.scrollArea)
         self.table = QtGui.QTableWidget(ReadTableSecondary_GUI2)
-        self.table.setRowCount(7)
+        self.table.setRowCount(10)
         self.table.setColumnCount(4)
         self.table.setColumnWidth(0,210)
         self.verticalLayout.addWidget(self.table)
