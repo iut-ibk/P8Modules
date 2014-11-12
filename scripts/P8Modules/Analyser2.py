@@ -27,6 +27,7 @@ class AnalyserModule(Module):
 		self.SEIwsud = 0.0
 		self.SEIurb = 0.0
 		self.musicfile = ""
+		self.useUB = ""
 		for value in strvec:
 			simuData = city.getComponent(value)
 			urb = simuData.getAttribute("SEIurb").getDouble()
@@ -46,6 +47,8 @@ class AnalyserModule(Module):
 				self.NoY = simuData.getAttribute("NoY").getDouble()
 			if(simuData.getAttribute("alpha").getDouble() != 0):
 				self.alpha = simuData.getAttribute("alpha").getDouble()
+			if(simuData.getAttribute("useUB").getString() != ""):
+				self.useUB = simuData.getAttribute("useUB").getString()
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
 		if (platform.system() != "Linux"):
@@ -57,7 +60,9 @@ class AnalyserModule(Module):
 
 		self.calcEBR(workpath)
 		self.calcTPR(workpath)
-		self.calcUTIL(workpath)
+		print "useUB: " + str(self.useUB)
+		if(self.useUB != "0"):
+			self.calcUTIL(workpath)
 		self.calcSEI(workpath)
 	def createInputDialog(self):
 		form = Analyser2_Gui(self, QApplication.activeWindow())
@@ -280,8 +285,9 @@ class AnalyserModule(Module):
 		wsur = 0.0
 		bf = 0.0
 		pb = 0.0
-		f = open(dbfFile,"r")
+		f = open(dbfFile, "r")
 		for line in f:
+			print line
 			linearr = line.strip("\n").split("\t")
 			#check for current sim nr
 			if(linearr[3] == simnr):
