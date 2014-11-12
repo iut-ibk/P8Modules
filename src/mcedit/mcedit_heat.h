@@ -29,6 +29,7 @@ public:
     void mousepress(QGraphicsSceneMouseEvent* event);
     void mouserelease(QGraphicsSceneMouseEvent* event);
     void mousedoubleclick(QGraphicsSceneMouseEvent* event);
+
     void tecLoad();
     void tecSave();
     void tecSaveAs();
@@ -43,6 +44,8 @@ public:
     void zoomout();
     void loadbackground(QString bgfilename);
     void setScale(double startTemp, double endTemp, int colorramp);
+    double getMinValue(int mode);
+    double getMaxValue(int mode);
 
     QColor getColor(double startTemp, double endTemp, double temp, int colorramp);
 
