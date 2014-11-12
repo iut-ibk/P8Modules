@@ -196,57 +196,68 @@ void mcedit_heat::mousemove(QGraphicsSceneMouseEvent *event)
 
 void mcedit_heat::mousepress(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem *item = scene->itemAt(event->scenePos(),ui->graphicsView->transform());
-    Cell_heat *selectedCell=cellmap.value((QGraphicsRectItem*)(item));
-    if (selectedCell!=NULL)
+    if(event->button() == Qt::RightButton)
     {
-        if (ui->rb_edit->isChecked())
-            selectedCell->editVals();
+        on_pb_edit_clicked();
+    }
+    else
+    {
+        QGraphicsItem *item = scene->itemAt(event->scenePos(),ui->graphicsView->transform());
+        Cell_heat *selectedCell=cellmap.value((QGraphicsRectItem*)(item));
+        if (selectedCell!=NULL)
+        {
+            if (ui->rb_edit->isChecked())
+                selectedCell->editVals();
+        }
     }
     cellupdate();
 }
 
 void mcedit_heat::mouserelease(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem *item;
-    item = scene->itemAt(event->scenePos(),ui->graphicsView->transform());
-    Cell_heat *selectedCell=cellmap.value((QGraphicsRectItem*)(item));
-    item = scene->itemAt(event->lastScenePos(),ui->graphicsView->transform());
-    Cell_heat *lastSelectedCell=cellmap.value((QGraphicsRectItem*)(item));
-    if (selectedCell==NULL || lastSelectedCell==NULL)
-        return;
-    int x1=lastSelectedCell->getPx();
-    int x2=selectedCell->getPx();
-    int y1=lastSelectedCell->getPy();
-    int y2=selectedCell->getPy();
-    if (x1>x2)
+    if(event->button() != Qt::RightButton)
     {
-        int h=x1; x1=x2; x2=h;
-    }
-    if (y1>y2)
-    {
-        int h=y1; y1=y2; y2=h;
-    }
-
-    QSet<Cell_heat*> selectedCells;
-    foreach (Cell_heat *cell, cellmap.values())
-    {
-        if (cell->getPx()>=x1 && cell->getPx()<=x2 && cell->getPy()>=y1 && cell->getPy()<=y2)
+        QGraphicsItem *item;
+        item = scene->itemAt(event->scenePos(),ui->graphicsView->transform());
+        Cell_heat *selectedCell=cellmap.value((QGraphicsRectItem*)(item));
+        item = scene->itemAt(event->lastScenePos(),ui->graphicsView->transform());
+        Cell_heat *lastSelectedCell=cellmap.value((QGraphicsRectItem*)(item));
+        if (selectedCell==NULL || lastSelectedCell==NULL)
+            return;
+        int x1=lastSelectedCell->getPx();
+        int x2=selectedCell->getPx();
+        int y1=lastSelectedCell->getPy();
+        int y2=selectedCell->getPy();
+        if (x1>x2)
         {
-            selectedCells.insert(cell);
+            int h=x1; x1=x2; x2=h;
         }
-    }
+        if (y1>y2)
+        {
+            int h=y1; y1=y2; y2=h;
+        }
 
-    foreach (Cell_heat *cell, selectedCells)
-    {
-        if (ui->rb_toggle->isChecked())
-            cell->setSelected(!cell->getSelected());
-        if (ui->rb_select->isChecked())
-            cell->setSelected(true);
-        if (ui->rb_deselect->isChecked())
-            cell->setSelected(false);
+        QSet<Cell_heat*> selectedCells;
+        foreach (Cell_heat *cell, cellmap.values())
+        {
+            if (cell->getPx()>=x1 && cell->getPx()<=x2 && cell->getPy()>=y1 && cell->getPy()<=y2)
+            {
+                selectedCells.insert(cell);
+            }
+        }
+
+        foreach (Cell_heat *cell, selectedCells)
+        {
+            if (ui->rb_toggle->isChecked())
+                cell->setSelected(!cell->getSelected());
+            if (ui->rb_select->isChecked())
+                cell->setSelected(true);
+            if (ui->rb_deselect->isChecked())
+                cell->setSelected(false);
+        }
+        cellupdate();
+
     }
-    cellupdate();
 }
 
 void mcedit_heat::mousedoubleclick(QGraphicsSceneMouseEvent *event)
@@ -336,6 +347,28 @@ void mcedit_heat::setScale(double startTemp, double endTemp, int colorramp)
     }
     scalestart->setText(QString("%1 °C").arg(startTemp));
     scaleend->setText(QString("%1 °C").arg(endTemp));
+}
+
+double mcedit_heat::getMinValue(int mode)
+{
+    double min = 99.9;
+    foreach (Cell_heat *cell, cellmap.values())
+    {
+        if(min > cell->getRes(mode))
+            min = cell->getRes(mode);
+    }
+    return min;
+}
+
+double mcedit_heat::getMaxValue(int mode)
+{
+    double max = -99.9;
+    foreach (Cell_heat *cell, cellmap.values())
+    {
+        if(max < cell->getRes(mode))
+            max = cell->getRes(mode);
+    }
+    return max;
 }
 
 
@@ -599,15 +632,15 @@ void mcedit_heat::cellupdate()
         }
         if (mode==1)
         {
-            setScale(-20,20,0);
+            setScale(getMinValue(0)-5,getMaxValue(0)+5,0);
         }
         if (mode==2)
         {
-            setScale(30,45,1);
+            setScale(getMinValue(1)-5,getMaxValue(1)+5,1);
         }
         if (mode==3)
         {
-            setScale(30,40,1);
+            setScale(getMinValue(2)-5,getMaxValue(2)+5,1);
         }
     }
 
@@ -721,25 +754,27 @@ void mcedit_heat::on_pb_edit_clicked()
 
 
         CellDialog_heat *dia=new CellDialog_heat(NULL,&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8,&v9,&v10,&v11,&v12,&v13,&v14,&v15);
-        dia->exec();
-        foreach (Cell_heat *cell, selectedCells)
+        if(dia->exec() == 1)
         {
-            dia->getValues(&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8,&v9,&v10,&v11,&v12,&v13,&v14,&v15);
-            cell->setV(0,v1);
-            cell->setV(1,v2);
-            cell->setV(2,v3);
-            cell->setV(3,v4);
-            cell->setV(4,v5);
-            cell->setV(5,v6);
-            cell->setV(6,v7);
-            cell->setV(7,v8);
-            cell->setV(8,v9);
-            cell->setV(9,v10);
-            cell->setV(10,v11);
-            cell->setV(11,v12);
-            cell->setV(12,v13);
-            cell->setV(13,v14);
-            cell->setV(14,v15);
+            foreach (Cell_heat *cell, selectedCells)
+            {
+                dia->getValues(&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8,&v9,&v10,&v11,&v12,&v13,&v14,&v15);
+                cell->setV(0,v1);
+                cell->setV(1,v2);
+                cell->setV(2,v3);
+                cell->setV(3,v4);
+                cell->setV(4,v5);
+                cell->setV(5,v6);
+                cell->setV(6,v7);
+                cell->setV(7,v8);
+                cell->setV(8,v9);
+                cell->setV(9,v10);
+                cell->setV(10,v11);
+                cell->setV(11,v12);
+                cell->setV(12,v13);
+                cell->setV(13,v14);
+                cell->setV(14,v15);
+            }
         }
         cellupdate();
     }
