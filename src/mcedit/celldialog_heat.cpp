@@ -43,7 +43,6 @@ CellDialog_heat::CellDialog_heat(QWidget *parent,double *v1,double *v2,double *v
     ui->v14->setValue(*v14);
     ui->v15->setValue(*v15);
     this->total = 0;
-    this->canceled = false;
     this->getTotal();
 }
 
@@ -70,27 +69,14 @@ void CellDialog_heat::closeEvent(QCloseEvent *ev)
 
     if(QString::number(this->total,'f',1).toDouble() != 100.0)
     {
-        if(canceled)
-        {
-            ev->accept();
-        }
-        else
-        {
+
             QMessageBox::warning(this,"Warning","The sum of the land cover fractions should be 100%");
             ev->ignore();
-        }
+
     }
     else
     {
-        if(canceled)
-        {
-            ev->accept();
-        }
-        else
-        {
-            this->saveValues();
-            ev->accept();
-        }
+        this->accept();
     }
 }
 
@@ -194,8 +180,7 @@ void CellDialog_heat::on_pb_ok_released()
 
 void CellDialog_heat::on_pb_cancel_released()
 {
-    this->canceled = true;
-    this->close();
+    this->reject();
 }
 
 void CellDialog_heat::saveValues()
