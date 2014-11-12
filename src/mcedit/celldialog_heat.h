@@ -34,7 +34,6 @@ private:
      double *v14;
      double *v15;
      double total;
-     bool canceled;
      Ui::CellDialog_heat *ui;
 
 
