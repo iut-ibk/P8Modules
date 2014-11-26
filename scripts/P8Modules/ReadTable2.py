@@ -90,6 +90,9 @@ class TreatmentPerformanceResultsModule(Module):
 		fileIn = open(filename,"r")
 		for line in fileIn:
 			linearr = line.strip("\n").split(",")
+
+			#get receiving node id
+			#this goes over two lines because we first read the node type and then two lines later the id
 			if (recvcounter == 2):
 					receivingnodeid = int(linearr[1])
 					recvcounter = 0
@@ -102,18 +105,22 @@ class TreatmentPerformanceResultsModule(Module):
 				if(foundOutBas):
 					OutBasId = linearr[1]
 					foundOutBas = 0
+			# if in node name "OUT-Bas" save and set foundOutBas
 			if(linearr[0] == "Node Name"):
 				if(linearr[1].find("OUT_Bas") != -1):
 					receiveBasName = linearr[1]
 					foundOutBas = 1
+
 		name = ""
 		outid = 0
+		# check wheter outbas or recnode has been found
 		if(OutBasId == 0 and receivingnodeid != 0):
 			name =  "Receiving Node"
 			outid = receivingnodeid
 		if(OutBasId != 0 and receivingnodeid == 0):
 			name = receiveBasName
 			outid = OutBasId
+		#if we found both we take receiving node id
 		if(OutBasId != 0 and receivingnodeid != 0):
 			name = "Receiving Node"
 			outid = receivingnodeid
