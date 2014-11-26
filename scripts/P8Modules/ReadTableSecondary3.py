@@ -679,6 +679,7 @@ class StreamHydrologyandWaterquality(Module):
 				if is_primary_connection:
 					StartNodeConnectionsPrimary[source_id] = str(linearr[1])
 				target_id = str(linearr[1])
+				PipeFlowLinkList.append(Link(source_id,target_id))
 			if(linearr[0] == "Source Node ID"):
 				source_id = str(linearr[1])
 				j = -1
@@ -751,8 +752,8 @@ class StreamHydrologyandWaterquality(Module):
 				#fluxinfl_list.append(linearr[1])
 			
 			# get all pipeflow
-			if((linearr[0] == "Secondary Outflow Components") and (linearr[1].find("Pipe Flow") >= 0)):
-				PipeFlowLinkList.append(Link(source_id,target_id))
+			#if((linearr[0] == "Secondary Outflow Components") and (linearr[1].find("Pipe Flow") >= 0)):
+				#PipeFlowLinkList.append(Link(source_id,target_id))
 				#pipelist.append(source_id)			
 			'''
 			# get all fluxes
@@ -805,6 +806,8 @@ class StreamHydrologyandWaterquality(Module):
 		print fluxinfl_list
 		print fluxinfl_list2
 		areaSumID = sumID + 1
+
+		#wirte all the new nodes
 		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, totalarea,1, catchment_paramter_list2)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Baseflows", areaSumID+1, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID,areaSumID+1)
@@ -919,24 +922,30 @@ class StreamHydrologyandWaterquality(Module):
 		print pipelist
 		print infillist
 		print baseflowlist
-
+		print PipeFlowLinkList
 		#make links
-		if(receivingnodeid != 0):
+		if(receivingnodeid != 0): #rec links to recv node
 			for r in reclist:
 				umusic.writeMUSIClink(fileOut,r,int(receivingnodeid))
 		else:
-			for r in reclist:
+			for r in reclist:	#rec links to outbas
 				umusic.writeMUSIClink(fileOut,r,int(OutBasId))
+
+		#pipe links
 		if(self.hasPipe):
-			for p in pipelist:
-				if(self.isLastInTrain(p,PipeFlowLinkList,NodeIDToType)):
+			for p in pipelist:	
+				if(self.isLastInTrain(p,PipeFlowLinkList,NodeIDToType)): 	#check if technology is last in train
 					print str(p) + " is last"
-					umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)
+					umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)		# if yes link it to pipeflow node
+
+		# links to infil node
 		if(self.hasInfil):
-			for i in infillist:
+			for i in infillist:	
 				umusic.writeMUSIClinkToInfilFlux2(fileOut,i,areaSumID+4)
-		if(self.hasBase):
-			for b in baseflowlist:
+
+		#links to baseflow node
+		if(self.hasBase):	
+			for b in baseflowlist:	
 				umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
 
 
@@ -955,6 +964,7 @@ class StreamHydrologyandWaterquality(Module):
 					techid = linearr[1]
 					break
 		fileIn.close()
+
 		# get name of tech
 		name = ""
 		fileIn = open(filename,"r")
