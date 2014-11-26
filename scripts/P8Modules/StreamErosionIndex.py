@@ -92,17 +92,13 @@ class StreamErosionIndex(Module):
             Filename = workpath + "ubeatsMUSIC-ID" + str(musicnr) + ".msf"
         name = self.changeMusicFile(Filename)
         self.writeBatFileFromFile(Filename)
+
         #Run music
         print "Music is running ... "
         if (platform.system() != "Linux"):
             call([str(workpath) + "RunMusicSEI.bat", ""])
         print "Music Done."
-        '''if(platform.system() == "Linux"):
-            Pre = self.readTimeSeries("Pre-developedCatchment.csv")
-            Urb = self.readTimeSeries("Pre-developedCatchment.csv")
-            PostWSUD = self.readTimeSeries("Pre-developedCatchment.csv")
-        else:
-        '''
+
         print "Reading Pre-developed TimeSeries ..."
         Pre = self.readTimeSeries(workpath + "Pre-developedCatchment.csv")
         print "Reading Urbanised TimeSeries ..."
