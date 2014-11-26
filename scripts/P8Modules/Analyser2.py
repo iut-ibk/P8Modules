@@ -61,7 +61,7 @@ class AnalyserModule(Module):
 		self.calcEBR(workpath)
 		self.calcTPR(workpath)
 		print "useUB: " + str(self.useUB)
-		if(self.useUB != "0"):
+		if(self.useUB == "1"):
 			self.calcUTIL(workpath)
 		self.calcSEI(workpath)
 	def createInputDialog(self):
