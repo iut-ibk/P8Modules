@@ -324,7 +324,7 @@ class StreamHydrologyandWaterquality(Module):
 #			print Filtflow[i]
 			if(Filtflow[i] > self.cin):
 				Filtflow[i] = 0
-		print "super summe of DOOOOOMMM: "+str(math.fsum(Filtflow))
+		#print "super summe of DOOOOOMMM: "+str(math.fsum(Filtflow))
 
 		print self.ImpAreaToTreatment
 		TreatFiltVol = math.fsum(Filtflow)* 60*60*24*1000/1000000
