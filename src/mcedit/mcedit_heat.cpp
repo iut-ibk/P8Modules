@@ -126,7 +126,7 @@ mcedit_heat::mcedit_heat(p8microclimate_heat_gui *parent, QString bgimage, QStri
     scaletitle=scene->addSimpleText("Scale");
     scaletitle->moveBy(rectwidth*scalesteps+5,scaleposy);
 
-    setScale(25,40,0);
+    setScale(0,100,0);
 
 
 
@@ -184,11 +184,10 @@ void mcedit_heat::mousemove(QGraphicsSceneMouseEvent *event)
         ui->v14->setValue(selectedCell->getV(13));
         ui->v15->setValue(selectedCell->getV(14));
 
-
-
-
-
-        ui->temp->setValue(selectedCell->getRes(0));
+        if(ui->cb_mode->currentIndex() <= 1)
+            ui->temp->setValue(selectedCell->getRes(0));
+        else
+            ui->temp->setValue(selectedCell->getRes(ui->cb_mode->currentIndex()-1));
     }
     ui->x->setValue(event->scenePos().x());
     ui->y->setValue(event->scenePos().y());
@@ -632,7 +631,7 @@ void mcedit_heat::cellupdate()
         }
         if (mode==1)
         {
-            setScale(getMinValue(0)-5,getMaxValue(0)+5,0);
+            setScale(getMinValue(0)-3,getMaxValue(0)+3,0);
         }
         if (mode==2)
         {
@@ -647,7 +646,7 @@ void mcedit_heat::cellupdate()
 
     foreach (Cell_heat *cell, cellmap.values())
     {
-        cell->update(mode,viewmode);
+        cell->update(mode,viewmode,getMinValue(mode-1),getMaxValue(mode-1));
     }
 }
 
