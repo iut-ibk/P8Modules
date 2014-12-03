@@ -67,7 +67,7 @@ QGraphicsRectItem *Cell_heat::getRect()
     return rect;
 }
 
-void Cell_heat::update(int mode,int viewmode)
+void Cell_heat::update(int mode,int viewmode,int startTemp, int endTemp)
 {   
     QPen pen;
     pen.setColor(QColor(0,0,0,255));
@@ -116,40 +116,24 @@ void Cell_heat::update(int mode,int viewmode)
     }
     if (mode==1) // lst change
     {
-        double maxdt=20;
+        double maxdt=startTemp-1;
         int col=255.0*fabs((res[0])/maxdt);
-        int alpha = 127;
-        if(col > 255)
-        {
-            col = 255;
-            alpha = 220;
-        }
         if (res[0]>0)
-            brush.setColor(QColor(255,255-col,255-col,alpha));
+            brush.setColor(QColor(255,255-col,255-col,127));
         if (res[0]<0)
-            brush.setColor(QColor(255-col,255-col,255,alpha));
+            brush.setColor(QColor(255-col,255-col,255,127));
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
     }
     if (mode==2) // lst before wusd
     {
-        double maxdt=20;
-        int col=255.0*fabs((res[1]-20)/maxdt);
-        if (res[1]>0)
-            brush.setColor(QColor(255,255-col,255-col,127));
-        if (res[1]<0)
-            brush.setColor(QColor(255-col,255-col,255,127));
+        brush.setColor(getColor(startTemp,endTemp,res[1]));
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
     }
     if (mode==3) // lst after wusd
     {
-        double maxdt=20;
-        int col=255.0*fabs((res[2]-20)/maxdt);
-        if (res[2]>0)
-            brush.setColor(QColor(255,255-col,255-col,127));
-        if (res[2]<0)
-            brush.setColor(QColor(255-col,255-col,255,127));
+        brush.setColor(getColor(startTemp,endTemp,res[2]));
         if (view->transform().m11()<0.25)
             pen.setColor(QColor(0,0,0,0));
     }
@@ -211,5 +195,21 @@ int Cell_heat::getNo()
 void Cell_heat::setNo(int nn)
 {
     no=nn;
+}
+
+QColor Cell_heat::getColor(int startTemp, int endTemp, double temp)
+{
+    QColor retVal(0,0,0,255);
+    if (temp<startTemp || temp>endTemp )
+        return retVal;
+    double perc = (temp - startTemp) / (endTemp - startTemp);
+
+    QColor startColor(255,255,255,255);
+    QColor endColor(255,0,0,255);
+    retVal.setRedF((1-perc)*startColor.redF()+perc*endColor.redF());
+    retVal.setGreenF((1-perc)*startColor.greenF()+perc*endColor.greenF());
+    retVal.setBlueF((1-perc)*startColor.blueF()+perc*endColor.blueF());
+
+    return retVal;
 }
 
