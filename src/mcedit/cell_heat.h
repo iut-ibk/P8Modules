@@ -15,7 +15,7 @@ public:
     Cell_heat(double px, double py, double sx, double sy, QGraphicsScene *scene, QGraphicsView *view, int no, QList<QColor*>* teccol);
     void editVals();
     QGraphicsRectItem *getRect();
-    void update(int mode,int viewmode);
+    void update(int mode,int viewmode,int startTemp, int endTemp);
     double getRes(int p);
     void setRes(int p, double v_);
     double getV(int p);
@@ -26,6 +26,7 @@ public:
     void setSelected(bool b);
     int getNo();
     void setNo(int nn);
+    QColor getColor(int startTemp, int endTemp, double temp);
 
 
 protected:
