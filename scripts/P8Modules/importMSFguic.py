@@ -49,6 +49,8 @@ class activateimportMSFGUI(QtGui.QDialog):
 				tkMessageBox.showinfo(title="File load", message="Climate data was not found, please ......")
 			window.destroy()
 	def checkForFile(self,filename):
+		if(platform.system() == "Linux"):
+			return True
 		fileToCheck = ""
 		f = open(filename,"r")
 		for line in f:
