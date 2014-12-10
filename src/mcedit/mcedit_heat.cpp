@@ -184,10 +184,11 @@ void mcedit_heat::mousemove(QGraphicsSceneMouseEvent *event)
         ui->v14->setValue(selectedCell->getV(13));
         ui->v15->setValue(selectedCell->getV(14));
 
-        if(ui->cb_mode->currentIndex() <= 1)
-            ui->temp->setValue(selectedCell->getRes(0));
+        ui->tempLSTchange->setValue(selectedCell->getRes(0));
+        if(ui->cb_mode->currentIndex() == 3)
+            ui->tempLST->setValue(selectedCell->getRes(2));
         else
-            ui->temp->setValue(selectedCell->getRes(ui->cb_mode->currentIndex()-1));
+            ui->tempLST->setValue(selectedCell->getRes(1));
     }
     ui->x->setValue(event->scenePos().x());
     ui->y->setValue(event->scenePos().y());
@@ -348,7 +349,7 @@ void mcedit_heat::setScale(double startTemp, double endTemp, int colorramp)
     scaleend->setText(QString("%1 °C").arg(endTemp));
 }
 
-double mcedit_heat::getMinValue(int mode)
+int mcedit_heat::getMinValue(int mode)
 {
     double min = 99.9;
     foreach (Cell_heat *cell, cellmap.values())
@@ -356,10 +357,10 @@ double mcedit_heat::getMinValue(int mode)
         if(min > cell->getRes(mode))
             min = cell->getRes(mode);
     }
-    return min;
+    return (int)min;
 }
 
-double mcedit_heat::getMaxValue(int mode)
+int mcedit_heat::getMaxValue(int mode)
 {
     double max = -99.9;
     foreach (Cell_heat *cell, cellmap.values())
@@ -367,7 +368,7 @@ double mcedit_heat::getMaxValue(int mode)
         if(max < cell->getRes(mode))
             max = cell->getRes(mode);
     }
-    return max;
+    return (int)max;
 }
 
 

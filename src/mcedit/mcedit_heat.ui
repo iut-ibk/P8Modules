@@ -885,12 +885,12 @@
          <item row="0" column="1">
           <widget class="QLabel" name="label_17">
            <property name="text">
-            <string>LST change</string>
+            <string>LST</string>
            </property>
           </widget>
          </item>
          <item row="0" column="2">
-          <widget class="QDoubleSpinBox" name="temp">
+          <widget class="QDoubleSpinBox" name="tempLST">
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::NoButtons</enum>
            </property>
@@ -909,6 +909,36 @@
            </property>
            <property name="pixmap">
             <pixmap resource="images.qrc">:/images/temp.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="label_41">
+           <property name="text">
+            <string>LST change</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_42">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="images.qrc">:/images/temp.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QDoubleSpinBox" name="tempLSTchange">
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="suffix">
+            <string> °C</string>
+           </property>
+           <property name="minimum">
+            <double>-99.900000000000006</double>
            </property>
           </widget>
          </item>
@@ -956,7 +986,7 @@
          </item>
          <item>
           <property name="text">
-           <string>View LST reductiion</string>
+           <string>View LST reduction</string>
           </property>
          </item>
          <item>

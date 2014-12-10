@@ -44,8 +44,8 @@ public:
     void zoomout();
     void loadbackground(QString bgfilename);
     void setScale(double startTemp, double endTemp, int colorramp);
-    double getMinValue(int mode);
-    double getMaxValue(int mode);
+    int getMinValue(int mode);
+    int getMaxValue(int mode);
 
     QColor getColor(double startTemp, double endTemp, double temp, int colorramp);
 
