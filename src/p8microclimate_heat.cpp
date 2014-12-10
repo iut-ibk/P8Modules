@@ -892,11 +892,14 @@ void Microclimate_heat::exportMCtemp(DM::RasterData *r, QString filename, double
 {
     int counter = 0;
     QFile file (filename);
+    QFileInfo finfo = QFileInfo(file);
+    QString description = finfo.fileName(); // take before/after wsud etc from file name
+    description.chop(4);
     if(file.open(QIODevice::WriteOnly))
     {
         QTextStream outstream(&file);
         //headers
-        outstream << "Block, LST reduction" << endl;
+        outstream << "Block, "<< description.toStdString().c_str() << endl;
         for(int i = 0; i<r->getHeight(); i++)
         {
             for(int j = 0; j<r->getWidth();j++)
@@ -1008,7 +1011,7 @@ void Microclimate_heat::writeTechs(QList<QList<double> > techs)
     {
         QTextStream outstream (&file);
         //headers
-        outstream << "Block Tree Water Pond and basin Wetland Dry Grass Swale Irrigated Grass Biofilter Inf system Green roof Green wall Roof Road Porous Pav Concrete" << endl;
+        outstream << "Block, Tree, Water, Pond and basin, Wetland, Dry Grass, Swale, Irrigated Grass, Biofilter, Inf system, Green roof, Green wall, Roof, Road, Porous Pav, Concrete" << endl;
         for(int i = 0; i<techs.size();i++)
         {
             for(int j = 0; j< techs[i].size(); j++)
