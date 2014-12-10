@@ -586,6 +586,7 @@ class StreamHydrologyandWaterquality(Module):
 		target_id = ""
 		source_id = ""
 		PipeFlowLinkList = []
+		DrainageLinkList = []
 
 		for line in fileIn:
 			i = i + 1
@@ -676,9 +677,11 @@ class StreamHydrologyandWaterquality(Module):
 				if linearr[1] == "Drainage Link":
 					is_primary_connection = True
 			if(linearr[0] == "Target Node ID"):
-				if is_primary_connection:
-					StartNodeConnectionsPrimary[source_id] = str(linearr[1])
 				target_id = str(linearr[1])
+				if is_primary_connection:
+					StartNodeConnectionsPrimary[source_id] = target_id
+					DrainageLinkList.append(Link(source_id,target_id))
+				
 				PipeFlowLinkList.append(Link(source_id,target_id))
 			if(linearr[0] == "Source Node ID"):
 				source_id = str(linearr[1])
@@ -765,7 +768,7 @@ class StreamHydrologyandWaterquality(Module):
 			'''
 
 		for ID in impnodes:
-			if(ID in StartNodeConnectionsPrimary):
+			'''if(ID in StartNodeConnectionsPrimary):
 				end_node = StartNodeConnectionsPrimary[ID]
 				if NodeIDToType[end_node] == "PondNode":
 					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
@@ -785,11 +788,18 @@ class StreamHydrologyandWaterquality(Module):
 				if NodeIDToType[end_node] == "SwaleNode":
 					self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
 					continue
+			'''
 
+			
+			if(self.linkedToTreatment(ID,DrainageLinkList,NodeIDToType)):
+				self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
 
+		print "DrainageLinkList"
+		for link in DrainageLinkList:
+			print link
 		fileIn.close()
 		fileOut.write("\n")
-		print splitlist2
+		print ImpIDtoImpArea
 		print "Summary:"
 		print "sumID: " + str(sumID)
 		print "Area sum: " + str(area)
@@ -799,9 +809,14 @@ class StreamHydrologyandWaterquality(Module):
 		print "Lists: "
 		print catchment_paramter_list
 
+		print "impnodes"
+		print impnodes
+		print "StartNodeConnection:"
+		print StartNodeConnectionsPrimary
 		print "Node Types List: " 
 		print NodeIDToType
-		print StartNodeConnectionsPrimary
+		print "ImpIDtoImpArea"
+		print ImpIDtoImpArea
 		print EtFlux_list
 		print fluxinfl_list
 		print fluxinfl_list2
@@ -850,7 +865,7 @@ class StreamHydrologyandWaterquality(Module):
 		print "StartNodeConnectionsPrimary"
 		print StartNodeConnectionsPrimary
 		for j in fluxinfl_list:
-			#CechkIfConnectedToPound
+			#CheckIfConnectedToPond
 			print str(j)
 			start_node = str(j)
 			if(str(j) in StartNodeConnectionsPrimary):
@@ -1028,6 +1043,16 @@ class StreamHydrologyandWaterquality(Module):
 			return "Yes"
 		else:
 			return "No"
+	def linkedToTreatment(self,id,DrainageLinkList,NodeToType):
+		for link in DrainageLinkList:
+			if(link.getSRC() == id):
+				if(self.isTech(link.getDST(),NodeToType)):
+					return True
+				else:
+					if(self.linkedToTreatment(link.getDST(),DrainageLinkList,NodeToType)):
+						return True
+		return False
+
 class Link:
 	def __init__(self,src,dst):
 		self.src = src
