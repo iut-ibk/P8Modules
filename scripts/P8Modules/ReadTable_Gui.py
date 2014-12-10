@@ -127,6 +127,8 @@ class ReadTable_Gui(QtGui.QDialog):
 	rowcounter = self.ui.table.rowCount()
 	colcounter = self.ui.table.columnCount()
 	for rows in range(rowcounter):
+		if(i >= len(liste)):
+			break
 		if rows == 2:
 			if(music5):
 				i = i + 4
