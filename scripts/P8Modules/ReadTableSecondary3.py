@@ -86,6 +86,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.hasBase = False
 		self.hasPipe = False
 		self.hasInfil = False
+		self.createInfilNode = False
 		realstring = ""
 		self.ImpAreaToTreatment = 0.0
 		settings = QSettings()
@@ -182,7 +183,8 @@ class StreamHydrologyandWaterquality(Module):
 		list3 = self.readFileToList(workpath + "TreatedRunoffFrequency"+str(number)+".TXT")
 		list4 = self.readFileToList(workpath + "ETandRe-useFluxes"+str(number)+".TXT")
 		list5 = self.readFileToList(workpath + "PredevelopTotalRunoff"+str(number)+".TXT")
-		list6 = self.readFileToList(workpath + "Exfiltration"+str(number)+".TXT")
+		if(self.createInfilNode):
+			list6 = self.readFileToList(workpath + "Exfiltration"+str(number)+".TXT")
 		list7 = self.readFileToList(workpath + "WQ"+str(number)+".TXT")
 		list8 = self.readFileToList(workpath + "PredevelopBaseflowFrequency"+str(number)+".TXT")
 		if(self.hasBase):
@@ -217,10 +219,9 @@ class StreamHydrologyandWaterquality(Module):
 			if i <2 or (i+1)%2:
 				continue
 			vec4.append(list4[i])
-			vec6.append(list6[i])
 			vec10.append(list3[i])
 
-			#if no base or pipe in msf file, there wont be any output from music so we just fill with zeros
+			#if no base, pipe or infiltration in msf file, there wont be any output from music so we just fill with zeros
 			if(self.hasBase):
 				vecBase.append(list9[i])
 			else:
@@ -229,6 +230,11 @@ class StreamHydrologyandWaterquality(Module):
 				vecPipe.append(list10[i])
 			else:
 				vecPipe.append(0)
+			if(self.createInfilNode):
+				vec6.append(list6[i])
+			else:
+				vec6.append(0)
+
 
 		for i in range(len(list7)):
 			if i<4 or ((i)%4==0):
@@ -402,12 +408,12 @@ class StreamHydrologyandWaterquality(Module):
 				linearr = line.strip("\n").split(",")
 				if(nr < linearr[0]):
 					nr = linearr[0]
-			f.write(str(nr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "\n")		
+			f.write(str(nr+1)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes())"," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")
 			f.close()
 		else:
 			f = open(self.tmpFile,'w')
-			#f.write(str(musicnr)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"\n")
-			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes())+"\n")
+			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes())"," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")
+			#f.write(ntpath.basename(realstring)+"," + str(self.getConsiderFluxes()) + "," +  str(FvPasture) + "," +str(self.cin) + "," + str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+"," + str(self.WQ[0]) + "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")		
 			f.close()
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
@@ -482,7 +488,8 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		f.write("Export_TS (Reuse and ET fluxes, Inflow, \"ETandRe-useFluxes"+str(number)+".TXT\",1d)\n")
-		f.write("Export_TS (Infiltration Fluxes, Inflow, \"Exfiltration"+str(number)+".TXT\",1d)\n")
+		if(self.createInfilNode):
+			f.write("Export_TS (Infiltration Fluxes, Inflow, \"Exfiltration"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency"+str(number)+".TXT \",1d)\n")
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
@@ -556,6 +563,7 @@ class StreamHydrologyandWaterquality(Module):
 		area = 0.0
 		tmparea = 0.0
 		totalarea = 0.0
+		totalimparea = 0.0
 		imp = 0.0
 		per = 0.0
 		splitlist = []
@@ -644,6 +652,7 @@ class StreamHydrologyandWaterquality(Module):
 				if(linearr[0] == "Areas - Impervious (%)"):
 					urbtmp += line
 					imp = float(linearr[1])
+					totalimparea += imp * tmparea / 100
 					ImpIDtoImpArea[str(tmpID)] = imp * tmparea / 100
 					impnodes.append(tmpID)
 					#if(imp == 100):
@@ -718,14 +727,19 @@ class StreamHydrologyandWaterquality(Module):
 
 			if(linearr[0] == "Node Type" and linearr[1] == "WetlandNode"):
 				WSUR = True
+				self.createInfilNode = True
 			if(linearr[0] == "Node Type" and linearr[1] == "PondNode"):
 				PB = True
+				self.createInfilNode = True
 			if(linearr[0] == "Node Type" and linearr[1] == "InfiltrationSystemNodeV4"):
 				IS = True
+				self.createInfilNode = True
 			if(linearr[0] == "Node Type" and linearr[1] == "BioRetentionNodeV4"):
 				BF = True
+				self.createInfilNode = True
 			if(linearr[0] == "Node Type" and linearr[1] == "SwaleNode"):
 				SW = True
+				self.createInfilNode = True
 			if(linearr[0] == "Node Type" and linearr[1] == "RainWaterTankNode"):
 				tank = True
 			if(linearr[0] == "Node Type" and linearr[1] == "DetentionBasinNode"):
@@ -790,7 +804,8 @@ class StreamHydrologyandWaterquality(Module):
 					continue
 			'''
 
-			
+			if(not self.createInfilNode):
+				self.ImpAreaToTreatment = totalimparea
 			if(self.linkedToTreatment(ID,DrainageLinkList,NodeIDToType)):
 				self.ImpAreaToTreatment += ImpIDtoImpArea[ID]
 
@@ -822,14 +837,15 @@ class StreamHydrologyandWaterquality(Module):
 		print fluxinfl_list2
 		areaSumID = sumID + 1
 
-		#wirte all the new nodes
+		#write all the new nodes
 		umusic.writeMUSICcatchmentnode2(fileOut, "Pre-developed Total Runoff", "", areaSumID, 0, 0, totalarea,1, catchment_paramter_list2)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Baseflows", areaSumID+1, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID,areaSumID+1)
 		umusic.writeMUSICjunction2(fileOut, "Pre-developed Runoff Frequency", areaSumID+2, 0, 0)
 		umusic.writeMUSIClinkToFrequenzy(fileOut,areaSumID,areaSumID+2)
 		umusic.writeMUSICjunction2(fileOut, "Reuse and ET fluxes",areaSumID+3,0,0)
-		umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0)
+		if(self.createInfilNode):
+			umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0) # if we have no treatment node except rain tank dont create and put zeros for list6
 		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, totalarea,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Ignore", areaSumID+6, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
@@ -859,13 +875,13 @@ class StreamHydrologyandWaterquality(Module):
 			i = i + 1
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
-		#Link to Infiltration
+		# Link to Infiltration
 		print "start Flux list"
 		print fluxinfl_list
 		print "StartNodeConnectionsPrimary"
 		print StartNodeConnectionsPrimary
 		for j in fluxinfl_list:
-			#CheckIfConnectedToPond
+			# CheckIfConnectedToPond
 			print str(j)
 			start_node = str(j)
 			if(str(j) in StartNodeConnectionsPrimary):
