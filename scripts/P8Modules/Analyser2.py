@@ -75,12 +75,15 @@ class AnalyserModule(Module):
 			f = open(self.EBRFile,'r')
 			for line in f:
 				linearr = line.strip('\n').split(',')
-				tmp = (linearr[5],round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])),round(float(linearr[11])),round(float(linearr[12])),str(linearr[13]))
+				#f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes())+"\n")
+				#f.write(str(self.getConsiderFluxes()) + "," +  str(FvPasture) + "," +str(self.cin) + "," + str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+ "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")		
+
+				tmp = (linearr[13],round(float(linearr[10])),round(float(linearr[3])),round(float(linearr[12])),round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),str(linearr[14]),str(linearr[15]),str(linearr[16]))
 				output.append(tmp)
 			#writing information into summary file
 			f = open(self.summaryFile, 'w')
 			f.write("------------ Analyzer Summary ------------\n\n")
-			f.write(" EB: Stream Hydrology and Water Quality\nRealisation,Frequency of runoff(days/year),Proportion of total volume reduction (%),Proportion of filtered flows (%),Water quality (%),Number of runoff days in the natural catchement (days/year),Baseflow rate allowed in the WSUD catchment(m3/s),Considered infiltration fluxes?\n")
+			f.write(" EB: Stream Hydrology and Water Quality\nConsidered infiltration fluxes?,Number of runoff days in the natural catchment (days/year), Baseflow rate allowed in the WSUD catchment(m3/s), Frequency of Runoff Days (days/year), Proportion of Total Volume Reduction (%), Proportion of Filtered Flow Volume (%), TSS mean concentration (mg/L), TP mean concentration (mg/L), TN mean concentration (mg/L)\n")
 
 			for line in output:
 				tmp = str(line)

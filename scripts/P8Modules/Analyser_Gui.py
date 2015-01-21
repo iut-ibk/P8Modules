@@ -37,8 +37,11 @@ class Analyser_Gui(QtGui.QDialog):
 		i = 0
 		bars = []
 		for line in f:
+			if(i == 0):
+				i = i+1
+				continue
 			linearr = line.strip('\n').split(',')
-			tmpbar = (round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),round(float(linearr[4])))
+			tmpbar = (round(float(linearr[4])),round(float(linearr[5])),round(float(linearr[6])),round(float(linearr[7])))
 			arr2 = [tmpbar,linearr[0]]
 			bars.append(arr2)
 			'''
