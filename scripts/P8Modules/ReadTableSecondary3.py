@@ -61,6 +61,14 @@ class StreamHydrologyandWaterquality(Module):
 		self.ConsiderFluxes = 0
 		self.createParameter("useUB", BOOL, "")
 		self.useUB = 0
+		self.createParameter("RainStart" ,STRING , "")
+		self.raintime = ""
+		self.createParameter("RainEnd", STRING , "")
+		self.raintime = ""
+		self.createParameter("RainDays", DOUBLE, "")
+		self.raindays = 0
+
+
 
 
 		#Views
@@ -300,8 +308,14 @@ class StreamHydrologyandWaterquality(Module):
 		FreqTreated = len(vec3)
 		print "FreqPredev: " +str(self.FreqPredev)
 		print "FreqUntreated: " +str(FreqUntreated)
-		print "FreqTreated: " +str(FreqTreated)		
-		RunoffVol = self.SumAllValues(vec3)		
+		print "FreqTreated: " +str(FreqTreated)	
+
+		if(self.RainDays < 365):
+			RunoffVol = 0
+		else:
+			RunoffVol = self.SumAllValues(vec3) / self.RainDays / 365		
+		
+
 		ETsum = self.SumAllValues(vec4)
 		VolumeET = ETsum * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
@@ -865,7 +879,8 @@ class StreamHydrologyandWaterquality(Module):
 
 		if(foundDetention):
 			for nodeid in detIds:
-				umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
+				if(self.createInfilNode):
+					umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
 				umusic.writeMUSIClinkToFlux(fileOut,nodeid,areaSumID+3)
 		i = 0
 
@@ -914,7 +929,8 @@ class StreamHydrologyandWaterquality(Module):
 		#linknig infilflux baseflow and pipeflow nodes to receiving or outbasin node
 		outid = 0
 		if(OutBasId == 0 and receivingnodeid != 0):
-			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
+			if(self.createInfilNode):
+				umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
 			if(self.hasBase):
 				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
 			if(self.hasPipe):
@@ -922,7 +938,8 @@ class StreamHydrologyandWaterquality(Module):
 			self.ReceivBas = "Receiving Node"
 			outid = receivingnodeid
 		if(OutBasId != 0 and receivingnodeid == 0):
-			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(OutBasId))
+			if(self.createInfilNode):
+				umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(OutBasId))
 			if(self.hasBase):
 				umusic.writeMUSIClink(fileOut, areaSumID+8,int(OutBasId))
 			if(self.hasPipe):
@@ -930,7 +947,8 @@ class StreamHydrologyandWaterquality(Module):
 			self.ReceivBas = receiveBasName
 			outid = OutBasId
 		if(OutBasId != 0 and receivingnodeid != 0):
-			umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
+			if(self.createInfilNode):
+				umusic.writeMUSIClinkToInfilFlux2(fileOut, areaSumID+4,int(receivingnodeid))
 			if(self.hasBase):
 				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
 			if(self.hasPipe):
@@ -971,8 +989,9 @@ class StreamHydrologyandWaterquality(Module):
 
 		# links to infil node
 		if(self.hasInfil):
-			for i in infillist:	
-				umusic.writeMUSIClinkToInfilFlux2(fileOut,i,areaSumID+4)
+			for i in infillist:
+				if(self.createInfilNode):
+					umusic.writeMUSIClinkToInfilFlux2(fileOut,i,areaSumID+4)
 
 		#links to baseflow node
 		if(self.hasBase):	
