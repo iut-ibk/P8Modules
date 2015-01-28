@@ -272,6 +272,26 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.chkb_ub.setObjectName(_fromUtf8("chkb_ub"))
         self.gridLayout.addWidget(self.chkb_ub, 25, 1, 1, 1)
 
+        self.label_ub = QtGui.QLabel(self.scrollAreaWidgetContents)
+        self.label_ub.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Start Date Rainfall Data", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_ub.setObjectName(_fromUtf8("lbl_ub"))
+        self.gridLayout.addWidget(self.label_ub, 26, 0, 1, 1)
+
+        self.te_rainstart = QtGui.QDateTimeEdit(self.scrollAreaWidgetContents)
+        self.te_rainstart.setObjectName(_fromUtf8("te_rainstart"))
+        self.te_rainstart.setDisplayFormat("yyyy.MM.dd")
+        self.gridLayout.addWidget(self.te_rainstart, 26, 1, 1, 1)
+
+        self.label_ub = QtGui.QLabel(self.scrollAreaWidgetContents)
+        self.label_ub.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "End Date Rainfall Data", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_ub.setObjectName(_fromUtf8("lbl_ub"))
+        self.gridLayout.addWidget(self.label_ub, 27, 0, 1, 1)
+
+        self.te_rainend = QtGui.QDateTimeEdit(self.scrollAreaWidgetContents)
+        self.te_rainend.setObjectName(_fromUtf8("te_rainend"))
+        self.te_rainend.setDisplayFormat("yyyy.MM.dd")
+        self.gridLayout.addWidget(self.te_rainend, 27, 1, 1, 1)
+
         self.verticalLayout.addWidget(self.scrollArea)
         self.table = QtGui.QTableWidget(ReadTableSecondary_GUI2)
         self.table.setRowCount(10)

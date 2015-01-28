@@ -2,6 +2,7 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QSettings
 from pydynamind import *
 from Ui_ReadTableSecondary_Dialog2 import Ui_ReadTableSecondary_GUI2
+from PyQt4.QtCore import QDate
 import shlex
 from Tkinter import Tk
 import matplotlib.pyplot as plt
@@ -44,6 +45,18 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.ui.le_rainrecharge.setText((self.module.getParameterAsString("RainRecharge")))
 	self.ui.le_rainbaseflow.setText((self.module.getParameterAsString("RainBaseflow")))
 	self.ui.le_raindeep.setText((self.module.getParameterAsString("RainDeep")))
+	date = self.module.getParameterAsString("RainEnd").split(".")
+	if(len(date) < 3):
+		self.ui.te_rainstart.setDate(QDate(2000,1,1))
+	else:
+		self.ui.te_rainend.setDate(QDate(int(date[0]),int(date[1]),int(date[2])))
+
+	date = self.module.getParameterAsString("RainStart").split(".")
+	if(len(date) < 3):
+		self.ui.te_rainstart.setDate(QDate(2000,1,1))
+	else:
+		self.ui.te_rainstart.setDate(QDate(int(date[0]),int(date[1]),int(date[2])))
+
 	#self.setMouseTracking(True)
 	#self.ui.label_base.installEventFilter(self)
 
@@ -81,6 +94,11 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.module.setParameterValue("RainRecharge",str(self.ui.le_rainrecharge.text()))
 	self.module.setParameterValue("RainBaseflow",str(self.ui.le_rainbaseflow.text()))
 	self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
+	self.module.setParameterValue("RainStart",str(self.ui.te_rainstart.date().toString("yyyy.MM.dd")))
+	self.module.setParameterValue("RainEnd",str(self.ui.te_rainend.date().toString("yyyy.MM.dd")))
+	self.module.setParameterValue("RainDays",str(self.ui.te_rainstart.date().daysTo(self.ui.te_rainend.date())))
+	print "diff in dates " + str(self.ui.te_rainstart.date().daysTo(self.ui.te_rainend.date()))
+
 	if(self.ui.chkb_flux.isChecked()):
 		self.module.setParameterValue("ConsiderFluxes",str(1))
 	else:
