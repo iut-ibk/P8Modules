@@ -199,7 +199,7 @@ void Cell_heat::setNo(int nn)
 
 QColor Cell_heat::getColor(int startTemp, int endTemp, double temp)
 {
-    QColor retVal(0,0,0,255);
+    QColor retVal(0,0,0,127);
 //    if (temp<startTemp || temp>endTemp )
 //        return retVal;
     double perc = (temp - startTemp) / (endTemp - startTemp);
