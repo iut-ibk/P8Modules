@@ -420,8 +420,8 @@ class StreamHydrologyandWaterquality(Module):
 			nr = 0
 			for line in f:
 				linearr = line.strip("\n").split(",")
-				if(nr < linearr[0]):
-					nr = linearr[0]
+				if(nr < int(linearr[0])):
+					nr = int(linearr[0])
 			f.write(str(nr+1)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")
 			f.close()
 		else:
