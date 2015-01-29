@@ -349,6 +349,7 @@ void mcedit_heat::setScale(double startTemp, double endTemp, int colorramp)
     scaleend->setText(QString("%1 °C").arg(endTemp));
 }
 
+
 int mcedit_heat::getMinValue(int mode)
 {
     double min = 99.9;
@@ -367,6 +368,33 @@ int mcedit_heat::getMaxValue(int mode)
     {
         if(max < cell->getRes(mode))
             max = cell->getRes(mode);
+    }
+    return (int)max;
+}
+
+int mcedit_heat::getMinValueForLstAfterBefore()
+{   // the view lst before wsud and lst after wsud have the same range of temp
+
+    double min = 99.9;
+    foreach(Cell_heat *cell, cellmap.values())
+    {
+        if(min > cell->getRes(1))
+            min = cell->getRes(1);
+        if(min > cell->getRes(2))
+            min = cell->getRes(2);
+    }
+    return (int)min;
+}
+
+int mcedit_heat::getMaxValueForLstAfterBefore()
+{   // the view lst before wsud and lst after wsud have the same range of temp
+    double max = -99.9;
+    foreach(Cell_heat *cell, cellmap.values())
+    {
+        if(max < cell->getRes(1))
+            max = cell->getRes(1);
+        if(max < cell->getRes(2))
+            max = cell->getRes(2);
     }
     return (int)max;
 }
@@ -636,11 +664,11 @@ void mcedit_heat::cellupdate()
         }
         if (mode==2)
         {
-            setScale(getMinValue(1)-5,getMaxValue(1)+5,1);
+            setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
         }
         if (mode==3)
         {
-            setScale(getMinValue(2)-5,getMaxValue(2)+5,1);
+            setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
         }
     }
 

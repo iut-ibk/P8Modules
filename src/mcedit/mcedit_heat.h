@@ -46,6 +46,8 @@ public:
     void setScale(double startTemp, double endTemp, int colorramp);
     int getMinValue(int mode);
     int getMaxValue(int mode);
+    int getMinValueForLstAfterBefore();
+    int getMaxValueForLstAfterBefore();
 
     QColor getColor(double startTemp, double endTemp, double temp, int colorramp);
 
