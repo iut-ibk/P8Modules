@@ -66,7 +66,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.createParameter("RainEnd", STRING , "")
 		self.raintime = ""
 		self.createParameter("RainDays", DOUBLE, "")
-		self.raindays = 0
+		self.RainDays = 0
 
 
 
@@ -310,12 +310,7 @@ class StreamHydrologyandWaterquality(Module):
 		print "FreqUntreated: " +str(FreqUntreated)
 		print "FreqTreated: " +str(FreqTreated)	
 
-		if(self.RainDays < 365):
-			RunoffVol = 0
-		else:
-			RunoffVol = self.SumAllValues(vec3) / self.RainDays / 365		
-		
-
+		RunoffVol = self.SumAllValues(vec3)		
 		ETsum = self.SumAllValues(vec4)
 		VolumeET = ETsum * 60*60*24*1000/1000000
 		UntreadSum = self.SumAllValues(vec2)
@@ -406,7 +401,13 @@ class StreamHydrologyandWaterquality(Module):
 		print "tmp VR: " + str(tmpVR)
 		tmpWQ = (tss+tn+tp)/3
 		print "tmp WQ: " + str(tmpWQ)
-
+		print "self.FF " + str(tmpFF)
+		print "days " + str(self.RainDays)
+		if(self.RainDays < 365):
+			tmpFF = 0
+		else:
+			tmpFF = tmpFF / (self.RainDays / 365)	
+		print "self.FF " + str(tmpFF)
 
 		print "ImpAreaToTreatment: " + str(self.ImpAreaToTreatment) 
 		#for numbers with only value after the comma
