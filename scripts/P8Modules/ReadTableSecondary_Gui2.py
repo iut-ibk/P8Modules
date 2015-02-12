@@ -96,8 +96,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
 	self.module.setParameterValue("RainStart",str(self.ui.te_rainstart.date().toString("yyyy.MM.dd")))
 	self.module.setParameterValue("RainEnd",str(self.ui.te_rainend.date().toString("yyyy.MM.dd")))
-	self.module.setParameterValue("RainDays",str(self.ui.te_rainstart.date().daysTo(self.ui.te_rainend.date())))
-	print "diff in dates " + str(self.ui.te_rainstart.date().daysTo(self.ui.te_rainend.date()))
+	self.module.setParameterValue("RainDays",str(self.ui.te_rainstart.date().daysTo(self.ui.te_rainend.date())-1))
 
 	if(self.ui.chkb_flux.isChecked()):
 		self.module.setParameterValue("ConsiderFluxes",str(1))
