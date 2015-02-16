@@ -62,9 +62,9 @@ class StreamHydrologyandWaterquality(Module):
 		self.createParameter("useUB", BOOL, "")
 		self.useUB = 0
 		self.createParameter("RainStart" ,STRING , "")
-		self.raintime = ""
+		self.RainStart = "2000.01.01"
 		self.createParameter("RainEnd", STRING , "")
-		self.raintime = ""
+		self.RainEnd = "2000.01.01"
 		self.createParameter("RainDays", DOUBLE, "")
 		self.RainDays = 0
 
@@ -403,10 +403,20 @@ class StreamHydrologyandWaterquality(Module):
 		print "tmp WQ: " + str(tmpWQ)
 		print "self.FF " + str(tmpFF)
 		print "days " + str(self.RainDays)
-		if(self.RainDays < 365):
+		start = int(self.RainStart.split(".")[0])
+		end = int(self.RainEnd.split(".")[0])
+		extraDays = 0
+		yearDays = 365
+
+		for i in range(start,end):
+			if(QDate.isLeapYear(i)):
+				extraDays = extraDays + 1
+				yearDays = 366
+
+		if(self.RainDays < yearDays):
 			tmpFF = 0
 		else:
-			tmpFF = tmpFF / (self.RainDays / 365)	
+			tmpFF = tmpFF / ((self.RainDays - extraDays) / 365)	
 		print "self.FF " + str(tmpFF)
 
 		print "ImpAreaToTreatment: " + str(self.ImpAreaToTreatment) 
