@@ -57,21 +57,6 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	else:
 		self.ui.te_rainstart.setDate(QDate(int(date[0]),int(date[1]),int(date[2])))
 
-	#self.setMouseTracking(True)
-	#self.ui.label_base.installEventFilter(self)
-
-	'''
-    def eventFilter(self, source, event):
-	if source is self.ui.label_base:
-		if event.type() == QtCore.QEvent.MouseMove:
-			pos = event.globalPos()
-			print('pos: %d, %d' % (pos.x(), pos.y()))
-		elif event.type() == QtCore.QEvent.Enter:
-			#print('ENTER')
-		elif event.type() == QtCore.QEvent.Leave:
-			#print('LEAVE')
-		return QtGui.QWidget.eventFilter(self, source, event)
-	'''
     def save(self):
 	city = self.ui.city_combo.currentIndex()
 	self.module.setParameterValue("AnnualUserRain",str(self.ui.spb_city.value()))
@@ -96,7 +81,9 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	self.module.setParameterValue("RainDeep",str(self.ui.le_raindeep.text()))
 	self.module.setParameterValue("RainStart",str(self.ui.te_rainstart.date().toString("yyyy.MM.dd")))
 	self.module.setParameterValue("RainEnd",str(self.ui.te_rainend.date().toString("yyyy.MM.dd")))
-	self.module.setParameterValue("RainDays",str(self.ui.te_rainstart.date().daysTo(self.ui.te_rainend.date())-1))
+	self.module.setParameterValue("RainDays",str(self.ui.te_rainstart.date().daysTo(self.ui.te_rainend.date())))
+
+
 
 	if(self.ui.chkb_flux.isChecked()):
 		self.module.setParameterValue("ConsiderFluxes",str(1))
