@@ -9,6 +9,7 @@ from subprocess import call
 import platform
 import ntpath
 import math
+import tkMessageBox
 
 
 class StreamHydrologyandWaterquality(Module):
@@ -412,9 +413,10 @@ class StreamHydrologyandWaterquality(Module):
 			if(QDate.isLeapYear(i)):
 				extraDays = extraDays + 1
 				yearDays = 366
-
+		showMsgBox = False
 		if(self.RainDays < yearDays):
 			tmpFF = 0
+			showMsgBox = True
 		else:
 			tmpFF = tmpFF / ((self.RainDays - extraDays) / 365)	
 		print "self.FF " + str(tmpFF)
@@ -440,6 +442,13 @@ class StreamHydrologyandWaterquality(Module):
 			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")
 			#f.write(ntpath.basename(realstring)+"," + str(self.getConsiderFluxes()) + "," +  str(FvPasture) + "," +str(self.cin) + "," + str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+"," + str(self.WQ[0]) + "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")		
 			f.close()
+		if(showMsgBox):
+			window = Tk()
+			window.wm_withdraw()
+			window.geometry("1x1+"+str(window.winfo_screenwidth()/2)+"+"+str(window.winfo_screenheight()/2))
+			tkMessageBox.showinfo(title="P8-WSC", message="This model requires at least one year of rainfall data")
+			window.destroy()
+
 	def createInputDialog(self):
 		form = ReadTableSecondary_Gui2(self, QApplication.activeWindow())
 		form.exec_()
