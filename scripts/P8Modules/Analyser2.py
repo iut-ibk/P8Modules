@@ -76,9 +76,11 @@ class AnalyserModule(Module):
 			for line in f:
 				linearr = line.strip('\n').split(',')
 				#f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes())+"\n")
-				#f.write(str(self.getConsiderFluxes()) + "," +  str(FvPasture) + "," +str(self.cin) + "," + str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+ "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")		
+				#f.write(str(self.getConsiderFluxes()) + "," +  str(FvPasture) + "," +str(self.cin) + "," + str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+ "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")	
+				#													4																							9															13
+				#(nr+1) self.FF[0]) (self.VR[0]) (self.FV[0]) (self.WQ[0]) (realstring)  (FreqUntreated) (self.FrequencyRunoffDays) (self.VolumeReduction) (FvForest) (FvPasture) (self.FreqPredev) (self.cin) (self.getConsiderFluxes()) (tss) (tp) (tn)
 
-				tmp = (linearr[13],round(float(linearr[10])),round(float(linearr[3])),round(float(linearr[12])),round(float(linearr[1])),round(float(linearr[2])),round(float(linearr[3])),str(linearr[14]),str(linearr[15]),str(linearr[16]))
+				tmp = (linearr[13],int(linearr[11]),float(linearr[12]),round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[14]),2),round(float(linearr[15]),2),round(float(linearr[16]),2))
 				output.append(tmp)
 			#writing information into summary file
 			f = open(self.summaryFile, 'w')
