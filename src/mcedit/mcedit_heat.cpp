@@ -537,7 +537,7 @@ void mcedit_heat::tecSave(QString filename)
         QTextStream stream;
         stream.setDevice(&file);
         //headers
-        stream << "Block Tree Water Pond and basin Wetland Dry Grass Swale Irrigated Grass Biofilter Inf system Green roof Green wall Roof Road Porous Pav Concrete" << endl;
+        stream << "Block, Tree, Water, Pond and basin, Wetland, Dry Grass, Swale, Irrigated Grass, Biofilter, Inf system, Green roof, Green wall, Roof, Road, Porous Pav, Concrete" << endl;
         QList<Cell_heat*> sortlist=cellmap.values();
         qSort(sortlist.begin(),sortlist.end(),cellCompare);
         foreach (Cell_heat *cell, sortlist)
