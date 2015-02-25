@@ -397,11 +397,9 @@ class StreamHydrologyandWaterquality(Module):
 		if(self.ConsiderFluxes):
 			tmpVR = ((VolumeET+VolumeInf)*1000)/((imparea*10000*AnnualRain/1000))
 		else:
-			tmpVR = ((VolumeET)*1000)/((imparea*10000*AnnualRain/1000))		
+			tmpVR = ((VolumeET)*1000)/((imparea*10000*AnnualRain/1000))
 
-		print "tmp VR: " + str(tmpVR)
-		tmpWQ = (tss+tn+tp)/3
-		print "tmp WQ: " + str(tmpWQ)
+
 		print "self.FF " + str(tmpFF)
 		print "days " + str(self.RainDays)
 		start = int(self.RainStart.split(".")[0])
@@ -418,8 +416,16 @@ class StreamHydrologyandWaterquality(Module):
 			tmpFF = 0
 			showMsgBox = True
 		else:
-			tmpFF = tmpFF / ((self.RainDays - extraDays) / 365)	
+			tmpFF = tmpFF / ((self.RainDays - extraDays) / 365)
+			tmpVR = tmpVR / ((self.RainDays - extraDays) / 365)
+			tmpFV = tmpFV / ((self.RainDays - extraDays) / 365)
 		print "self.FF " + str(tmpFF)
+
+
+
+		print "tmp VR: " + str(tmpVR)
+		tmpWQ = (tss+tn+tp)/3
+		print "tmp WQ: " + str(tmpWQ)
 
 		print "ImpAreaToTreatment: " + str(self.ImpAreaToTreatment) 
 		#for numbers with only value after the comma
@@ -435,11 +441,11 @@ class StreamHydrologyandWaterquality(Module):
 				linearr = line.strip("\n").split(",")
 				if(nr < int(linearr[0])):
 					nr = int(linearr[0])
-			f.write(str(nr+1)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")
+			f.write(str(nr+1)+","+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "," + str(self.tableTSS[0]) + "," + str(self.tableTP[0]) + "," + str(self.tableTN[0]) + "\n")
 			f.close()
 		else:
 			f = open(self.tmpFile,'w')
-			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")
+			f.write("1,"+str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+","+str(self.WQ[0])+"," + ntpath.basename(realstring) + "," + str(FreqUntreated) + "," + str(self.FrequencyRunoffDays) + "," + str(self.VolumeReduction) + "," + str(FvForest) + "," + str(FvPasture) + ","+ str(self.FreqPredev) + "," + str(self.cin) + "," + str(self.getConsiderFluxes()) + "," + str(self.tableTSS[0]) + "," + str(self.tableTP[0]) + "," + str(self.tableTN[0]) + "\n")
 			#f.write(ntpath.basename(realstring)+"," + str(self.getConsiderFluxes()) + "," +  str(FvPasture) + "," +str(self.cin) + "," + str(self.FF[0])+","+str(self.VR[0])+","+str(self.FV[0])+"," + str(self.WQ[0]) + "," + str(tss) + "," + str(tp) + "," + str(tn) + "\n")		
 			f.close()
 		if(showMsgBox):
