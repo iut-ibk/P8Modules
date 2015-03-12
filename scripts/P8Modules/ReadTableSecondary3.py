@@ -419,6 +419,7 @@ class StreamHydrologyandWaterquality(Module):
 			tmpFF = tmpFF / ((self.RainDays - extraDays) / 365)
 			tmpVR = tmpVR / ((self.RainDays - extraDays) / 365)
 			tmpFV = tmpFV / ((self.RainDays - extraDays) / 365)
+			self.FreqPredev = self.FreqPredev / ((self.RainDays - extraDays) / 365)
 		print "self.FF " + str(tmpFF)
 
 
