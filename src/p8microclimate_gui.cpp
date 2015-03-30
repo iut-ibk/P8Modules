@@ -165,7 +165,7 @@ void p8microclimate_gui::on_pb_wsud_released()
 
 void p8microclimate_gui::on_bBox_accepted()
 {
-    this->p8microclimate->setParameterValue("mapPic",ui->le_map->text().toStdString());
+    this->p8microclimate->setParameterValue("MapPic",ui->le_map->text().toStdString());
     int index = ui->cmb_perc->currentIndex();
     this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
     if(index == 0)
