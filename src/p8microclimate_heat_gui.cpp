@@ -221,6 +221,7 @@ void p8microclimate_heat_gui::on_bBox_accepted()
 
 void p8microclimate_heat_gui::on_pb_placeTech_released()
 {
+    this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
     QSettings settings;
     this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
     int cols;
