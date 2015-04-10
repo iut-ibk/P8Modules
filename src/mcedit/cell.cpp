@@ -70,7 +70,7 @@ QGraphicsRectItem *Cell::getRect()
 void Cell::update(int mode,int viewmode)
 {   
     QPen pen;
-    pen.setColor(QColor(0,0,0,255));
+    pen.setColor(QColor(125,125,125,125));
 
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);

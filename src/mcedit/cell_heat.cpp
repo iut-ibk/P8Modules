@@ -52,7 +52,6 @@ int techcountrand=rand()%100;
     QPen circpen;
     circpen.setColor(QColor(0,0,0,0));
     circ->setPen(circpen);
-
     //circ=NULL;
 }
 
@@ -70,7 +69,7 @@ QGraphicsRectItem *Cell_heat::getRect()
 void Cell_heat::update(int mode,int viewmode,int startTemp, int endTemp)
 {   
     QPen pen;
-    pen.setColor(QColor(0,0,0,255));
+    pen.setColor(QColor(125,125,125,125));
 
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
