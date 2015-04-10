@@ -592,9 +592,14 @@ void Microclimate::exportMCtemp(DM::RasterData *r, QString filename, double scal
 {
     int counter = 0;
     QFile file (filename);
+    QFileInfo finfo = QFileInfo(file);
+    QString description = finfo.fileName(); // take before/after wsud etc from file name
+    description.chop(4);
     if(file.open(QIODevice::WriteOnly))
     {
         QTextStream outstream(&file);
+        //headers
+        outstream << "Block, "<< description.toStdString().c_str() << endl;
         for(int i = 0; i<r->getHeight(); i++)
         {
             for(int j = 0; j<r->getWidth();j++)
