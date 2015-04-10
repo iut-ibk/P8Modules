@@ -376,7 +376,7 @@ void mcedit::resLoad(int no, QString tfilename)
         stream.setDevice(&file);
         QList<Cell*> sortlist=cellmap.values();
         qSort(sortlist.begin(),sortlist.end(),cellComp);
-        int linecount=0;
+        int linecount=-1; // because of header
         while (!stream.atEnd())
         {
             stream.readLine();
@@ -385,7 +385,7 @@ void mcedit::resLoad(int no, QString tfilename)
 
         if (linecount==sortlist.size())
         {
-            stream.seek(0);
+            stream.seek(1); // because of header
             foreach (Cell *cell, sortlist)
             {
                 QStringList linelist=stream.readLine().split(",");
