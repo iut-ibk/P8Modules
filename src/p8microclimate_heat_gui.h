@@ -38,6 +38,8 @@ private:
     Ui::p8microclimate_heat_gui *ui;
     Microclimate_heat *p8microclimate;
     mcedit_heat * edit;
+    int oldGridsize;
+
 };
 
 #endif // P8MICROCLIMATE_GUI_H

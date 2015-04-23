@@ -45,6 +45,7 @@ p8microclimate_heat_gui::p8microclimate_heat_gui(Microclimate_heat * p8, QWidget
     ui->le_shape->setText(p8microclimate->shapefile.c_str());
     //ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
     ui->le_techFile->setText(p8microclimate->techFile.c_str());
+    this->oldGridsize = this->p8microclimate->gridsize;
 
 }
 
@@ -217,6 +218,14 @@ void p8microclimate_heat_gui::on_bBox_accepted()
         this->p8microclimate->setParameterValue("Percentile","4");
     }
     this->p8microclimate->setParameterValue("Techfile",ui->le_techFile->text().toStdString());
+
+    // remove mcd file if gridsize is changed
+    if(this->oldGridsize != this->p8microclimate->gridsize)
+    {
+        QSettings settings;
+        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
+            QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
+    }
 }
 
 void p8microclimate_heat_gui::on_pb_placeTech_released()
