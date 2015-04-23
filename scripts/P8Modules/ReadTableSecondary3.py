@@ -96,6 +96,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.hasPipe = False
 		self.hasInfil = False
 		self.createInfilNode = False
+		self.linkToReuse = False
 		realstring = ""
 		self.ImpAreaToTreatment = 0.0
 		settings = QSettings()
@@ -190,7 +191,8 @@ class StreamHydrologyandWaterquality(Module):
 		list1 = self.readFileToList(workpath + "PredevelopRunoffFrequency"+str(number)+".TXT")
 		list2 = self.readFileToList(workpath + "UntreatedRunoffFrequency"+str(number)+".TXT")
 		list3 = self.readFileToList(workpath + "TreatedRunoffFrequency"+str(number)+".TXT")
-		list4 = self.readFileToList(workpath + "ETandRe-useFluxes"+str(number)+".TXT")
+		if(self.linkToReuse):
+			list4 = self.readFileToList(workpath + "ETandRe-useFluxes"+str(number)+".TXT")
 		list5 = self.readFileToList(workpath + "PredevelopTotalRunoff"+str(number)+".TXT")
 		if(self.createInfilNode):
 			list6 = self.readFileToList(workpath + "Exfiltration"+str(number)+".TXT")
@@ -224,10 +226,13 @@ class StreamHydrologyandWaterquality(Module):
 			vec5.append(list5[i])
 			vec8.append(list8[i])
 
-		for i in range(len(list4)):
+		for i in range(len(list1)):
 			if i <2 or (i+1)%2:
 				continue
-			vec4.append(list4[i])
+			if(self.linkToReuse):
+				vec4.append(list4[i])
+			else:
+				vec4.append(0)
 			vec10.append(list3[i])
 
 			#if no base, pipe or infiltration in msf file, there wont be any output from music so we just fill with zeros
@@ -528,13 +533,14 @@ class StreamHydrologyandWaterquality(Module):
 		f = open(workpath + "musicConfigFileSecondary.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
-		f.write("Export_TS (Reuse and ET fluxes, Inflow, \"ETandRe-useFluxes"+str(number)+".TXT\",1d)\n")
+		if(self.linkToReuse):
+			f.write("Export_TS (Reuse and ET fluxes, Inflow, \"ETandRe-useFluxes"+str(number)+".TXT\",1d)\n")
 		if(self.createInfilNode):
 			f.write("Export_TS (Infiltration Fluxes, Inflow, \"Exfiltration"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency"+str(number)+".TXT \",1d)\n")
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
-		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Urbanised Catchement, Outflow, \"UrbanisedCatchement"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
 		if(self.hasBase):
 			f.write("Export_TS (Baseflow, Inflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
@@ -557,7 +563,7 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency"+str(nr)+".TXT \",1d)\n")
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(nr)+".TXT\",1d)\n")
-		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(nr)+".TXT\",1d)\n")
+		f.write("Export_TS (Urbanised Catchement, Outflow, \"UrbanisedCatchement"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Receiving Node, Inflow, \"TreatedRunoffFrequency"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(nr)+".TXT\",1d)\n")
@@ -617,6 +623,7 @@ class StreamHydrologyandWaterquality(Module):
 		infillist = []
 		baseflowlist = []
 		reclist = []
+		swalelist = []
 		readcatchmentlist = False
 		writetop = True
 		writebot = False
@@ -696,7 +703,8 @@ class StreamHydrologyandWaterquality(Module):
 					totalimparea += imp * tmparea / 100
 					ImpIDtoImpArea[str(tmpID)] = imp * tmparea / 100
 					impnodes.append(tmpID)
-					#if(imp == 100):
+					if(imp == 0):
+						baseflowlist.append(tmpID)
 						#EtFlux_list.append(tmpID)
 				if(writetop):
 					urbfirst += line
@@ -806,7 +814,7 @@ class StreamHydrologyandWaterquality(Module):
 				BF = False
 			if (linearr[0] == "Node ID" and (SW)):
 				SW = False
-				EtFlux_list.append(linearr[1])
+				swalelist.append(linearr[1])
 				#fluxinfl_list.append(linearr[1])
 			
 			# get all pipeflow
@@ -887,7 +895,7 @@ class StreamHydrologyandWaterquality(Module):
 		umusic.writeMUSICjunction2(fileOut, "Reuse and ET fluxes",areaSumID+3,0,0)
 		if(self.createInfilNode):
 			umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0) # if we have no treatment node except rain tank dont create and put zeros for list6
-		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, totalarea,1, catchment_paramter_list)
+		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchement", "", areaSumID+5, 0, 0, totalarea,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Ignore", areaSumID+6, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
 		umusic.writeMUSICjunction2(fileOut, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
@@ -909,6 +917,7 @@ class StreamHydrologyandWaterquality(Module):
 				if(self.createInfilNode):
 					umusic.writeMUSIClinkToInfilFlux1(fileOut,nodeid,areaSumID+4)
 				umusic.writeMUSIClinkToFlux(fileOut,nodeid,areaSumID+3)
+				self.linkToReuse = True
 		i = 0
 
 		for IDs in splitlist:
@@ -917,6 +926,7 @@ class StreamHydrologyandWaterquality(Module):
 			i = i + 1
 		for i in EtFlux_list:
 		    umusic.writeMUSIClinkToFlux(fileOut, i, areaSumID+3)
+		    self.linkToReuse = True
 		# Link to Infiltration
 		print "start Flux list"
 		print fluxinfl_list
@@ -1025,6 +1035,8 @@ class StreamHydrologyandWaterquality(Module):
 			for b in baseflowlist:	
 				umusic.writeMUSIClinkBase(fileOut,b,areaSumID+8)
 
+		for s in swalelist:
+			umusic.writeMUSIClinkToInfilFlux3(fileOut,s,areaSumID+4)
 
 		#check if outbas last node or if its connected to another technology
 		found = False
