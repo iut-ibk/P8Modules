@@ -80,12 +80,12 @@ class AnalyserModule(Module):
 				#													4																							9															13
 				#(nr+1) self.FF[0]) (self.VR[0]) (self.FV[0]) (self.WQ[0]) (realstring)  (FreqUntreated) (self.FrequencyRunoffDays) (self.VolumeReduction) (FvForest) (FvPasture) (self.FreqPredev) (self.cin) (self.getConsiderFluxes()) (tss) (tp) (tn)
 
-				tmp = (linearr[13],int(linearr[11]),float(linearr[12]),round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[14]),2),round(float(linearr[15]),2),round(float(linearr[16]),2))
+				tmp = (linearr[13],float(linearr[11]),float(linearr[12]),round(float(linearr[1]),2),round(float(linearr[2]),2),round(float(linearr[3]),2),round(float(linearr[14]),2),round(float(linearr[15]),2),round(float(linearr[16]),2))
 				output.append(tmp)
 			#writing information into summary file
 			f = open(self.summaryFile, 'w')
 			f.write("------------ Analyzer Summary ------------\n\n")
-			f.write(" EB: Stream Hydrology and Water Quality\nConsidered infiltration fluxes?,Number of runoff days in the natural catchment (days/year), Baseflow rate allowed in the WSUD catchment(m3/s), Frequency of Runoff Days (days/year), Proportion of Total Volume Reduction (%), Proportion of Filtered Flow Volume (%), TSS mean concentration (mg/L), TP mean concentration (mg/L), TN mean concentration (mg/L)\n")
+			f.write(" EB: Stream Hydrology and Water Quality\nConsidered infiltration fluxes?,Number of runoff days in the natural catchement (days/year), Baseflow rate allowed in the WSUD catchement(m3/s), Frequency of Runoff Days (days/year), Proportion of Total Volume Reduction (%), Proportion of Filtered Flow Volume (%), TSS mean concentration (mg/L), TP mean concentration (mg/L), TN mean concentration (mg/L)\n")
 
 			for line in output:
 				tmp = str(line)
