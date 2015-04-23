@@ -417,7 +417,7 @@ class StreamHydrologyandWaterquality(Module):
 				extraDays = extraDays + 1
 				yearDays = 366
 		showMsgBox = False
-		if(self.RainDays < yearDays):
+		if(self.RainDays < yearDays - 1): 	# - 1 so special cases of 01-01-1959 00:00 to 31-12-1959 23:54 is still consider a year since this happens alot from MUSIC export
 			tmpFF = 0
 			showMsgBox = True
 		else:
