@@ -36,6 +36,7 @@ public:
     double calcLST(QList<QList<double> > t);
 
     QList<QList<double> > readWsud(QString filename);
+    QList<QList<double> > fillWithZeros(int rows, int cols);
     QList<double> getTechAreasForCell(int x, int y,double width, QList<QList<double> >table);
     double calcDeltaLst(QList<double> t, double frac);
     void exportRasterData(DM::RasterData * r, QString filename);
