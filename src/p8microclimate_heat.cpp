@@ -605,15 +605,16 @@ void Microclimate_heat::run()
     std::cout << "lstReductionAIR" << endl;
     printRaster(lstReductionAir);
     exportRasterData(imp,QString::fromStdString(workingDir)+"/Grid.txt");
-    exportRasterData(lst,QString::fromStdString(workingDir)+"/LST before WSUD.txt");
     */
+    exportRasterData(lst,QString::fromStdString(workingDir)+"/LST before WSUD.txt",1);
     exportMCtemp(lst,QString::fromStdString(workingDir)+"/LST before WSUD.mcd",1);
 
-    //exportRasterData(lstAfterWsud,QString::fromStdString(workingDir)+"/LST after WSUD.txt")
+    exportRasterData(lstAfterWsud,QString::fromStdString(workingDir)+"/LST after WSUD.txt",1);
     exportMCtemp(lstAfterWsud,QString::fromStdString(workingDir)+"/LST after WSUD.mcd",1);
-    //exportRasterData(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.txt");
+
     exportMCtemp(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.mcd",-1);
     exportRasterData(lstReduction,QString::fromStdString(workingDir)+"/Reduction in LST.TXT",-1);
+
     /*exportRasterData(lstReductionAir,QString::fromStdString(workingDir)+"/Reduction in Air Temperature.txt");
     exportMCtemp(lstReductionAir,QString::fromStdString(workingDir)+"/Reduction in Air Temperature.mcd",1);
     */
