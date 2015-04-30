@@ -540,7 +540,7 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency"+str(number)+".TXT \",1d)\n")
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
-		f.write("Export_TS (Urbanised Catchement, Outflow, \"UrbanisedCatchement"+str(number)+".TXT\",1d)\n")
+		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
 		if(self.hasBase):
 			f.write("Export_TS (Baseflow, Inflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
@@ -563,7 +563,7 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Total Runoff, Outflow, \"PredevelopTotalRunoff"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Pre-developed Runoff Frequency, Inflow, \"PredevelopRunoffFrequency"+str(nr)+".TXT \",1d)\n")
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(nr)+".TXT\",1d)\n")
-		f.write("Export_TS (Urbanised Catchement, Outflow, \"UrbanisedCatchement"+str(nr)+".TXT\",1d)\n")
+		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Receiving Node, Inflow, \"TreatedRunoffFrequency"+str(nr)+".TXT\",1d)\n")
 		f.write("Export_TS (Receiving Node, InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(nr)+".TXT\",1d)\n")
@@ -895,7 +895,7 @@ class StreamHydrologyandWaterquality(Module):
 		umusic.writeMUSICjunction2(fileOut, "Reuse and ET fluxes",areaSumID+3,0,0)
 		if(self.createInfilNode):
 			umusic.writeMUSICjunction2(fileOut, "Infiltration Fluxes",areaSumID+4,0,0) # if we have no treatment node except rain tank dont create and put zeros for list6
-		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchement", "", areaSumID+5, 0, 0, totalarea,1, catchment_paramter_list)
+		umusic.writeMUSICcatchmentnode3(fileOut, "Urbanised Catchment", "", areaSumID+5, 0, 0, totalarea,1, catchment_paramter_list)
 		umusic.writeMUSICjunction2(fileOut, "Ignore", areaSumID+6, 0, 0)
 		umusic.writeMUSIClinkToIgnore(fileOut,areaSumID+5,areaSumID+6)
 		umusic.writeMUSICjunction2(fileOut, "Untreated Runoff Frequency", areaSumID+7, 0, 0)
