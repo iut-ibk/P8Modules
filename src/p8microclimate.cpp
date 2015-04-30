@@ -169,9 +169,12 @@ void Microclimate::run()
     testgrid->setSize(width,height,gridsize,gridsize,imp->getXOffset(),imp->getYOffset());
     fillZeros(testgrid);
 
-
-    QList<QList<double> >WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
-
+    QList<QList<double> >WsudTech;
+    QString path = QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd");
+    if(QFile::exists(path))
+        WsudTech = readWsud(QString(this->workingDir.c_str()) + QString("/WSUDtech.mcd"));
+    else
+        WsudTech = fillWithZeros(height,width);
 
     double percent;
     int impervcounter;
@@ -466,6 +469,7 @@ QList<QList<double> > Microclimate::readWsud(QString filename)
     file.open(QIODevice::Text|QIODevice::ReadOnly);
     QTextStream stream;
     stream.setDevice(&file);
+    stream.readLine(); // skip headers
 
     while(!stream.atEnd())
     {
@@ -477,6 +481,23 @@ QList<QList<double> > Microclimate::readWsud(QString filename)
         line.clear();
     }
     file.close();
+    return res;
+}
+
+QList<QList<double> > Microclimate::fillWithZeros(int rows, int cols)
+{
+    QList<QList<double> > res;
+    QList<double> line;
+
+
+    for(int i = 0; i < rows * cols; i++) // loop for cells
+    {
+
+        for(int j = 0; j < 12; j++)  // loop for techs + cell nr
+            line.append(0);
+        res.append(line);
+        line.clear();
+    }
     return res;
 }
 
