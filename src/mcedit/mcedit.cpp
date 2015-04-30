@@ -340,6 +340,7 @@ void mcedit::tecLoad(QString tfilename)
         {
             QTextStream stream;
             stream.setDevice(&file);
+            stream.readLine(); // skip first line because of headers
             QList<Cell*> sortlist=cellmap.values();
             qSort(sortlist.begin(),sortlist.end(),cellComp);
 
@@ -385,7 +386,8 @@ void mcedit::resLoad(int no, QString tfilename)
 
         if (linecount==sortlist.size())
         {
-            stream.seek(1); // because of header
+            stream.seek(0);
+            stream.readLine(); // because of header
             foreach (Cell *cell, sortlist)
             {
                 QStringList linelist=stream.readLine().split(",");
@@ -435,6 +437,7 @@ void mcedit::tecSave(QString filename)
     file.open(QIODevice::WriteOnly|QIODevice::Text);
     QTextStream stream;
     stream.setDevice(&file);
+    stream << "Block, Swale, Bioretention, Infiltration system, Surface wetland, Pond and basin, Tree, Grass, Impervious area, Green wall, Green roof, User defined" << endl;
     QList<Cell*> sortlist=cellmap.values();
     qSort(sortlist.begin(),sortlist.end(),cellComp);
     foreach (Cell *cell, sortlist)
