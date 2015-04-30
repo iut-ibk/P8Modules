@@ -68,16 +68,16 @@ class Ui_ReadTableSecondary_GUI2(object):
         self.gridLayout.addWidget(self.spb_city, 1, 1, 1, 1)
         '''
         self.label_head3 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_head3.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Natural catchement properties", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_head3.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Natural catchment properties", None, QtGui.QApplication.UnicodeUTF8))
         self.label_head3.setObjectName(_fromUtf8("lbl_head3"))
         self.label_head3.setFont(font)
         self.gridLayout.addWidget(self.label_head3, 2, 0, 1, 1)
         '''
         self.label_base = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_base.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Baseflow allowed in the WSUD catchement[m³/day] (Leave zero for default value.)", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_base.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Baseflow allowed in the WSUD catchment[m³/day] (Leave zero for default value.)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_base.setObjectName(_fromUtf8("lbl_base"))
         self.label_base.setFont(fontB)
-        self.label_base.setToolTip("Leave zero for default equal to\n3 times the median of the baseflow\n in the natural catchement.")
+        self.label_base.setToolTip("Leave zero for default equal to\n3 times the median of the baseflow\n in the natural catchment.")
         self.gridLayout.addWidget(self.label_base, 3, 0, 1, 1)
 
         self.spb_base = QtGui.QDoubleSpinBox(self.scrollAreaWidgetContents)
@@ -88,7 +88,7 @@ class Ui_ReadTableSecondary_GUI2(object):
 
 
         self.label_head4 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_head4.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Natural catchement properties", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_head4.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Natural catchment properties", None, QtGui.QApplication.UnicodeUTF8))
         self.label_head4.setObjectName(_fromUtf8("lbl_head4"))
         self.label_head4.setFont(fontB)
         self.gridLayout.addWidget(self.label_head4, 4, 0, 1, 1)
