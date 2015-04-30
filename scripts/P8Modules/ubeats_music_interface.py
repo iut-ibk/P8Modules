@@ -561,13 +561,13 @@ def writeMUSIClinkToInfilFlux2(f, upN, downN):
     return True
 
 def writeMUSIClinkToInfilFlux3(f, upN, downN):
-    f.write("Link Name,Drainage Link,\n")
+    f.write("Link Name,Secondary Drainage Link,\n")
     f.write("Source Node ID,"+str(upN)+",{The is the ID of the upstream node}\n")
     f.write("Target Node ID,"+str(downN)+",{This is the ID of the downstream node}\n")
     f.write("Routing,Not Routed,{either \"Not Routed\" or \"Routed\"}\n")
     f.write("Muskingum K,30,{no value required for no routing or \"numerical value\" for routed}\n")
     f.write("Muskingum Theta,0.25,{no value required for no routing or \"numerical value\" for routed. Must be between 0.1 and 0.49}\n")
-    f.write("Secondary Outflow Components,Reuse; Evapotranspiration,{for secondary drainage link only}\n")
+    f.write("Secondary Outflow Components,Infiltration,{for secondary drainage link only}\n")
     f.write("------------------------------------------------------------------------------------\n")
     return True
 
