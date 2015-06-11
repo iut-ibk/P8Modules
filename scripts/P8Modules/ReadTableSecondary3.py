@@ -95,6 +95,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.hasBase = False
 		self.hasPipe = False
 		self.hasInfil = False
+		self.hasOverFlow = False
 		self.createInfilNode = False
 		self.linkToReuse = False
 		realstring = ""
@@ -202,6 +203,8 @@ class StreamHydrologyandWaterquality(Module):
 			list9 = self.readFileToList(workpath + "Baseflow"+str(number)+".TXT")
 		if(self.hasPipe):
 			list10 = self.readFileToList(workpath + "Pipe Flow"+str(number)+".TXT")
+		if(self.hasOverFlow):
+			list11 = self.readFileToList(workpath + "Overflow" + str(number)+ ".TXT")
 
 
 		vec1 = []
@@ -215,6 +218,7 @@ class StreamHydrologyandWaterquality(Module):
 		vec10 = []
 		vecBase = []
 		vecPipe = []
+		vecOverFlow = []
 		tssVec = []
 		tnVec = []
 		tpVec = []
@@ -235,7 +239,7 @@ class StreamHydrologyandWaterquality(Module):
 				vec4.append(0)
 			vec10.append(list3[i])
 
-			#if no base, pipe or infiltration in msf file, there wont be any output from music so we just fill with zeros
+			#if no base, pipe or infiltration or overflow in msf file, there wont be any output from music so we just fill with zeros
 			if(self.hasBase):
 				vecBase.append(list9[i])
 			else:
@@ -248,7 +252,10 @@ class StreamHydrologyandWaterquality(Module):
 				vec6.append(list6[i])
 			else:
 				vec6.append(0)
-
+			if(self.hasOverFlow):
+				vecOverFlow.append(list11[i])
+			else:
+				vecOverFlow.append(0)
 
 		for i in range(len(list7)):
 			if i<4 or ((i)%4==0):
@@ -341,7 +348,7 @@ class StreamHydrologyandWaterquality(Module):
 #      ###### for each day in the timeseries 	i = 1 to end of infiltration fluxes 	
 		Filtflow = []
 		for i in range(len(vecBase)):
-			Filtflow.append(float(vec6[i]) + float(vecPipe[i]) + float(vecBase[i]))
+			Filtflow.append(float(vec6[i]) + float(vecPipe[i]) + float(vecBase[i]) + float(vecOverFlow[i]))
 #			print Filtflow[i]
 			if(Filtflow[i] > self.cin):
 				Filtflow[i] = 0
@@ -542,10 +549,13 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS (Pre-developed Baseflows, Inflow, \"PredevelopBaseflowFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Urbanised Catchment, Outflow, \"UrbanisedCatchment"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS (Untreated Runoff Frequency, Inflow, \"UntreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
+		if(self.hasOverFlow):
+			f.write("Export_TS (Overflow, Inflow, \"Overflow"+str(number)+".TXT\",1d)\n")
 		if(self.hasBase):
 			f.write("Export_TS (Baseflow, Inflow, \"Baseflow"+str(number)+".TXT\",1d)\n")
 		if(self.hasPipe):
 			f.write("Export_TS (Pipe Flow, Inflow, \"Pipe Flow"+str(number)+".TXT\",1d)\n")
+
 		f.write("Export_TS ("+str(name)+", Inflow, \"TreatedRunoffFrequency"+str(number)+".TXT\",1d)\n")
 		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(number)+".TXT\",1d)\n")
 		f.close()
@@ -623,6 +633,7 @@ class StreamHydrologyandWaterquality(Module):
 		infillist = []
 		baseflowlist = []
 		reclist = []
+		overflowlist = []
 		swalelist = []
 		readcatchmentlist = False
 		writetop = True
@@ -777,15 +788,19 @@ class StreamHydrologyandWaterquality(Module):
 			if(linearr[0] == "Node Type" and linearr[1] == "WetlandNode"):
 				WSUR = True
 				self.createInfilNode = True
+				self.hasOverFlow = True
 			if(linearr[0] == "Node Type" and linearr[1] == "PondNode"):
 				PB = True
 				self.createInfilNode = True
+				self.hasOverFlow = True
 			if(linearr[0] == "Node Type" and linearr[1] == "InfiltrationSystemNodeV4"):
 				IS = True
 				self.createInfilNode = True
+				self.hasOverFlow = True
 			if(linearr[0] == "Node Type" and linearr[1] == "BioRetentionNodeV4"):
 				BF = True
 				self.createInfilNode = True
+				self.hasOverFlow = True
 			if(linearr[0] == "Node Type" and linearr[1] == "SwaleNode"):
 				SW = True
 				self.createInfilNode = True
@@ -794,6 +809,14 @@ class StreamHydrologyandWaterquality(Module):
 			if(linearr[0] == "Node Type" and linearr[1] == "DetentionBasinNode"):
 				foundDetention = True
 				deten = True
+				self.hasOverFlow = True
+			if(linearr[0] == "Node Type" and linearr[1] == "SedimentationBasinNode"):
+				self.hasOverFlow = True
+			if(linearr[0] == "Node Type" and linearr[1] == "MediaFiltrationNode"):
+				self.hasOverFlow = True
+			if(self.hasOverFlow and linearr[0] =="Nde ID"):
+				self.hasOverFlow = False
+				overflowlist.append(int(linearr[1]))
 			if(deten and linearr[0] == "Node ID"):
 				detIds.append(int(linearr[1]))
 				deten = False
@@ -911,6 +934,11 @@ class StreamHydrologyandWaterquality(Module):
 			umusic.writeMUSICjunction2(fileOut,"Pipe Flow",areaSumID+9,0,0)
 		if(len(infillist) != 0):
 			self.hasInfil = True
+		if(len(overflowlist) != 0):
+			self.hasOverFlow = True
+			umusic.writeMUSICjunction2(fileOut,"Overflow",areaSumID+10,0,0)
+
+
 
 		if(foundDetention):
 			for nodeid in detIds:
@@ -972,6 +1000,8 @@ class StreamHydrologyandWaterquality(Module):
 				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
 			if(self.hasPipe):
 				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
+			if(self.hasOverFlow):
+				umusic.writeMUSIClink(fileOut, areaSumID+10,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
 			outid = receivingnodeid
 		if(OutBasId != 0 and receivingnodeid == 0):
@@ -981,6 +1011,8 @@ class StreamHydrologyandWaterquality(Module):
 				umusic.writeMUSIClink(fileOut, areaSumID+8,int(OutBasId))
 			if(self.hasPipe):
 				umusic.writeMUSIClink(fileOut, areaSumID+9,int(OutBasId))
+			if(self.hasOverFlow):
+				umusic.writeMUSIClink(fileOut, areaSumID+10,int(OutBasId))
 			self.ReceivBas = receiveBasName
 			outid = OutBasId
 		if(OutBasId != 0 and receivingnodeid != 0):
@@ -990,6 +1022,8 @@ class StreamHydrologyandWaterquality(Module):
 				umusic.writeMUSIClink(fileOut, areaSumID+8,int(receivingnodeid))
 			if(self.hasPipe):
 				umusic.writeMUSIClink(fileOut, areaSumID+9,int(receivingnodeid))
+			if(self.hasOverFlow):
+				umusic.writeMUSIClink(fileOut, areaSumID+10,int(receivingnodeid))
 			self.ReceivBas = "Receiving Node"
 			outid = receivingnodeid
 		if (OutBasId == 0 and receivingnodeid == 0):
@@ -1037,6 +1071,11 @@ class StreamHydrologyandWaterquality(Module):
 
 		for s in swalelist:
 			umusic.writeMUSIClinkToInfilFlux3(fileOut,s,areaSumID+4)
+
+		#links to overflow
+		if(self.hasOverFlow):
+			for t in overflowlist:
+				umusic.writeMUSIClinkToOverFlow(fileOut,t,areaSumID+10)
 
 		#check if outbas last node or if its connected to another technology
 		found = False
