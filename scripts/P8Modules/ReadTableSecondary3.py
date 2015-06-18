@@ -814,7 +814,7 @@ class StreamHydrologyandWaterquality(Module):
 				self.hasOverFlow = True
 			if(linearr[0] == "Node Type" and linearr[1] == "MediaFiltrationNode"):
 				self.hasOverFlow = True
-			if(self.hasOverFlow and linearr[0] =="Nde ID"):
+			if(self.hasOverFlow and linearr[0] =="Node ID"):
 				self.hasOverFlow = False
 				overflowlist.append(int(linearr[1]))
 			if(deten and linearr[0] == "Node ID"):
@@ -1054,7 +1054,7 @@ class StreamHydrologyandWaterquality(Module):
 		#pipe links
 		if(self.hasPipe):
 			for p in pipelist:	
-				if(self.isLastInTrain(p,PipeFlowLinkList,NodeIDToType)): 	#check if technology is last in train
+				if(self.isLastInTrain(p,PipeFlowLinkList,NodeIDToType)): 	# check if technology is last in train
 					print str(p) + " is last"
 					umusic.writeMUSIClinkPipe(fileOut,p,areaSumID+9)		# if yes link it to pipeflow node
 
