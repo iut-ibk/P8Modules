@@ -1048,8 +1048,9 @@ class StreamHydrologyandWaterquality(Module):
 			for r in reclist:
 				umusic.writeMUSIClink(fileOut,r,int(receivingnodeid))
 		else:
-			for r in reclist:	#rec links to outbas
-				umusic.writeMUSIClink(fileOut,r,int(OutBasId))
+			if(OutBasId != 0):
+				for r in reclist:	#rec links to outbas
+					umusic.writeMUSIClink(fileOut,r,int(OutBasId))
 
 		#pipe links
 		if(self.hasPipe):
