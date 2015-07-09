@@ -420,7 +420,8 @@ class StreamErosionIndex(Module):
                 outfile.write(line)
 
         umusic.writeMUSICcatchmentnodeEro(outfile,"Pre-developed Catchment",ID+1,perArea,False,catchment_paramter_list2) #pervious
-        umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 2,impArea,True,catchment_paramter_list) #impervious
+        #umusic.writeMUSICcatchmentnodeEro(outfile,"Urbanised Catchment",ID + 2,impArea,True,catchment_paramter_list) #impervious
+        umusic.writeMUSICcatchmentnodeEro2(outfile,"Urbanised Catchment",ID + 2, impArea+perArea,impArea/(impArea+perArea),perArea/(impArea+perArea),catchment_paramter_list)
         if(routed):
             umusic.writeMUSICjunction2(outfile,"PreJunction",ID + 3,0,0)
             umusic.writeMUSICjunction2(outfile,"UrbJunction",ID + 4,0,0)
