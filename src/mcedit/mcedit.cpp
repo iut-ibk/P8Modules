@@ -19,6 +19,7 @@
 #include <QMessageBox>
 #include <QTransform>
 #include <cmath>
+#include <QKeyEvent>
 #include "../p8microclimate_gui.h"
 
 #include "celldialog.h"
@@ -45,6 +46,14 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
     teccol.append(new QColor(181,90,29,255));
     teccol.append(new QColor(9,0,173,255));
 
+    minTempLandercover = 0;
+    maxTempLandcover = 0;
+    minTempReduction = 0;
+    maxTempReduction = 0;
+    minTempBefore = 0;
+    maxTempBefore = 0;
+    minTempAfter= 0;
+    maxTempAfter = 0;
 
     this->cx=cx;
     this->cy=cy;
@@ -530,6 +539,8 @@ void mcedit::tecLoad(p8microclimate_gui *parent)
 
 void mcedit::cellupdate()
 {
+    double startTemp = 0;
+    double endTemp = 0;
     foreach(QGraphicsRectItem* scalebox,scaleboxes)
     {
         if (mode==0)
@@ -538,15 +549,21 @@ void mcedit::cellupdate()
         }
         if (mode==1)
         {
-            setScale(-5,5,0);
+            startTemp = minTempReduction;
+            endTemp = maxTempReduction;
+            setScale(minTempReduction,maxTempReduction,0);//setScale(getMinValue(0)-3,getMaxValue(0)+3,0);
         }
         if (mode==2)
         {
-            setScale(30,45,1);
+            startTemp = minTempBefore;
+            endTemp = maxTempBefore;
+            setScale(minTempBefore,maxTempBefore,0);//setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
         }
         if (mode==3)
         {
-            setScale(30,40,1);
+            startTemp = minTempAfter;
+            endTemp = maxTempAfter;
+            setScale(minTempAfter,maxTempAfter,0); // setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
         }
     }
 
@@ -640,6 +657,19 @@ void mcedit::on_pb_edit_clicked()
 void mcedit::on_cb_mode_currentIndexChanged(int index)
 {
     mode=index;
+    if(index == 0){
+        this->ui->minTemp->setValue(minTempLandercover);
+        this->ui->maxTemp->setValue(maxTempLandcover);
+    }else if(index == 1){
+        this->ui->minTemp->setValue(minTempReduction);
+        this->ui->maxTemp->setValue(maxTempReduction);
+    }else if(index == 2){
+        this->ui->minTemp->setValue(minTempBefore);
+        this->ui->maxTemp->setValue(maxTempBefore);
+    }else if(index == 3){
+        this->ui->minTemp->setValue(minTempAfter);
+        this->ui->maxTemp->setValue(maxTempAfter);
+    }
     cellupdate();
 }
 
@@ -711,4 +741,40 @@ void mcedit::on_pushButton_clicked()
         ui->graphicsView->scene()->render(&painter);
         image.save(tfilename);
     }
+}
+
+void mcedit::on_pb_run_released()
+{
+    this->parent->set_run();
+    // emulate button box click
+    QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
+    QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
+
+}
+
+void mcedit::on_minTemp_valueChanged(double arg1)
+{
+    if(mode == 0){
+        minTempLandercover = arg1;
+    }else if(mode == 1){
+        minTempReduction = arg1;
+    }else if(mode == 2){
+        minTempBefore = arg1;
+    }else if(mode == 3){
+        minTempAfter = arg1;
+    }
+    cellupdate();}
+
+void mcedit::on_maxTemp_valueChanged(double arg1)
+{
+    if(mode == 0){
+        maxTempLandcover = arg1;
+    }else if(mode == 1){
+        maxTempReduction = arg1;
+    }else if(mode == 2){
+        maxTempBefore = arg1;
+    }else if(mode == 3){
+        maxTempAfter = arg1;
+    }
+    cellupdate();
 }

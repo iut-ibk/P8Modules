@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include "mcedit/mcedit.h"
+#include <QKeyEvent>
 
 
 p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
@@ -40,6 +41,7 @@ p8microclimate_gui::p8microclimate_gui(Microclimate * p8, QWidget *parent) :
     ui->le_map->setText(p8microclimate->mapPic.c_str());
     ui->le_shape->setText(p8microclimate->shapefile.c_str());
     //ui->le_WSUDtech->setText(p8microclimate->wsudTech.c_str());
+    this->oldGridsize = this->p8microclimate->gridsize;
 
 }
 
@@ -67,6 +69,37 @@ void p8microclimate_gui::setTec(QList<QList<double> > tec)
 p8microclimate_gui::~p8microclimate_gui()
 {
     delete ui;
+}
+
+void p8microclimate_gui::set_run()
+{
+    // save gui stuffs
+    this->p8microclimate->setParameterValue("MapPic",ui->le_map->text().toStdString());
+    int index = ui->cmb_perc->currentIndex();
+    this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
+    if(index == 0)
+    {
+        this->p8microclimate->setParameterValue("Percentile","20");
+    }
+    if(index == 1)
+    {
+        this->p8microclimate->setParameterValue("Percentile","50");
+    }
+    if(index == 2)
+    {
+        this->p8microclimate->setParameterValue("Percentile","80");
+    }
+    // remove mcd file if gridsize is changed
+    if(this->oldGridsize != this->p8microclimate->gridsize)
+    {
+        QSettings settings;
+        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
+            QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
+    }
+
+    // emulate button box click
+    QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
+    QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
 }
 
 void p8microclimate_gui::on_pb_map_released()
@@ -179,6 +212,13 @@ void p8microclimate_gui::on_bBox_accepted()
     if(index == 2)
     {
         this->p8microclimate->setParameterValue("Percentile","80");
+    }
+    // remove mcd file if gridsize is changed
+    if(this->oldGridsize != this->p8microclimate->gridsize)
+    {
+        QSettings settings;
+        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
+            QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
     }
 }
 

@@ -1,6 +1,7 @@
 #include "p8microclimate_heat_gui.h"
 #include "p8microclimate_heat.h"
 #include <QFileDialog>
+#include <QKeyEvent>
 #include "ui_p8microclimate_heat_gui.h"
 #include "string"
 #include "sstream"
@@ -158,6 +159,42 @@ void p8microclimate_heat_gui::on_pb_landuse_released()
     settings.setValue("dataPath",finfo.absolutePath());
 }
 
+void p8microclimate_heat_gui::set_run()
+{
+    //save gui stuffs
+    this->p8microclimate->setParameterValue("MapPic",ui->le_map->text().toStdString());
+    int index = ui->cmb_perc->currentIndex();
+    this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
+    if(index == 0)
+    {
+        this->p8microclimate->setParameterValue("Percentile","20");
+    }
+    if(index == 1)
+    {
+        this->p8microclimate->setParameterValue("Percentile","50");
+    }
+    if(index == 2)
+    {
+        this->p8microclimate->setParameterValue("Percentile","80");
+    }
+    if(index == 3)
+    {
+        this->p8microclimate->setParameterValue("Percentile","4");
+    }
+    this->p8microclimate->setParameterValue("Techfile",ui->le_techFile->text().toStdString());
+
+    // remove mcd file if gridsize is changed
+    if(this->oldGridsize != this->p8microclimate->gridsize)
+    {
+        QSettings settings;
+        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
+            QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
+    }
+
+    QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
+    QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
+}
+
 void p8microclimate_heat_gui::on_pb_wsud_released()
 {
     QSettings settings;
@@ -272,6 +309,7 @@ void p8microclimate_heat_gui::on_pb_placeTech_released()
 
         edit=new mcedit_heat(this,ui->le_map->text(),QString(this->p8microclimate->workingDir.c_str()),newcols,newrows,30,30);
         edit->show();
+
     }
     else
         QMessageBox::critical(this,"Error","Internal Error 354235");

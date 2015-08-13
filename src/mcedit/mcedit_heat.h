@@ -67,6 +67,12 @@ private slots:
     void on_pb_zoomout_2_clicked();
     void on_pushButton_clicked();
 
+    void on_pb_run_released();
+
+    void on_minTemp_valueChanged(double arg1);
+
+    void on_maxTemp_valueChanged(double arg1);
+
 private:
     p8microclimate_heat_gui *parent;
     QString filename;
@@ -92,6 +98,15 @@ private:
     int scalehight;
     int scalelength;
     int scalesteps;
+
+    double minTempLandercover;
+    double maxTempLandcover;
+    double minTempReduction;
+    double maxTempReduction;
+    double minTempBefore;
+    double maxTempBefore;
+    double minTempAfter;
+    double maxTempAfter;
 
 };
 

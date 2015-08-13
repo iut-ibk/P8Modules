@@ -19,12 +19,13 @@ public:
     QList<QList<double> > getTec();
     void setTec(QList<QList<double> >);
     ~p8microclimate_heat_gui();
+    void set_run();
+
 
 private slots:
     void on_pb_map_released();
     void on_pb_shape_released();
     void on_pb_landuse_released();
-
     void on_bBox_accepted();
 
     void on_pb_wsud_released();

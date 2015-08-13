@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>984</width>
-    <height>892</height>
+    <height>925</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -196,7 +196,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,2,0,0,0,0,0,0,0,0">
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="1" column="1">
@@ -971,35 +971,73 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="label_19">
-         <property name="text">
-          <string>Mode</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="cb_mode">
-         <item>
-          <property name="text">
-           <string>Edit Lancover</string>
-          </property>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_43">
+           <property name="text">
+            <string>Min Temp</string>
+           </property>
+          </widget>
          </item>
-         <item>
-          <property name="text">
-           <string>View LST reduction</string>
-          </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_19">
+           <property name="text">
+            <string>Mode</string>
+           </property>
+          </widget>
          </item>
-         <item>
-          <property name="text">
-           <string>View LST before WSUD</string>
-          </property>
+         <item row="1" column="0">
+          <widget class="QComboBox" name="cb_mode">
+           <item>
+            <property name="text">
+             <string>Edit Lancover</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>View LST reduction</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>View LST before WSUD</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>View LST after WSUD</string>
+            </property>
+           </item>
+          </widget>
          </item>
-         <item>
-          <property name="text">
-           <string>View LST after WSUD</string>
-          </property>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_44">
+           <property name="text">
+            <string>Max Temp</string>
+           </property>
+          </widget>
          </item>
-        </widget>
+         <item row="1" column="1">
+          <widget class="QDoubleSpinBox" name="minTemp">
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="suffix">
+            <string>°C</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QDoubleSpinBox" name="maxTemp">
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="suffix">
+            <string>°C</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="Line" name="line_4">
@@ -1071,6 +1109,13 @@
            </property>
            <property name="standardButtons">
             <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_run">
+           <property name="text">
+            <string>Run</string>
            </property>
           </widget>
          </item>

@@ -19,6 +19,7 @@ public:
     QList<QList<double> > getTec();
     void setTec(QList<QList<double> >);
     ~p8microclimate_gui();
+    void set_run();
 
 private slots:
     void on_pb_map_released();
@@ -36,6 +37,7 @@ private:
     Ui::p8microclimate_gui *ui;
     Microclimate *p8microclimate;
     mcedit * edit;
+    int oldGridsize;
 };
 
 #endif // P8MICROCLIMATE_GUI_H

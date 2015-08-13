@@ -18,6 +18,7 @@
 #include <QMessageBox>
 #include <QTransform>
 #include <cmath>
+#include <QKeyEvent>
 #include "../p8microclimate_heat_gui.h"
 
 #include "celldialog_heat.h"
@@ -69,6 +70,15 @@ mcedit_heat::mcedit_heat(p8microclimate_heat_gui *parent, QString bgimage, QStri
     this->cy=cy;
     this->sx=sx;
     this->sy=sy;
+
+    minTempLandercover = 0;
+    maxTempLandcover = 0;
+    minTempReduction = 0;
+    maxTempReduction = 0;
+    minTempBefore = 0;
+    maxTempBefore = 0;
+    minTempAfter= 0;
+    maxTempAfter = 0;
 
     scaleposx=0;
     scaleposy=-30;
@@ -652,6 +662,8 @@ void mcedit_heat::tecLoad(p8microclimate_heat_gui *parent)
 
 void mcedit_heat::cellupdate()
 {
+    double startTemp = 0;
+    double endTemp = 0;
     foreach(QGraphicsRectItem* scalebox,scaleboxes)
     {
         if (mode==0)
@@ -660,22 +672,29 @@ void mcedit_heat::cellupdate()
         }
         if (mode==1)
         {
-            setScale(getMinValue(0)-3,getMaxValue(0)+3,0);
+            startTemp = minTempReduction;
+            endTemp = maxTempReduction;
+            setScale(minTempReduction,maxTempReduction,0);//setScale(getMinValue(0)-3,getMaxValue(0)+3,0);
         }
         if (mode==2)
         {
-            setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
+            startTemp = minTempBefore;
+            endTemp = maxTempBefore;
+            setScale(minTempBefore,maxTempBefore,0);//setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
         }
         if (mode==3)
         {
-            setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
+            startTemp = minTempAfter;
+            endTemp = maxTempAfter;
+            setScale(minTempAfter,maxTempAfter,0); // setScale(getMinValueForLstAfterBefore()-5,getMaxValueForLstAfterBefore()+5,1);
         }
     }
 
 
     foreach (Cell_heat *cell, cellmap.values())
     {
-        cell->update(mode,viewmode,getMinValue(mode-1),getMaxValue(mode-1));
+        //cell->update(mode,viewmode,getMinValue(mode-1),getMaxValue(mode-1));
+        cell->update(mode,viewmode,startTemp,endTemp);
     }
 }
 
@@ -813,7 +832,21 @@ void mcedit_heat::on_pb_edit_clicked()
 void mcedit_heat::on_cb_mode_currentIndexChanged(int index)
 {
     mode=index;
+    if(index == 0){
+        this->ui->minTemp->setValue(minTempLandercover);
+        this->ui->maxTemp->setValue(maxTempLandcover);
+    }else if(index == 1){
+        this->ui->minTemp->setValue(minTempReduction);
+        this->ui->maxTemp->setValue(maxTempReduction);
+    }else if(index == 2){
+        this->ui->minTemp->setValue(minTempBefore);
+        this->ui->maxTemp->setValue(maxTempBefore);
+    }else if(index == 3){
+        this->ui->minTemp->setValue(minTempAfter);
+        this->ui->maxTemp->setValue(maxTempAfter);
+    }
     cellupdate();
+
 }
 
 void mcedit_heat::on_horizontalSlider_valueChanged(int value)
@@ -885,4 +918,44 @@ void mcedit_heat::on_pushButton_clicked()
         ui->graphicsView->scene()->render(&painter);
         image.save(tfilename);
     }
+}
+
+void mcedit_heat::on_pb_run_released()
+{
+    this->parent->set_run();
+    // emulate button box click
+    QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
+    QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
+}
+
+void mcedit_heat::on_minTemp_valueChanged(double arg1)
+{
+
+    if(mode == 0){
+        minTempLandercover = arg1;
+    }else if(mode == 1){
+        minTempReduction = arg1;
+    }else if(mode == 2){
+        minTempBefore = arg1;
+    }else if(mode == 3){
+        minTempAfter = arg1;
+    }
+    cellupdate();
+
+}
+
+void mcedit_heat::on_maxTemp_valueChanged(double arg1)
+{
+
+    if(mode == 0){
+        maxTempLandcover = arg1;
+    }else if(mode == 1){
+        maxTempReduction = arg1;
+    }else if(mode == 2){
+        maxTempBefore = arg1;
+    }else if(mode == 3){
+        maxTempAfter = arg1;
+    }
+    cellupdate();
+
 }
