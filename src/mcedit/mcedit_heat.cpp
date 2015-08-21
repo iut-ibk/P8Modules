@@ -73,12 +73,12 @@ mcedit_heat::mcedit_heat(p8microclimate_heat_gui *parent, QString bgimage, QStri
 
     minTempLandercover = 0;
     maxTempLandcover = 0;
-    minTempReduction = 0;
-    maxTempReduction = 0;
-    minTempBefore = 0;
-    maxTempBefore = 0;
-    minTempAfter= 0;
-    maxTempAfter = 0;
+    minTempReduction = -10;
+    maxTempReduction = 10;
+    minTempBefore = 20;
+    maxTempBefore = 50;
+    minTempAfter= 20;
+    maxTempAfter = 50;
 
     scaleposx=0;
     scaleposy=-30;
@@ -143,23 +143,7 @@ mcedit_heat::mcedit_heat(p8microclimate_heat_gui *parent, QString bgimage, QStri
     mode=0;
     viewmode=1;
     tecLoad(parent);
-    if(QFile::exists(workpath+"/WSUDtech.mcd"))
-    {
-        tecLoad(workpath+"/WSUDtech.mcd");
-    }
-    if (QFile::exists(workpath+"/Reduction in LST.mcd"))
-    {
-        resLoad(0,workpath+"/Reduction in LST.mcd");
-        ui->cb_mode->setCurrentIndex(1);
-    }
-    if (QFile::exists(workpath+"/LST before WSUD.mcd"))
-    {
-        resLoad(1,workpath+"/LST before WSUD.mcd");
-    }
-    if (QFile::exists(workpath+"/LST after WSUD.mcd"))
-    {
-        resLoad(2,workpath+"/LST after WSUD.mcd");
-    }
+    loadResults();
 
 
     if (!bgimage.isEmpty())
@@ -357,6 +341,27 @@ void mcedit_heat::setScale(double startTemp, double endTemp, int colorramp)
     }
     scalestart->setText(QString("%1 °C").arg(startTemp));
     scaleend->setText(QString("%1 °C").arg(endTemp));
+}
+
+void mcedit_heat::loadResults()
+{
+    if(QFile::exists(workpath+"/WSUDtech.mcd"))
+    {
+        tecLoad(workpath+"/WSUDtech.mcd");
+    }
+    if (QFile::exists(workpath+"/Reduction in LST.mcd"))
+    {
+        resLoad(0,workpath+"/Reduction in LST.mcd");
+        ui->cb_mode->setCurrentIndex(1);
+    }
+    if (QFile::exists(workpath+"/LST before WSUD.mcd"))
+    {
+        resLoad(1,workpath+"/LST before WSUD.mcd");
+    }
+    if (QFile::exists(workpath+"/LST after WSUD.mcd"))
+    {
+        resLoad(2,workpath+"/LST after WSUD.mcd");
+    }
 }
 
 
@@ -922,10 +927,15 @@ void mcedit_heat::on_pushButton_clicked()
 
 void mcedit_heat::on_pb_run_released()
 {
+    tecSave(workpath+"/WSUDtech.mcd");
+    tecSave(parent);
     this->parent->set_run();
     // emulate button box click
-    QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
-    QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
+    //QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
+    //QApplication::postEvent(this->ui->buttonBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
+    tecLoad(parent);
+    loadResults();
+    cellupdate();
 }
 
 void mcedit_heat::on_minTemp_valueChanged(double arg1)

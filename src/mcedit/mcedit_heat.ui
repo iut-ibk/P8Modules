@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>984</width>
-    <height>925</height>
+    <width>1088</width>
+    <height>927</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1025,6 +1025,9 @@
            <property name="suffix">
             <string>°C</string>
            </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
           </widget>
          </item>
          <item row="1" column="2">
@@ -1034,6 +1037,9 @@
            </property>
            <property name="suffix">
             <string>°C</string>
+           </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
            </property>
           </widget>
          </item>

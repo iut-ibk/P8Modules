@@ -44,6 +44,7 @@ public:
     void zoomout();
     void loadbackground(QString bgfilename);
     void setScale(double startTemp, double endTemp, int colorramp);
+    void loadResults();
     int getMinValue(int mode);
     int getMaxValue(int mode);
     int getMinValueForLstAfterBefore();
