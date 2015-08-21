@@ -17,7 +17,7 @@
 //DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
 DM_DECLARE_CUSTOM_NODE_NAME(Microclimate_heat,"Microclimate Extreme Heat", "Scenario Simulation and Assessment")
 Microclimate_heat::Microclimate_heat()
-{
+{   
     gridsize = 30;
     percentile = 80;
     mapPic = "";

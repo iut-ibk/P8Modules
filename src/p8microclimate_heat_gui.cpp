@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include "mcedit/mcedit_heat.h"
+#include "dmsimulation.h"
 
 
 p8microclimate_heat_gui::p8microclimate_heat_gui(Microclimate_heat * p8, QWidget *parent) :
@@ -187,12 +188,16 @@ void p8microclimate_heat_gui::set_run()
     if(this->oldGridsize != this->p8microclimate->gridsize)
     {
         QSettings settings;
-        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
+        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd")){
+            cout << "deleting wsud tech file" << endl;
             QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
+        }
     }
 
-    QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
-    QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
+    //QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, 0, 0));
+    //QApplication::postEvent(this->ui->bBox->focusWidget(), new QKeyEvent(QEvent::KeyRelease, Qt::Key_Enter, 0, 0));
+    this->p8microclimate->getSimulation()->startSimulation(false);
+
 }
 
 void p8microclimate_heat_gui::on_pb_wsud_released()
