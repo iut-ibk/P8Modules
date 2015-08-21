@@ -48,12 +48,12 @@ mcedit::mcedit(p8microclimate_gui *parent, QString bgimage, QString workpath, in
 
     minTempLandercover = 0;
     maxTempLandcover = 0;
-    minTempReduction = 0;
-    maxTempReduction = 0;
-    minTempBefore = 0;
-    maxTempBefore = 0;
-    minTempAfter= 0;
-    maxTempAfter = 0;
+    minTempReduction = -10;
+    maxTempReduction = 10;
+    minTempBefore = 20;
+    maxTempBefore = 50;
+    minTempAfter= 20;
+    maxTempAfter = 50;
 
     this->cx=cx;
     this->cy=cy;
