@@ -26,88 +26,103 @@ class Ui_StreamErosionIndexDialog(object):
         self.groupBox.setTitle(QtGui.QApplication.translate("StreamErosionIndexguic", "Regional climate data", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         '''
+
+        fontBold = QtGui.QFont()
+        fontBold.setBold(True)
+        fontBigHeader = QtGui.QFont()
+        fontBigHeader.setBold(True)
+        fontBigHeader.setPointSize(14)
+
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+
+        self.bigheader = QtGui.QLabel(self.scrollAreaWidgetContents)
+        self.bigheader.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "Climate data", None, QtGui.QApplication.UnicodeUTF8))
+        self.bigheader.setObjectName(_fromUtf8("label"))
+        self.bigheader.setFont(fontBigHeader)
+        self.gridLayout.addWidget(self.bigheader, 0, 0, 1, 1)  
         
         self.header = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.header.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "Rainfall series", None, QtGui.QApplication.UnicodeUTF8))
         self.header.setObjectName(_fromUtf8("label"))
-        self.gridLayout.addWidget(self.header, 0, 0, 1, 1)  
+        self.gridLayout.addWidget(self.header, 1, 0, 1, 1)  
 
         self.label = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "      Select Csv Rain ", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setObjectName(_fromUtf8("label"))
-        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.label, 2, 0, 1, 1)
         self.le_r = QtGui.QLineEdit(self.scrollAreaWidgetContents)
         self.le_r.setObjectName(_fromUtf8("le_r"))
-        self.gridLayout.addWidget(self.le_r, 1, 2, 1, 1)
+        self.gridLayout.addWidget(self.le_r, 2, 2, 1, 1)
         self.pb_r = QtGui.QPushButton(self.scrollAreaWidgetContents)
         self.pb_r.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r.setObjectName(_fromUtf8("pb_r"))
-        self.gridLayout.addWidget(self.pb_r, 1, 3, 1, 1)
+        self.gridLayout.addWidget(self.pb_r, 2, 3, 1, 1)
         
         self.header2 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.header2.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "PET series", None, QtGui.QApplication.UnicodeUTF8))
         self.header2.setObjectName(_fromUtf8("label"))
-        self.gridLayout.addWidget(self.header2, 2, 0, 1, 1)  
+        self.gridLayout.addWidget(self.header2, 3, 0, 1, 1)  
 
         self.label2 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label2.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "      Select ET File ", None, QtGui.QApplication.UnicodeUTF8))
         self.label2.setObjectName(_fromUtf8("label2"))
-        self.gridLayout.addWidget(self.label2, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.label2, 4, 0, 1, 1)
         self.le_r2 = QtGui.QLineEdit(self.scrollAreaWidgetContents)
         self.le_r2.setObjectName(_fromUtf8("le_r2"))
-        self.gridLayout.addWidget(self.le_r2, 3, 2, 1, 1)
+        self.gridLayout.addWidget(self.le_r2, 4, 2, 1, 1)
         self.pb_r2 = QtGui.QPushButton(self.scrollAreaWidgetContents)
         self.pb_r2.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r2.setObjectName(_fromUtf8("pb_r"))
-        self.gridLayout.addWidget(self.pb_r2, 3, 3, 1, 1)
+        self.gridLayout.addWidget(self.pb_r2, 4, 3, 1, 1)
 
         self.header3 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.header3.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "or use MUSIC template file             Use:", None, QtGui.QApplication.UnicodeUTF8))
         self.header3.setObjectName(_fromUtf8("label"))
-        self.gridLayout.addWidget(self.header3, 4, 0, 1, 1) 
+        self.gridLayout.addWidget(self.header3, 5, 0, 1, 1) 
         self.chkb_music = QtGui.QCheckBox(self.scrollAreaWidgetContents)
         self.chkb_music.setObjectName(_fromUtf8("chkb_music"))
-        self.gridLayout.addWidget(self.chkb_music, 4, 1, 1, 1)
+        self.gridLayout.addWidget(self.chkb_music, 5, 1, 1, 1)
 
         self.label3 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label3.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "      Select climate mlb", None, QtGui.QApplication.UnicodeUTF8))
         self.label3.setObjectName(_fromUtf8("label3"))
-        self.gridLayout.addWidget(self.label3, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.label3, 6, 0, 1, 1)
         self.le_r3 = QtGui.QLineEdit(self.scrollAreaWidgetContents)
         self.le_r3.setObjectName(_fromUtf8("le_r3"))
-        self.gridLayout.addWidget(self.le_r3, 5, 2, 1, 1)
+        self.gridLayout.addWidget(self.le_r3, 6, 2, 1, 1)
         self.pb_r3 = QtGui.QPushButton(self.scrollAreaWidgetContents)
         self.pb_r3.setText(QtGui.QApplication.translate("StreamErosionIndex_GUI", "Import File", None, QtGui.QApplication.UnicodeUTF8))
         self.pb_r3.setObjectName(_fromUtf8("pb_r3"))
-        self.gridLayout.addWidget(self.pb_r3, 5, 3, 1, 1)
+        self.gridLayout.addWidget(self.pb_r3, 6, 3, 1, 1)
 
         self.header4 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.header4.setText(QtGui.QApplication.translate("StreamErosionIndexguic", "or use Templates                    Use:", None, QtGui.QApplication.UnicodeUTF8))
         self.header4.setObjectName(_fromUtf8("label"))
-        self.gridLayout.addWidget(self.header4, 6, 0, 1, 1) 
+        self.gridLayout.addWidget(self.header4, 7, 0, 1, 1) 
         self.chkb_defaults = QtGui.QCheckBox(self.scrollAreaWidgetContents)
         self.chkb_defaults.setObjectName(_fromUtf8("chkb_defaults"))
-        self.gridLayout.addWidget(self.chkb_defaults, 6, 1, 1, 1)
+        self.gridLayout.addWidget(self.chkb_defaults, 7, 1, 1, 1)
 
         self.city_combo = QtGui.QComboBox(self.scrollAreaWidgetContents)
         self.city_combo.setGeometry(QtCore.QRect(250, 39, 141, 22))
         self.city_combo.setObjectName(_fromUtf8("city_combo"))
         self.city_combo.addItem(_fromUtf8(""))
-        '''self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
         self.city_combo.addItem(_fromUtf8(""))
-        self.city_combo.addItem(_fromUtf8(""))'''
-        self.gridLayout.addWidget(self.city_combo, 7,2,1,1)
+        self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.city_combo.addItem(_fromUtf8(""))
+        self.gridLayout.addWidget(self.city_combo, 9,2,1,1)
 
 
         self.label_head3 = QtGui.QLabel(self.scrollAreaWidgetContents)
         self.label_head3.setText(QtGui.QApplication.translate("ReadTableSecondary_GUI2", "Natural catchment properties", None, QtGui.QApplication.UnicodeUTF8))
         self.label_head3.setObjectName(_fromUtf8("lbl_head3"))
-        self.gridLayout.addWidget(self.label_head3, 8, 0, 1, 1)
+        self.label_head3.setFont(fontBold)
+        self.gridLayout.addWidget(self.label_head3, 9, 0, 1, 1)
 
 
         self.label_head4 = QtGui.QLabel(self.scrollAreaWidgetContents)
@@ -249,15 +264,12 @@ class Ui_StreamErosionIndexDialog(object):
 
 
     def retranslateUi(self, StreamErosionIndexguic):
-        '''
+        
         self.city_combo.setItemText(0,"Brisbane")
         self.city_combo.setItemText(1,"Sydney")   
         self.city_combo.setItemText(2,"Canberra")
-        '''
-        self.city_combo.setItemText(0,"Melbourne")
-        '''
+        self.city_combo.setItemText(3,"Melbourne")
         self.city_combo.setItemText(4,"Hobart")
         self.city_combo.setItemText(5,"Adelaide")
         self.city_combo.setItemText(6,"Perth")
-        '''
-        pass
+        self.city_combo.setItemText(7,"User defined")

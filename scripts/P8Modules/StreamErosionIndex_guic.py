@@ -71,31 +71,98 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		else:
 			self.module.setParameterValue("useUB",str(0))
 	def cityChanged(self):
-		'''
+		
 		if self.ui.city_combo.currentIndex() == 0:
+			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("120")
+			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("80")
+			self.ui.le_raininfil.setText("200")
+			self.ui.le_raininfil2.setText("1")
+			self.ui.le_raindepth.setText("10")
+			self.ui.le_rainrecharge.setText("25")
+			self.ui.le_rainbaseflow.setText("5")
+			self.ui.le_raindeep.setText("0")
 		elif self.ui.city_combo.currentIndex() == 1:
+			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("200")
+			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("170")
+			self.ui.le_raininfil.setText("200")
+			self.ui.le_raininfil2.setText("1")
+			self.ui.le_raindepth.setText("10")
+			self.ui.le_rainrecharge.setText("25")
+			self.ui.le_rainbaseflow.setText("5")
+			self.ui.le_raindeep.setText("0")
 		elif self.ui.city_combo.currentIndex() == 2:
+			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("40")
+			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("25")
-		'''
-		if self.ui.city_combo.currentIndex() == 3:
+			self.ui.le_raininfil.setText("200")
+			self.ui.le_raininfil2.setText("1")
+			self.ui.le_raindepth.setText("10")
+			self.ui.le_rainrecharge.setText("25")
+			self.ui.le_rainbaseflow.setText("5")
+			self.ui.le_raindeep.setText("0")
+		elif self.ui.city_combo.currentIndex() == 3:
+			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("30")
+			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("20")
-		'''
+			self.ui.le_raininfil.setText("200")
+			self.ui.le_raininfil2.setText("1")
+			self.ui.le_raindepth.setText("10")
+			self.ui.le_rainrecharge.setText("25")
+			self.ui.le_rainbaseflow.setText("5")
+			self.ui.le_raindeep.setText("0")
 		elif self.ui.city_combo.currentIndex() == 4:
+			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("30")
+			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("20")
+			self.ui.le_raininfil.setText("200")
+			self.ui.le_raininfil2.setText("1")
+			self.ui.le_raindepth.setText("10")
+			self.ui.le_rainrecharge.setText("25")
+			self.ui.le_rainbaseflow.setText("5")
+			self.ui.le_raindeep.setText("0")
 		elif self.ui.city_combo.currentIndex() == 5:
+			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("40")
+			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("30")
+			self.ui.le_raininfil.setText("200")
+			self.ui.le_raininfil2.setText("1")
+			self.ui.le_raindepth.setText("10")
+			self.ui.le_rainrecharge.setText("25")
+			self.ui.le_rainbaseflow.setText("5")
+			self.ui.le_raindeep.setText("0")
 		elif self.ui.city_combo.currentIndex() == 6:
+			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("250")
+			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("23")
-		'''
+			self.ui.le_raininfil.setText("200")
+			self.ui.le_raininfil2.setText("1")
+			self.ui.le_raindepth.setText("10")
+			self.ui.le_rainrecharge.setText("25")
+			self.ui.le_rainbaseflow.setText("5")
+			self.ui.le_raindeep.setText("0")
+		elif self.ui.city_combo.currentIndex() == 7:
+			self.ui.le_rainthres.setText("0")
+			self.ui.le_rainsoil.setText("0")
+			self.ui.le_raininitial.setText("0")
+			self.ui.le_rainfield.setText("0")
+			self.ui.le_raininfil.setText("0")
+			self.ui.le_raininfil2.setText("0")
+			self.ui.le_raindepth.setText("0")
+			self.ui.le_rainrecharge.setText("0")
+			self.ui.le_rainbaseflow.setText("0")
+			self.ui.le_raindeep.setText("0")
+		
+		self.ui.le_NoY.setValue(10)
+		self.ui.le_A.setValue(0.4)
 	def load(self):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
