@@ -22,8 +22,31 @@ class RainGui(QtGui.QDialog):
         self.ui.le_r.setText(self.module.getParameterAsString("Netfile"))
         self.ui.le_csv.setText(self.module.getParameterAsString("csvFile"))
         self.ui.le_ET.setText(self.module.getParameterAsString("etFile"))
-        self.ui.le_CoordX.setText(self.module.getParameterAsString("Xcoord"))
-        self.ui.le_CoordY.setText(self.module.getParameterAsString("Ycoord"))
+        self.ui.le_CoordX1.setText(self.module.getParameterAsString("Xcoord1"))
+        self.ui.le_CoordY1.setText(self.module.getParameterAsString("Ycoord1"))
+        self.ui.le_CoordX2.setText(self.module.getParameterAsString("Xcoord2"))
+        self.ui.le_CoordY2.setText(self.module.getParameterAsString("Ycoord2"))
+        self.ui.le_CoordX3.setText(self.module.getParameterAsString("Xcoord3"))
+        self.ui.le_CoordY3.setText(self.module.getParameterAsString("Ycoord3"))
+        self.ui.le_CoordX4.setText(self.module.getParameterAsString("Xcoord4"))
+        self.ui.le_CoordY4.setText(self.module.getParameterAsString("Ycoord4"))
+        self.ui.le_CoordX5.setText(self.module.getParameterAsString("Xcoord5"))
+        self.ui.le_CoordY5.setText(self.module.getParameterAsString("Ycoord5"))
+        self.ui.le_CoordX6.setText(self.module.getParameterAsString("Xcoord6"))
+        self.ui.le_CoordY6.setText(self.module.getParameterAsString("Ycoord6"))
+        selectedLocation = int(self.module.getParameterAsString("selectedLocation"))
+        if(selectedLocation == 1):
+            self.ui.radio1.setChecked(True)
+        elif(selectedLocation == 2):
+            self.ui.radio2.setChecked(True)
+        elif(selectedLocation == 3):
+            self.ui.radio3.setChecked(True)
+        elif(selectedLocation == 4):
+            self.ui.radio4.setChecked(True)
+        elif(selectedLocation == 5):
+            self.ui.radio5.setChecked(True)
+        elif(selectedLocation == 6):
+            self.ui.radio6.setChecked(True)
         QtCore.QObject.connect(self.ui.pb_preview, QtCore.SIGNAL("released()"), self.preview)
         QtCore.QObject.connect(self.ui.buttonBox, QtCore.SIGNAL("accepted()"), self.save_values)
         QtCore.QObject.connect(self.ui.pb_r, QtCore.SIGNAL("released()"), self.load)
@@ -87,8 +110,18 @@ class RainGui(QtGui.QDialog):
     def save_values(self):
         Net = False
         Csv = False
-        self.module.setParameterValue("Xcoord",str(self.ui.le_CoordX.text()))
-        self.module.setParameterValue("Ycoord",str(self.ui.le_CoordY.text()))
+        self.module.setParameterValue("Xcoord1",str(self.ui.le_CoordX1.text()))
+        self.module.setParameterValue("Ycoord1",str(self.ui.le_CoordY1.text()))
+        self.module.setParameterValue("Xcoord2",str(self.ui.le_CoordX2.text()))
+        self.module.setParameterValue("Ycoord2",str(self.ui.le_CoordY2.text()))
+        self.module.setParameterValue("Xcoord3",str(self.ui.le_CoordX3.text()))
+        self.module.setParameterValue("Ycoord3",str(self.ui.le_CoordY3.text()))
+        self.module.setParameterValue("Xcoord4",str(self.ui.le_CoordX4.text()))
+        self.module.setParameterValue("Ycoord4",str(self.ui.le_CoordY4.text()))
+        self.module.setParameterValue("Xcoord5",str(self.ui.le_CoordX5.text()))
+        self.module.setParameterValue("Ycoord5",str(self.ui.le_CoordY5.text()))
+        self.module.setParameterValue("Xcoord6",str(self.ui.le_CoordX6.text()))
+        self.module.setParameterValue("Ycoord6",str(self.ui.le_CoordY6.text()))
         filename = str(self.ui.le_ET.text())
         if(filename != ""):
             self.module.setParameterValue("etFile", filename)
@@ -106,6 +139,20 @@ class RainGui(QtGui.QDialog):
             self.module.setParameterValue("UserCsv", "csv")
         elif(Net):
             self.module.setParameterValue("UserCsv", "net")
+
+        if(self.ui.radio1.isChecked()):
+            self.module.setParameterValue("selectedLocation",str(1))
+        elif(self.ui.radio2.isChecked()):
+            self.module.setParameterValue("selectedLocation",str(2))
+        elif(self.ui.radio3.isChecked()):
+            self.module.setParameterValue("selectedLocation",str(3))
+        elif(self.ui.radio4.isChecked()):
+            self.module.setParameterValue("selectedLocation",str(4))
+        elif(self.ui.radio5.isChecked()):
+            self.module.setParameterValue("selectedLocation",str(5))
+        elif(self.ui.radio6.isChecked()):
+            self.module.setParameterValue("selectedLocation",str(6))
+
 
     def load(self):
         settings = QSettings()

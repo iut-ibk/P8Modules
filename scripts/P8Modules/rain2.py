@@ -25,10 +25,32 @@ class RainModule(Module):
 		self.UserCsv = ""
 		self.createParameter("etFile", STRING, "")
 		self.etFile = ""
-		self.createParameter("Xcoord", DOUBLE , "")
-		self.Xcoord = 151.25
-		self.createParameter("Ycoord", DOUBLE ,"")
-		self.Ycoord = -34.05
+		self.createParameter("Xcoord1", DOUBLE , "")
+		self.Xcoord1 = 151.91			#144 37
+		self.createParameter("Ycoord1", DOUBLE ,"")
+		self.Ycoord1 = -34.79
+		self.createParameter("Xcoord2", DOUBLE , "")
+		self.Xcoord2 = 151.98
+		self.createParameter("Ycoord2", DOUBLE ,"")
+		self.Ycoord2 = -34.83
+		self.createParameter("Xcoord3", DOUBLE , "")
+		self.Xcoord3 = 151.22
+		self.createParameter("Ycoord3", DOUBLE ,"")
+		self.Ycoord3 = -34.98
+		self.createParameter("Xcoord4", DOUBLE , "")
+		self.Xcoord4 = 151.98
+		self.createParameter("Ycoord4", DOUBLE ,"")
+		self.Ycoord4 = -34.42
+		self.createParameter("Xcoord5", DOUBLE , "")
+		self.Xcoord5 = 151.57
+		self.createParameter("Ycoord5", DOUBLE ,"")
+		self.Ycoord5 = -34.75
+		self.createParameter("Xcoord6", DOUBLE , "")
+		self.Xcoord6 = 151.55
+		self.createParameter("Ycoord6", DOUBLE ,"")
+		self.Ycoord6 = -34.64
+		self.createParameter("selectedLocation", DOUBLE, "")
+		self.selectedLocation = 1
 		self.simulation = View("SimulationData",COMPONENT,WRITE)
 		self.simulation.addAttribute("UserCsv")
 		self.simulation.getAttribute("msfFilename")
@@ -68,32 +90,20 @@ class RainModule(Module):
 			data = netCDF4.Dataset(str(workpath + self.Netfile))#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
 
-			if(self.checkCoords(data,self.Xcoord,self.Ycoord)):
-				print "WRONG COORDS"
-				return 
+			coords = []
+			coords.append((self.Xcoord1, self.Ycoord1))
+			coords.append((self.Xcoord2, self.Ycoord2))
+			coords.append((self.Xcoord3, self.Ycoord3))
+			coords.append((self.Xcoord4, self.Ycoord4))
+			coords.append((self.Xcoord5, self.Ycoord5))
+			coords.append((self.Xcoord6, self.Ycoord6))
+			for i in range(6):
+				if(self.checkCoords(data,coords[i][0],coords[i][1])):
+					print "coords for location " + str(i+1) + " not in range of provided netcdf file"
+					continue
+				self.createRainCSV(data,workpath, coords[i][0],coords[i][1],i+1)
 
-
-
-			datas = self.getRainData(self.Xcoord,self.Ycoord,data)
-			
-			f = open(workpath + "RainData.csv",'w')
-			f.write("Date,Rainfall\n")
-			print "Start writing Rain Data"
-			size = float(data.variables['time'].size)
-			oldpercent = 0
-			newpercent = float(0)
-			i = 0
-			while (i < size):
-				newpercent = float((float(i) /float(size)) * float(100))
-				if(oldpercent < int(newpercent)):
-					oldpercent = int(newpercent)
-					print "Writing Rain-Data " + str(oldpercent) + "%"
-				f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i] * self.timestep / 60)+"\n")
-				i = i +1
-			f.close()
-			print "Done"
-
-			self.changeMusicFile(realstring,workpath + "RainData.csv")
+			self.changeMusicFile(realstring,workpath + "stimulation" + str(int(self.selectedLocation)) + ".csv")
 			tmp = realstring.split(".")
 			simuAttr.changeAttribute("msfFilename", str(tmp[0]) + "NewRain." + str(tmp[1]))
 			
@@ -159,6 +169,26 @@ class RainModule(Module):
 	    	print "Adding Rain to Blocks: " + str(i) + " of " + str(len(catchments))
 	    '''
 
+	def createRainCSV(self,data,workpath,xcoord,ycoord,count):
+		datas = self.getRainData(xcoord,ycoord,data)
+		
+		f = open(workpath + "stimulation" + str(count) + ".csv",'w')
+		f.write("Date,Rainfall\n")
+		print "Start writing Rain Data for Location " + str(i)
+		size = float(data.variables['time'].size)
+		oldpercent = 0
+		newpercent = float(0)
+		i = 0
+		while (i < size):
+			newpercent = float((float(i) /float(size)) * float(100))
+			if(oldpercent < int(newpercent)):
+				oldpercent = int(newpercent)
+				print "Writing Rain-Data for Location " + str(count) + " " + str(oldpercent) + "%"
+			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(datas[i] * self.timestep / 60)+"\n")
+			i = i +1
+		f.close()
+		print "Done"
+
 	def changeMusicFile(self, musicf, csvf):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
@@ -220,12 +250,18 @@ class RainModule(Module):
 		yWrong = False
 
 		variables = netCDF.variables.keys()
-		longs = netCDF.variables[variables[1]][:] # long
-		lats = netCDF.variables[variables[0]][:] # lat
+		longs = netCDF.variables[variables[0]][:] # long
+		lats = netCDF.variables[variables[1]][:] # lat
+		print x
+		print str(longs[0]) + " " + str(longs[len(longs)-1])
+		print y
+		print str(lats[0]) + " " + str(lats[len(lats)-1])
 		if(x < longs[0] or x > longs[len(longs)-1]):
 			xWrong = True
-		if(y < lats[0] or y > lats[len(lats)-1]):
+		if(y > lats[0] or y < lats[len(lats)-1]):
 			yWrong = True
+		print xWrong
+		print yWrong
 		if( yWrong or yWrong):
 			#todo show warning messagebox
 			#QMessageBox.warning(QApplication.activeWindow(),QString("Warning"),QString("Wrong Coords"), QMessageBox.Ok)
@@ -242,9 +278,9 @@ class RainModule(Module):
 		print "variables " + str(variables)
 
 		longs = doublevector()
-		longs = netCDF.variables[variables[1]][:] # long
+		longs = netCDF.variables[variables[0]][:] # long
 		lats = doublevector()
-		lats = netCDF.variables[variables[0]][:] # lat
+		lats = netCDF.variables[variables[1]][:] # lat
 		rain = netCDF.variables[variables[3]]
 		#looking here in the netCDF vector for the index of our values
 		print "LONGS"
