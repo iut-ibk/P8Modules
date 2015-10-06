@@ -160,7 +160,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	elif self.ui.city_combo.currentIndex() == 6:
 		self.ui.spb_city.setValue(730)
 		self.ui.le_rainsoil.setText("250")
-		self.ui.le_rainfield.setText("23")
+		self.ui.le_rainfield.setText("230")
 	elif self.ui.city_combo.currentIndex() == 7:
 		self.ui.spb_city.setValue(0)
 

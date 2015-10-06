@@ -142,7 +142,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 			self.ui.le_rainthres.setText("1")
 			self.ui.le_rainsoil.setText("250")
 			self.ui.le_raininitial.setText("30")
-			self.ui.le_rainfield.setText("23")
+			self.ui.le_rainfield.setText("230")
 			self.ui.le_raininfil.setText("200")
 			self.ui.le_raininfil2.setText("1")
 			self.ui.le_raindepth.setText("10")
