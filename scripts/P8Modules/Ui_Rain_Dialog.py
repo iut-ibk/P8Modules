@@ -51,11 +51,11 @@ class Ui_P8Rain_GUI(object):
         self.gridLayoutMid.setObjectName(_fromUtf8("gridLayoutMid"))
 
         self.labelCoordX = QtGui.QLabel(self.groupBoxMid)
-        self.labelCoordX.setText(QtGui.QApplication.translate("P8Rain_GUI", "X Coordinate", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelCoordX.setText(QtGui.QApplication.translate("P8Rain_GUI", "Longitude Coordinate", None, QtGui.QApplication.UnicodeUTF8))
         self.labelCoordX.setObjectName(_fromUtf8("labelCoordX"))
         self.gridLayoutMid.addWidget(self.labelCoordX, 0, 2, 1, 1)
         self.labelCoordY = QtGui.QLabel(self.groupBoxMid)
-        self.labelCoordY.setText(QtGui.QApplication.translate("P8Rain_GUI", "Y Coordinate", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelCoordY.setText(QtGui.QApplication.translate("P8Rain_GUI", "Latitude Coordinate", None, QtGui.QApplication.UnicodeUTF8))
         self.labelCoordY.setObjectName(_fromUtf8("labelCoordY"))
         self.gridLayoutMid.addWidget(self.labelCoordY, 0, 3, 1, 1)
 
