@@ -26,29 +26,29 @@ class RainModule(Module):
 		self.createParameter("etFile", STRING, "")
 		self.etFile = ""
 		self.createParameter("Xcoord1", DOUBLE , "")
-		self.Xcoord1 = 151.91			#144 37
+		self.Xcoord1 = 144.91
 		self.createParameter("Ycoord1", DOUBLE ,"")
-		self.Ycoord1 = -34.79
+		self.Ycoord1 = -37.79
 		self.createParameter("Xcoord2", DOUBLE , "")
-		self.Xcoord2 = 151.98
+		self.Xcoord2 = 144.98
 		self.createParameter("Ycoord2", DOUBLE ,"")
-		self.Ycoord2 = -34.83
+		self.Ycoord2 = -37.83
 		self.createParameter("Xcoord3", DOUBLE , "")
-		self.Xcoord3 = 151.22
+		self.Xcoord3 = 145.22
 		self.createParameter("Ycoord3", DOUBLE ,"")
-		self.Ycoord3 = -34.98
+		self.Ycoord3 = -37.98
 		self.createParameter("Xcoord4", DOUBLE , "")
-		self.Xcoord4 = 151.98
+		self.Xcoord4 = 144.98
 		self.createParameter("Ycoord4", DOUBLE ,"")
-		self.Ycoord4 = -34.42
+		self.Ycoord4 = -37.42
 		self.createParameter("Xcoord5", DOUBLE , "")
-		self.Xcoord5 = 151.57
+		self.Xcoord5 = 144.57
 		self.createParameter("Ycoord5", DOUBLE ,"")
-		self.Ycoord5 = -34.75
+		self.Ycoord5 = -37.75
 		self.createParameter("Xcoord6", DOUBLE , "")
-		self.Xcoord6 = 151.55
+		self.Xcoord6 = 145.55
 		self.createParameter("Ycoord6", DOUBLE ,"")
-		self.Ycoord6 = -34.64
+		self.Ycoord6 = -37.64
 		self.createParameter("selectedLocation", DOUBLE, "")
 		self.selectedLocation = 1
 		self.simulation = View("SimulationData",COMPONENT,WRITE)
@@ -174,7 +174,7 @@ class RainModule(Module):
 		
 		f = open(workpath + "stimulation" + str(count) + ".csv",'w')
 		f.write("Date,Rainfall\n")
-		print "Start writing Rain Data for Location " + str(i)
+		print "Start writing Rain Data for Location " + str(count)
 		size = float(data.variables['time'].size)
 		oldpercent = 0
 		newpercent = float(0)
@@ -243,23 +243,37 @@ class RainModule(Module):
 		return True 
 	def find_nearest(self,array,value):
 		idx=(np.abs(array-value)).argmin()
-		print "Index " + str(idx)
+		#print "Index " + str(idx)
 		return idx
 	def checkCoords(self,netCDF,x,y):
 		xWrong = False
 		yWrong = False
 
-		variables = netCDF.variables.keys()
-		longs = netCDF.variables[variables[0]][:] # long
-		lats = netCDF.variables[variables[1]][:] # lat
+		longs = doublevector()
+		lats = doublevector()
+		coords = self.getlonglat(netCDF)
+		longs = coords[0]
+		lats = coords[1]
 		print x
 		print str(longs[0]) + " " + str(longs[len(longs)-1])
 		print y
 		print str(lats[0]) + " " + str(lats[len(lats)-1])
-		if(x < longs[0] or x > longs[len(longs)-1]):
-			xWrong = True
-		if(y > lats[0] or y < lats[len(lats)-1]):
-			yWrong = True
+
+		#check which end of longs has smallest coords
+		if(longs[0] < longs[len(longs)-1]):
+			if(x < longs[0] or x > longs[len(longs)-1]):
+				xWrong = True
+		else:
+			if(x < longs[len(longs)-1]) or x > longs[0]:
+				xWrong = True
+
+		#check which end of lats has smallest coords
+		if(lats[0] < lats[len(lats)-1]):
+			if(y < lats[0] or y > lats[len(lats)-1]):
+				yWrong = True
+		else:
+			if(y < lats[len(lats)-1] or y > lats[0]):
+				yWrong = True
 		print xWrong
 		print yWrong
 		if( yWrong or yWrong):
@@ -275,18 +289,19 @@ class RainModule(Module):
 		print "netcdf " + str(netCDF)
 
 		variables = netCDF.variables.keys()
-		print "variables " + str(variables)
+		#print "variables " + str(variables)
 
 		longs = doublevector()
-		longs = netCDF.variables[variables[0]][:] # long
 		lats = doublevector()
-		lats = netCDF.variables[variables[1]][:] # lat
-		rain = netCDF.variables[variables[3]]
+		coords = self.getlonglat(netCDF)
+		longs = coords[0]
+		lats = coords[1]
+		rain = self.getRainFromNetCDF(netCDF)
 		#looking here in the netCDF vector for the index of our values
-		print "LONGS"
-		print longs
-		print "LATS"
-		print lats
+		#print "LONGS"
+		#print longs
+		#print "LATS"
+		#print lats
 
 		x = self.find_nearest(longs,xValue)#numpy.where(longs==xValue) #use find_nearest func with the real coodinates
 		y = self.find_nearest(lats,yValue)#numpy.where(lats==yValue)
@@ -313,7 +328,35 @@ class RainModule(Module):
 			counter = counter + 1
 			#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 		return datas
+
+	# returns long and lats array from a netCDF file
+	# searches for "lat" and "lon"
+	def getlonglat(self,data):
+		ret = []
+		variables = data.variables.keys()
+		longs = doublevector()
+		lats = doublevector()
+		for var in variables:
+			if(var.find("lat") >= 0):
+				lats = data.variables[var][:]
+			if(var.find("lon") >= 0):
+				longs = data.variables[var][:]
+		ret.append(longs)
+		ret.append(lats)
+		return ret
+
+	# returns rain array from netCDF file
+	# searches for "rain" or "prec"
+	def getRainFromNetCDF(self, data):
+		variables = data.variables.keys()
+
+		for var in variables:
+			if(var.find("rain") >= 0):
+				return data.variables[var]
+			if(var.find("prec") >= 0):
+				return data.variables[var]
+
 	def getClassName(self):
-		return "Rainfall"
+		return "Future Rainfall"
 	def getFileName(self):
-		return "Scenario Simulation and Assessment"
+		return "Scenario Definition"
