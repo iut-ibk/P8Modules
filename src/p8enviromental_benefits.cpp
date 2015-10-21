@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-DM_DECLARE_GROUP_NAME(Enviromental_Benefits, P8Modules)
+DM_DECLARE_GROUP_NAME(Enviromental_Benefits, )
 
 
 Enviromental_Benefits::Enviromental_Benefits()

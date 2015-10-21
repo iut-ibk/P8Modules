@@ -267,7 +267,7 @@ class AnalyserModule(Module):
 	def getClassName(self):
 		return "Analyser"
 	def getFileName(self):
-		return "Scenario Simulation and Assessment"
+		return "Scenario Definition"
 	def writeUtilFile(self,vec):
 		f = open(self.UtilFile,"w")
 		for i in range(len(vec)):

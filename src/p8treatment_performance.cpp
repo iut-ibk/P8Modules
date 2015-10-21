@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-DM_DECLARE_GROUP_NAME(Treatment_Performance, P8Modules)
+DM_DECLARE_GROUP_NAME(Treatment_Performance, )
 
 
 Treatment_Performance::Treatment_Performance()

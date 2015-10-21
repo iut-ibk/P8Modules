@@ -511,4 +511,4 @@ class StreamErosionIndex(Module):
     def getClassName(self):
         return "Stream Erosion and Minor Flooding"
     def getFileName(self):
-        return "Scenario Simulation and Assessment"
+        return "Stormwater"

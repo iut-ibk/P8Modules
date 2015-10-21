@@ -15,7 +15,7 @@
 #include <boost/random/normal_distribution.hpp>
 
 //DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
-DM_DECLARE_CUSTOM_NODE_NAME(Microclimate_heat,"Microclimate Extreme Heat", "Scenario Simulation and Assessment")
+DM_DECLARE_CUSTOM_NODE_NAME(Microclimate_heat,"Extreme Heat", "Microclimate")
 Microclimate_heat::Microclimate_heat()
 {   
     gridsize = 30;

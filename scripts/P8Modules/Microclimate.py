@@ -14,3 +14,5 @@ class Microclimate(Module):
 	    self.addData("City",datastream)
 	def run(self):
 	    city = self.getData("City")
+	def getFileName(self):
+		return ""

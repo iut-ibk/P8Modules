@@ -4,7 +4,7 @@
 
 #include <QWidget>
 
-DM_DECLARE_NODE_NAME(Current_Realisation,P8Modules)
+DM_DECLARE_NODE_NAME(Current_Realisation, )
 
 Current_Realisation::Current_Realisation()
 {

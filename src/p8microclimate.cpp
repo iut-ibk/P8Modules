@@ -13,7 +13,7 @@
 #include <QSettings>
 
 //DM_DECLARE_NODE_NAME(Microclimate,P8Modules)
-DM_DECLARE_CUSTOM_NODE_NAME(Microclimate,"Microclimate Average Summer Heat", "Scenario Simulation and Assessment")
+DM_DECLARE_CUSTOM_NODE_NAME(Microclimate,"Average Summer Heat", "Microclimate")
 Microclimate::Microclimate()
 {
     gridsize = 30;

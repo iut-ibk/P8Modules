@@ -4,7 +4,7 @@
 #include <rasterdatahelper.h>
 #include <dm.h>
 
-DM_DECLARE_NODE_NAME( P8ScenarioGroup ,CRCP8 )
+DM_DECLARE_NODE_NAME( P8ScenarioGroup , )
 
 
 P8ScenarioGroup::P8ScenarioGroup() {

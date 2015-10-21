@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-DM_DECLARE_GROUP_NAME(P8Rain, CRCP8)
+DM_DECLARE_GROUP_NAME(P8Rain, )
 
 
 P8Rain::P8Rain()

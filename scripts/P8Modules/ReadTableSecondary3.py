@@ -1131,7 +1131,7 @@ class StreamHydrologyandWaterquality(Module):
 	def getClassName(self):
 		return "Stream Hydrology and Water Quality"
 	def getFileName(self):
-		return "Scenario Simulation and Assessment"
+		return "Stormwater"
 	def isLastInTrain(self,id,linkList,NodeToType):
 		for link in linkList:
 			if(link.getSRC() == id):

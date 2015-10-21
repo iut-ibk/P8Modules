@@ -43,7 +43,7 @@
 
 
 
-DM_DECLARE_NODE_NAME( GraphicPlacement,CRCP8 )
+DM_DECLARE_NODE_NAME( GraphicPlacement, )
 GraphicPlacement::GraphicPlacement()
 {
     //QColorDialog::getColor();

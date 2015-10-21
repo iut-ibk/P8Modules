@@ -3,7 +3,8 @@
 
 #include <QWidget>
 
-DM_DECLARE_CUSTOM_NODE_NAME(Current_RealisationModule,"Current Realisation","Scenario Simulation and Assessment")
+
+DM_DECLARE_CUSTOM_NODE_NAME(Current_RealisationModule,"","")
 
 Current_RealisationModule::Current_RealisationModule()
 {

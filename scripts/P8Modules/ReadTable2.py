@@ -192,6 +192,6 @@ class TreatmentPerformanceResultsModule(Module):
 		form.exec_()
 		return True 
 	def getClassName(self):
-		return "Treatment and Harvesting Performance (MUSIC)"
+		return "Treatment and Harvesting Performance"
 	def getFileName(self):
-		return "Scenario Simulation and Assessment"
+		return "Stormwater"

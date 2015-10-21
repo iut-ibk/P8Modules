@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pydynamind import *
 import math
-
+import pymsgbox
 class ImportMSF(Module):
 
 
@@ -31,12 +31,13 @@ class ImportMSF(Module):
         simu.addAttribute("msfFilename",str(workpath + self.Filename))
         simu.addAttribute("MusicFileNo","-1")
         city.addComponent(simu,self.simulation)
+        pymsgbox.alert('This is an alert!', 'Title')
 
     def createInputDialog(self):
         form = activateimportMSFGUI(self, QApplication.activeWindow())
         form.exec_()
         return True 
     def getClassName(self):
-        return "Import MUSIC File (.msf)"
+        return "Import WSUD Layout (.msf)"
     def getFileName(self):
-        return "Scenario Simulation and Assessment"
+        return "Scenario Definition"

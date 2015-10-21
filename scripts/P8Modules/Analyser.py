@@ -38,4 +38,4 @@ class Analyser(Module):
 		form.exec_()
 		return True 
 	def getClassName(self):
-		return "blabal"
+		return "Analyser Old"

@@ -4,7 +4,7 @@
 #include <rasterdatahelper.h>
 #include <dm.h>
 
-DM_DECLARE_NODE_NAME( AppendRasterAsAttribute ,CRCP8 )
+DM_DECLARE_NODE_NAME( AppendRasterAsAttribute , )
 
 
 AppendRasterAsAttribute::AppendRasterAsAttribute() {

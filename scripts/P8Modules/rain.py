@@ -156,8 +156,8 @@ class Rain(Module):
 	    	counter = counter + 1
 	    	#print netCDF.variables['rain'][i][int(lats[y])][int(longs[x])]
 	    return datas
-
-
+	def getFileName(self):
+		return ""
 
 
 

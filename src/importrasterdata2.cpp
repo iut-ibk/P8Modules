@@ -30,7 +30,7 @@
 #include <QTextStream>
 #include <QStringList>
 //DM_DECLARE_NODE_NAME(ImportRasterData2, Modules)
-DM_DECLARE_CUSTOM_NODE_NAME(ImportRasterData2,"Land Cover Map (Microclimate)","Scenario Generation")
+DM_DECLARE_CUSTOM_NODE_NAME(ImportRasterData2,"","")
 ImportRasterData2::ImportRasterData2()
 {
 	multiplier = 1;

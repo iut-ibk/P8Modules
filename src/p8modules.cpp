@@ -47,17 +47,17 @@ using namespace DM;
 
 extern "C" void DM_HELPER_DLL_EXPORT  registerModules(ModuleRegistry *registry)
 {
-    registry->addNodeFactory(new NodeFactory<URBAN_FORM>());
+    //registry->addNodeFactory(new NodeFactory<URBAN_FORM>());
    // registry->addNodeFactory(new NodeFactory<P8Rain>());
-    registry->addNodeFactory(new NodeFactory<SCENARIO>());
+    //registry->addNodeFactory(new NodeFactory<SCENARIO>());
     registry->addNodeFactory(new NodeFactory<GraphicPlacement>());
     registry->addNodeFactory(new NodeFactory<Treatment_Performance>());
     registry->addNodeFactory(new NodeFactory<Enviromental_Benefits>());
 //    registry->addNodeFactory(new NodeFactory<P8Simulation>());
 //    registry->addNodeFactory(new NodeFactory<P8Evaluation>());
     registry->addNodeFactory(new NodeFactory<AppendRasterAsAttribute>());
-    registry->addNodeFactory(new NodeFactory<Current_Realisation>());
-    registry->addNodeFactory(new NodeFactory<Current_RealisationModule>());
+    //registry->addNodeFactory(new NodeFactory<Current_Realisation>());
+    //registry->addNodeFactory(new NodeFactory<Current_RealisationModule>());
     registry->addNodeFactory(new NodeFactory<Microclimate>());
     registry->addNodeFactory(new NodeFactory<ImportRasterData2>());
     //registry->addNodeFactory(new NodeFactory<p8shapemicro>());
