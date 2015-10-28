@@ -29,7 +29,7 @@ class Analyser2_Gui(QtGui.QDialog):
 			workpath = workpath.replace("/","\\")
 		self.TPRFile = workpath + "TPRtable.txt"
 		self.EBRFile = workpath + "EBRtable.txt"
-		self.UtilFile = workpath + "UtilTable.txt"
+		#self.UtilFile = workpath + "UtilTable.txt"
 		self.summaryFile = workpath + "AnalyzerSummary.csv"
 		QtCore.QObject.connect(self.ui.pb_plotEBR, QtCore.SIGNAL("released()"),self.plotEBR)
 		QtCore.QObject.connect(self.ui.pb_plotEBR2, QtCore.SIGNAL("released()"),self.plotEBR2)
@@ -37,7 +37,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.pb_plotEBR4, QtCore.SIGNAL("released()"),self.plotEBR4)
 		QtCore.QObject.connect(self.ui.pb_plotTPR, QtCore.SIGNAL("released()"),self.plotTPR)
 		QtCore.QObject.connect(self.ui.pb_delete, QtCore.SIGNAL("released()"),self.delete)
-		QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
+		#QtCore.QObject.connect(self.ui.pb_plotUtil, QtCore.SIGNAL("released()"),self.plotUtil)
 		QtCore.QObject.connect(self.ui.pb_plotSEI, QtCore.SIGNAL("released()"),self.plotSEI)
 		QtCore.QObject.connect(self.ui.pb_plotSEI2, QtCore.SIGNAL("released()"),self.plotSEI2)
 

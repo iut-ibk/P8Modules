@@ -55,14 +55,14 @@ class AnalyserModule(Module):
 			workpath = workpath.replace("/","\\")
 		self.TPRFile = workpath + "TPRtable.txt"
 		self.EBRFile = workpath + "EBRtable.txt"
-		self.UtilFile = workpath + "UtilTable.txt"
+		#self.UtilFile = workpath + "UtilTable.txt"
 		self.summaryFile = workpath + "AnalyzerSummary.csv"	
 
 		self.calcEBR(workpath)
 		self.calcTPR(workpath)
-		print "useUB: " + str(self.useUB)
-		if(self.useUB == "1"):
-			self.calcUTIL(workpath)
+		#print "useUB: " + str(self.useUB)
+		#if(self.useUB == "1"):
+		#	self.calcUTIL(workpath)
 		self.calcSEI(workpath)
 	def createInputDialog(self):
 		form = Analyser2_Gui(self, QApplication.activeWindow())
