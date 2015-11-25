@@ -6,7 +6,8 @@ import netCDF4
 from matplotlib import *
 import matplotlib.pyplot as plt
 import tempfile
-import datetime, time
+import datetime
+import time as zeit
 from datetime import date
 import numpy as np
 import os
@@ -90,11 +91,11 @@ class RainModule(Module):
 			
 			data = netCDF4.Dataset(str(workpath + self.Netfile))#'/home/csam8457/Documents/P8-WSC/P8Modules/scripts/P8Modules/demo.nc' ,'r',format='NETCDF4')
 			print "Start reading Rain Data"
-
+			time = data.variables["time"][:]
+			rain = data.variables["rain"][:]
 			for i in range(int(self.Xcoord1), int(self.Ycoord1)):
-				self.createRainCSV(data,workpath, i)
+				self.createRainCSV(time,rain[i,:],workpath, i)
 				self.createMusicFile(realstring, workpath + "stimulation" + str(i+1) + ".csv", i)
-				print "music file " + str(i+1) + " written."
 
 			
 		else:
@@ -159,27 +160,34 @@ class RainModule(Module):
 	    	print "Adding Rain to Blocks: " + str(i) + " of " + str(len(catchments))
 	    '''
 
-	def createRainCSV(self,data,workpath,count):
-		self.timestep = (data.variables["time"][101] -  data.variables["time"][100]) / 60
-		self.startdate = datetime.datetime.fromtimestamp(int(data.variables['time'][100])).strftime('%d/%m/%Y %H:%M:%S')
-		self.enddate = datetime.datetime.fromtimestamp(int(data.variables['time'][data.variables['time'].size-1])).strftime('%d/%m/%Y %H:%M:%S')
+	def createRainCSV(self, time, rain, workpath, count):
+		t0 = zeit.time()
+		
+		self.timestep = (time[101] - time[100]) / 60
+		self.startdate = datetime.datetime.fromtimestamp(int(time[100])).strftime('%d/%m/%Y %H:%M:%S')
+		self.enddate = datetime.datetime.fromtimestamp(int(time[len(time)-1])).strftime('%d/%m/%Y %H:%M:%S')
 
-		f = open(workpath + "stimulation" + str(count+1) + ".csv",'w')
-		f.write("Date,Rainfall\n")
-		print "Start writing Rain Data for Location " + str(count+1)
-		size = float(data.variables['time'].size)
-		oldpercent = 0
-		newpercent = float(0)
+
+		#print "Start writing Rain Data for Location " + str(count+1)
+		size = len(time)
+		data = ""
+		#oldpercent = 0
+		#newpercent = 0
+
 		i = 100
 		while (i < size):
-			newpercent = float((float(i) /float(size)) * float(100))
-			if(oldpercent < int(newpercent)):
-				oldpercent = int(newpercent)
-				print "Writing Rain-Data for Location " + str(count+1) + " " + str(oldpercent) + "%"
-			f.write(str(datetime.datetime.fromtimestamp(int(data.variables['time'][i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(data.variables["rain"][count,i] * self.timestep / 60)+"\n")
+			#newpercent = float((float(i) /float(size)) * float(100))
+			#if(oldpercent < int(newpercent)):
+				#oldpercent = int(newpercent)
+				#print "Writing Rain-Data for Location " + str(count+1) + " " + str(oldpercent) + "%"
+			data += str(datetime.datetime.fromtimestamp(int(time[i])).strftime('%d/%m/%Y %H:%M:%S'))+","+str(rain[i] * self.timestep / 60)+"\n"
 			i = i +1
+		f = open(workpath + "stimulation" + str(count+1) + ".csv",'w')
+		f.write("Date,Rainfall\n")
+		f.write(data)
 		f.close()
-		print "Done"
+		t1 = zeit.time()
+		print "Done Simu " + str(count + 1) + " in " + str(t1-t0) + " secs"
 	def createMusicFile(self, musicf, csvf, count):
 		settings = QSettings()
 		workpath = settings.value("workPath").toString() + "/"
