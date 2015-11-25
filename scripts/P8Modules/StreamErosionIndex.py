@@ -85,11 +85,13 @@ class StreamErosionIndex(Module):
             stringname = simuAttr.getAttribute("msfFilename").getString()
             if (stringname != ""):
                 Filename = stringname
+        """
             musicNo = int(simuAttr.getAttribute("MusicFileNo").getDouble())
             if (musicNo != 0):
                 musicnr = musicNo
         if(Filename == ""):
             Filename = workpath + "ubeatsMUSIC-ID" + str(musicnr) + ".msf"
+        """
         name = self.changeMusicFile(Filename)
         self.writeBatFileFromFile(Filename)
 
