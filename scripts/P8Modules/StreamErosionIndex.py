@@ -311,23 +311,29 @@ class StreamErosionIndex(Module):
         enddate = ""
         timestep = 0
         counter = 0
-        files = self.getRainEtFile()
-        if((self.useDefaults or self.useMusic) == False):
-            f = open(files[0],"r")
-            for line in f:
-                counter = counter + 1
-                linearr = line.strip("\n").split(",")
-                if (counter == 2):
-                    startdate = linearr[0].split(" ")
-                if (counter == 3):
-                    tmp = linearr[0].split(" ")[1].split(":")
-                    tmp2 = startdate[1].split(":")
-                    timestep = int(tmp[0]) * 360 - int(tmp2[0]) * 360
-                    timestep = timestep + (int(tmp[1]) * 60 - int(tmp2[1]) * 60)
-                    #timestep = timestep + int(tmp[2]) - int(tmp2[2])
-            enddate = linearr[0].split(" ")[0]
-            startdate = startdate[0]
-            f.close()
+
+        # only get RainEtFile when files in gui
+        # skip if not
+
+        if( not((self.Csvfile == "" or self.ETfile == "") and self.useDefaults == 0 and self.useMusic == 0) ):
+            files = self.getRainEtFile()
+            if((self.useDefaults or self.useMusic) == False):
+                f = open(files[0],"r")
+                for line in f:
+                    counter = counter + 1
+                    linearr = line.strip("\n").split(",")
+                    if (counter == 2):
+                        startdate = linearr[0].split(" ")
+                    if (counter == 3):
+                        tmp = linearr[0].split(" ")[1].split(":")
+                        tmp2 = startdate[1].split(":")
+                        timestep = int(tmp[0]) * 360 - int(tmp2[0]) * 360
+                        timestep = timestep + (int(tmp[1]) * 60 - int(tmp2[1]) * 60)
+                        #timestep = timestep + int(tmp[2]) - int(tmp2[2])
+                enddate = linearr[0].split(" ")[0]
+                startdate = startdate[0]
+                f.close()
+
         infile = open(filename,"r")
         filearr = filename.split(".")
         outfile = open(filearr[0] + "SEI." + filearr[1] ,"w")
@@ -410,14 +416,20 @@ class StreamErosionIndex(Module):
                 if(int(linearr[1]) > int(ID)):
                     ID = int(linearr[1])
             if (linearr[0] == "MeteorologicalTemplate"):
+
+                # check here too if Rain and ET files are input in GUI
+                # else skip bzw. just copy line from input file, like in line 430
                 if(self.useMusic):
                     outfile.write("MeteorologicalTemplate," + workpath + self.MusicTemplateFile + ",{MLB Filename}\n")
                 else:
-                    outfile.write("RainfallFile," + files[0] +"\n")
-                    outfile.write("PETFile," + files[1] + "\n")
-                    outfile.write("StartDate," + startdate + "\n")
-                    outfile.write("EndDate," + enddate + "\n")
-                    outfile.write("Timestep," + str(timestep) + "\n")
+                    if(self.Csvfile == "" or self.ETfile == ""):
+                        outfile.write(line)
+                    else:
+                        outfile.write("RainfallFile," + files[0] +"\n")
+                        outfile.write("PETFile," + files[1] + "\n")
+                        outfile.write("StartDate," + startdate + "\n")
+                        outfile.write("EndDate," + enddate + "\n")
+                        outfile.write("Timestep," + str(timestep) + "\n")
             else:
                 outfile.write(line)
 
@@ -485,6 +497,7 @@ class StreamErosionIndex(Module):
         #checks wether the user chose a rain file or a city
         #return an array with the path of rainfile and the ET file in it
         files = []
+
         if(self.useDefaults):
             files.append("C:/Program Files (x86)/hydro-IT/P8-WSC/ClimateDataTemplates/Melbourne Rainfall 1985_1995 6min.csv")
         else:
