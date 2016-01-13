@@ -94,7 +94,7 @@ class RainModule(Module):
 			time = data.variables["time"][:]
 			rain = data.variables["rain"][:]
 			for i in range(int(self.Xcoord1), int(self.Ycoord1)):
-				self.createRainCSV(time,rain[i,:],workpath, i)
+				self.createRainCSV(time,rain[i],workpath, i)
 				self.createMusicFile(realstring, workpath + "stimulation" + str(i+1) + ".csv", i)
 
 			
@@ -174,7 +174,7 @@ class RainModule(Module):
 		#oldpercent = 0
 		#newpercent = 0
 
-		i = 100
+		i = 0
 		while (i < size):
 			#newpercent = float((float(i) /float(size)) * float(100))
 			#if(oldpercent < int(newpercent)):
