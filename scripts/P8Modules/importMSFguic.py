@@ -49,8 +49,8 @@ class activateimportMSFGUI(QtGui.QDialog):
 				tkMessageBox.showinfo(title="File load", message="The Climate Files in the provided msf couldnt be found:\n" + self.errmsg)
 			window.destroy()
 	def checkForFile(self,filename):
-		#if(platform.system() == "Linux"):
-		#	return True
+		if(platform.system() == "Linux"):
+			return True
 		missingFiles = False
 		filesToCheck = []
 		f = open(filename,"r")
