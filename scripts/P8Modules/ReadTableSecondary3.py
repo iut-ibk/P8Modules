@@ -312,7 +312,7 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i]) <self.cin):
+			if (float(list3[i]) < self.cin):
 				continue
 			if i%2==1:
 				vec3.append(list3[i])
@@ -350,7 +350,7 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(vecBase)):
 			Filtflow.append(float(vec6[i]) + float(vecPipe[i]) + float(vecBase[i]) + float(vecOverFlow[i]))
 #			print Filtflow[i]
-			if(Filtflow[i] > self.cin):
+			if(Filtflow[i] < self.cin):
 				Filtflow[i] = 0
 		#print "super summe of DOOOOOMMM: "+str(math.fsum(Filtflow))
 
