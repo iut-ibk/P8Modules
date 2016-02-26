@@ -107,7 +107,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 			self.ui.le_raindeep.setText("0")
 		elif self.ui.city_combo.currentIndex() == 3:
 			self.ui.le_rainthres.setText("1")
-			self.ui.le_rainsoil.setText("30")
+			self.ui.le_rainsoil.setText("60")
 			self.ui.le_raininitial.setText("30")
 			self.ui.le_rainfield.setText("20")
 			self.ui.le_raininfil.setText("200")
