@@ -312,7 +312,7 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i]) < self.cin):
+			if (float(list3[i]) > self.cin):
 				continue
 			if i%2==1:
 				vec3.append(list3[i])
@@ -338,7 +338,7 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i]) * EIF >self.cin):
+			if (float(list3[i]) * EIF > self.cin):
 				continue
 			if i%2==1:
 				vec9.append(list3[i])
