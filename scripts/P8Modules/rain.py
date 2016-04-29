@@ -67,7 +67,7 @@ class RainModule(Module):
 
 	def run(self):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		dataflow = self.getData("City")
@@ -190,7 +190,7 @@ class RainModule(Module):
 		print "Done Simu " + str(count + 1) + " in " + str(t1-t0) + " secs"
 	def createMusicFile(self, musicf, csvf, count):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		infile = open(musicf,"r")
@@ -216,7 +216,7 @@ class RainModule(Module):
 
 	def changeMusicFile(self, musicf, csvf):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		startdate = ""

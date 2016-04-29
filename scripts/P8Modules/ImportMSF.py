@@ -22,8 +22,7 @@ class ImportMSF(Module):
         self.addData("City", datastream)
 
     def run(self):
-        settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.getHelpUrl() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
         city = self.getData("City")

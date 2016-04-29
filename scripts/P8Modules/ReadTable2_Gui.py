@@ -25,7 +25,7 @@ class ReadTable_Gui(QtGui.QDialog):
 	    os.remove(self.tmpFile)
     def load(self):
 	settings = QSettings()
-	workpath = settings.value("workPath").toString()
+	workpath = self.module.getHelpUrl() + "/"
 	datapath = settings.value("dataPath").toString()
 	if (platform.system() != "Linux"):
 		workpath = workpath.replace("/","\\")

@@ -172,8 +172,7 @@ class ReadTableSecondary_Gui2(QtGui.QDialog):
 	elif self.ui.vol_combo.currentIndex() == 2:
 		self.ui.spb_vol.setValue(0)
     def export(self):
-	settings = QSettings()
-	workpath = settings.value("workPath").toString() + "/"
+	workpath = self.module.getHelpUrl() + "/"
 	if (platform.system() != "Linux"):
 		workpath = workpath.replace("/","\\")
 	f = open(workpath + 'EnvironmentalBenefit.csv','w')

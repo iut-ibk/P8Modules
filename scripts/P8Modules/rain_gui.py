@@ -54,8 +54,7 @@ class RainGui(QtGui.QDialog):
         QtCore.QObject.connect(self.ui.pb_ET, QtCore.SIGNAL("released()"), self.loadET)
         
     def preview(self):
-        settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.module.getHelpUrl() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
         vec = []
@@ -156,7 +155,7 @@ class RainGui(QtGui.QDialog):
 
     def load(self):
         settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.module.getHelpUrl() + "/"
         datapath = settings.value("dataPath").toString() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
@@ -169,7 +168,7 @@ class RainGui(QtGui.QDialog):
             copyfile(filename,workpath + QFileInfo(filename).fileName())
     def loadcsv(self):
         settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.module.getHelpUrl() + "/"
         datapath = settings.value("dataPath").toString() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
@@ -184,7 +183,7 @@ class RainGui(QtGui.QDialog):
 
     def loadET(self):
         settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.module.getHelpUrl() + "/"
         datapath = settings.value("dataPath").toString() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")

@@ -20,6 +20,7 @@ class AnalyserModule(Module):
 		datastream = []
 		datastream.append(self.simulation)
 		self.addData("City",datastream)
+
 	def run(self):
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
@@ -49,8 +50,7 @@ class AnalyserModule(Module):
 				self.alpha = simuData.getAttribute("alpha").getDouble()
 			if(simuData.getAttribute("useUB").getString() != ""):
 				self.useUB = simuData.getAttribute("useUB").getString()
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		self.TPRFile = workpath + "TPRtable.txt"
@@ -100,6 +100,14 @@ class AnalyserModule(Module):
 			print "no EB file found"
 	def calcTPR(self,workpath):
 		filename = workpath + "Perf_TTE.txt"
+		reusefile = workpath + "reusetable.txt"
+		hasReuse = False
+		reuseSum = 0
+		if(os.path.exists(reusefile)):
+			f = open(reusefile,"r")
+			for line in f:
+				reuseSum = float(line.split(":")[1])
+			hasReuse = True
 		if(os.path.exists(filename)):
 			f = open(filename,'r')
 			text = shlex.shlex(f.read(),posix = True)
@@ -135,6 +143,8 @@ class AnalyserModule(Module):
 				tmp = tmp.replace("[","")
 				tmp = tmp.replace(")","")
 				f.write(str(tmp) + "\n")
+			if(hasReuse):
+				f.write("\nRe-Use Sum, " + str(reuseSum) +"\n")
 			f.write("\n------------------------------------------\n\n")
 			f.close()
 		else:

@@ -712,6 +712,9 @@ def writeTankLinkReuse(f,up, down):
     f.write("Muskingum K,30,{no value required for no routing or \"numerical value\" for routed}\n")
     f.write("Muskingum Theta,0.25,{no value required for no routing or \"numerical value\" for routed. Must be between 0.1 and 0.49}\n")
     f.write("Secondary Outflow Components,Reuse,{for secondary drainage link only}\n")
+    f.write("------------------------------------------------------------------------------------\n")
+    return True
+
 
 def writeMUSICreceiving(f, ID, ncount, x, y):
     f.write("Node Type,ReceivingNode,{Node Type}\n")

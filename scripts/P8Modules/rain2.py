@@ -65,8 +65,7 @@ class RainModule(Module):
 
 
 	def run(self):
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		dataflow = self.getData("City")
@@ -190,8 +189,7 @@ class RainModule(Module):
 		print "Done"
 
 	def changeMusicFile(self, musicf, csvf):
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		startdate = ""

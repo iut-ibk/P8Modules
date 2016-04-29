@@ -21,8 +21,7 @@ Microclimate::Microclimate()
     mapPic = "";
     shapefile = "";
     landuse = "";
-    QSettings settings;
-    workingDir = settings.value("workPath").toString().toStdString();
+    workingDir = this->getWorkPath().toStdString();
 /*
     if(QFile::exists(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd")))
         QFile::remove(QString(this->workingDir.c_str()) + QString("/Reduction in Air Temperature.mcd"));
@@ -49,8 +48,7 @@ void Microclimate::init()
 
 void Microclimate::run()
 {
-    QSettings settings;
-    workingDir = settings.value("workPath").toString().toStdString();
+    workingDir = this->getWorkPath().toStdString();
 
     //DM::View topo("Topology", DM::FACE, DM::READ);
     DM::View raster("Imp",DM::RASTERDATA,DM::READ);

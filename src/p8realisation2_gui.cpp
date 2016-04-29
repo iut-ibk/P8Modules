@@ -12,8 +12,7 @@ p8realisationModule_gui::p8realisationModule_gui(Current_RealisationModule * p8,
     ui->setupUi(this);
     this->p8realisation = p8;
     //ui->le_mNr->setText(QString::fromStdString(p8->getParameterAsString("RealisationNr")));
-    QSettings settings;
-    QString path = settings.value("workPath").toString();
+    QString path = QString(this->p8realisation->getWorkPath());
     QDir dir = QDir(path);
     dir.setFilter(QDir::Files);
     QStringList files = dir.entryList();
@@ -63,8 +62,7 @@ p8realisationModule_gui::~p8realisationModule_gui()
 
 void p8realisationModule_gui::on_buttonBox_accepted()
 {
-    QSettings settings;
-    QString path = settings.value("workPath").toString();
+    QString path = QString(this->p8realisation->getWorkPath());
         //this->p8realisation->setParameterValue("RealisationNr",ui->le_mNr->text().toStdString());
     this->p8realisation->setParameterValue("RealisationNr",path.toStdString() + "/" + ui->comboBox->currentText().toStdString());
 }

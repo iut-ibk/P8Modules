@@ -29,7 +29,7 @@ class activateimportMSFGUI(QtGui.QDialog):
 		self.module.setParameterValue("Filename", Filename)
 	def load(self):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
 		datapath = settings.value("dataPath").toString() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")

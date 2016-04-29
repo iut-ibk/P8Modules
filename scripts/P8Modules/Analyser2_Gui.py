@@ -23,8 +23,7 @@ class Analyser2_Gui(QtGui.QDialog):
 		QtGui.QDialog.__init__(self,parent)
 		self.ui = Ui_Analyser2_GUI()
 		self.ui.setupUi(self)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		self.TPRFile = workpath + "TPRtable.txt"
@@ -53,8 +52,7 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotEBR(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		filename = workpath + "EBRtable.txt"
@@ -112,8 +110,8 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotEBR2(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		filename = workpath + "EBRtable.txt"
@@ -167,8 +165,8 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotEBR3(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		filename = workpath + "EBRtable.txt"
@@ -222,8 +220,8 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotEBR4(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		filename = workpath + "WQtable.txt"
@@ -319,8 +317,8 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotTPR(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		filename = workpath + "Perf_TTE.txt"#QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))
@@ -416,8 +414,8 @@ class Analyser2_Gui(QtGui.QDialog):
 			f.write("\n------------------------------------------\n\n")
 		'''
 	def plotUtil(self):
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
@@ -606,8 +604,8 @@ class Analyser2_Gui(QtGui.QDialog):
 		f.close()
 		self.writeUtilFile(ResultVec)
 	def plotSEI(self):
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		mpl.rcParams['toolbar'] = 'None'
@@ -682,8 +680,8 @@ class Analyser2_Gui(QtGui.QDialog):
 	def plotSEI2(self):
 		params = {'legend.fontsize': 8,'legend.linewidth': 2,'legend.labelspacing':0.2}
 		mpl.rcParams.update(params)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.module.getHelpUrl() + "/"
+
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		filename = workpath + "SEItable.txt"#QtGui.QFileDialog.getOpenFileName(self, "Open MUSIC Output File", workpath,self.tr("Text Files (*.txt)"))

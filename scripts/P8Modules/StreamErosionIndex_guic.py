@@ -165,7 +165,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 		self.ui.le_A.setValue(0.4)
 	def load(self):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		datapath = settings.value("dataPath").toString() + "/"
 
 		if (platform.system() != "Linux"):
@@ -179,7 +179,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 			copyfile(filename,workpath + QFileInfo(filename).fileName())
 	def load2(self):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		datapath = settings.value("dataPath").toString() + "/"
 
 		if (platform.system() != "Linux"):
@@ -193,7 +193,7 @@ class activateStreamErosionIndexGUI(QtGui.QDialog):
 			copyfile(filename,workpath + QFileInfo(filename).fileName())
 	def load3(self):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		datapath = settings.value("dataPath").toString() + "/"
 
 		if (platform.system() != "Linux"):

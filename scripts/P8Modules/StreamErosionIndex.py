@@ -74,8 +74,7 @@ class StreamErosionIndex(Module):
     def run(self):
         Filename = ""
         musicNo = 0
-        settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.getHelpUrl() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
         city = self.getData("City")
@@ -271,7 +270,7 @@ class StreamErosionIndex(Module):
             
     def writeBatFileFromFile(self,file):
         settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.getHelpUrl() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
         f = open(workpath + "RunMusicSEI.bat",'w')
@@ -279,8 +278,7 @@ class StreamErosionIndex(Module):
         f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \""+ filearr[0] + "SEI." + filearr[1] +"\" \"" + workpath + "musicConfigFileSEI.mcf\" -light -silent\n")
         f.close()
     def writeMusicConfigFile(self,routed,name):
-        settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.getHelpUrl() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
         f = open(workpath + "musicConfigFileSEI.mcf", 'w')
@@ -303,7 +301,7 @@ class StreamErosionIndex(Module):
                 import ubeats_music_interface_5 as umusic
             else:
                 import ubeats_music_interface as umusic
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.getHelpUrl() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
         #read start- , enddate and timestep from csv
@@ -490,8 +488,7 @@ class StreamErosionIndex(Module):
         print "tech name: " + name
         self.writeMusicConfigFile(routed,name)
     def getRainEtFile(self):
-        settings = QSettings()
-        workpath = settings.value("workPath").toString() + "/"
+        workpath = self.getHelpUrl() + "/"
         if (platform.system() != "Linux"):
             workpath = workpath.replace("/","\\")
         #checks wether the user chose a rain file or a city

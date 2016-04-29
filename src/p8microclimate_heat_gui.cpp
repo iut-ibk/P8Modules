@@ -20,8 +20,7 @@ p8microclimate_heat_gui::p8microclimate_heat_gui(Microclimate_heat * p8, QWidget
 
     this->p8microclimate = p8;
 
-    QSettings settings;
-    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+    this->p8microclimate->workingDir = this->p8microclimate->getWorkPath().toStdString();
 
     if(p8microclimate->percentile == 20)
     {
@@ -80,7 +79,6 @@ p8microclimate_heat_gui::~p8microclimate_heat_gui()
 void p8microclimate_heat_gui::on_pb_map_released()
 {
     QSettings settings;
-    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
     QString datapath = settings.value("dataPath").toString() + "/";
     QString fname = QFileDialog::getOpenFileName(this,"Map png",datapath,"*.png");
     if (fname == "")
@@ -88,17 +86,17 @@ void p8microclimate_heat_gui::on_pb_map_released()
     QFileInfo finfo = QFileInfo(fname);
     ui->le_map->setText(finfo.fileName());
     this->p8microclimate->setParameterValue("MapPic",finfo.fileName().toStdString());
-    QFileInfo workfinfo = QFileInfo(QString(settings.value("workPath").toString() + "/" + finfo.fileName()));
+    QFileInfo workfinfo = QFileInfo(QString(this->p8microclimate->workingDir.c_str()) + "/" + finfo.fileName());
     if(finfo.absolutePath() != workfinfo.absolutePath())
     {
-        if( QFile::exists(settings.value("workPath").toString() + finfo.fileName()))
+        if( QFile::exists(QString(this->p8microclimate->workingDir.c_str()) + finfo.fileName()))
         {
-            QFile::remove(settings.value("workPath").toString() +"/"+ finfo.fileName());
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::remove(QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
         else
         {
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
     }
     settings.setValue("dataPath",finfo.absolutePath());
@@ -108,7 +106,6 @@ void p8microclimate_heat_gui::on_pb_map_released()
 void p8microclimate_heat_gui::on_pb_shape_released()
 {
     QSettings settings;
-    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
     QString datapath = settings.value("dataPath").toString() + "/";
     QString fname = QFileDialog::getOpenFileName(this,"Shape File", datapath, "*.sh");
     if (fname == "")
@@ -116,17 +113,17 @@ void p8microclimate_heat_gui::on_pb_shape_released()
     QFileInfo finfo = QFileInfo(fname);
     ui->le_shape->setText(finfo.fileName());
     this->p8microclimate->setParameterValue("Shapefile",finfo.fileName().toStdString());
-    QFileInfo workfinfo = QFileInfo(QString(settings.value("workPath").toString() + "/" + finfo.fileName()));
+    QFileInfo workfinfo = QFileInfo(QString(this->p8microclimate->workingDir.c_str()) + "/" + finfo.fileName());
     if(finfo.absolutePath() != workfinfo.absolutePath())
     {
-        if( QFile::exists(settings.value("workPath").toString() + finfo.fileName()))
+        if( QFile::exists(QString(this->p8microclimate->workingDir.c_str()) + finfo.fileName()))
         {
-            QFile::remove(settings.value("workPath").toString() +"/"+ finfo.fileName());
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::remove(QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
         else
         {
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
     }
     settings.setValue("dataPath",finfo.absolutePath());
@@ -136,7 +133,6 @@ void p8microclimate_heat_gui::on_pb_shape_released()
 void p8microclimate_heat_gui::on_pb_landuse_released()
 {
     QSettings settings;
-    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
     QString datapath = settings.value("dataPath").toString() + "/";
     QString fname = QFileDialog::getOpenFileName(this,"Landuse File",datapath,"*.txt");
     if(fname == "")
@@ -144,17 +140,17 @@ void p8microclimate_heat_gui::on_pb_landuse_released()
     QFileInfo finfo = QFileInfo(fname);
     ui->le_landuse->setText(finfo.fileName());
     this->p8microclimate->setParameterValue("Landuse",finfo.fileName().toStdString());
-    QFileInfo workfinfo = QFileInfo(QString(settings.value("workPath").toString() + "/" + finfo.fileName()));
+    QFileInfo workfinfo = QFileInfo(QString(this->p8microclimate->workingDir.c_str()) + "/" + finfo.fileName());
     if(finfo.absolutePath() != workfinfo.absolutePath())
     {
-        if( QFile::exists(settings.value("workPath").toString() + finfo.fileName()))
+        if( QFile::exists(QString(this->p8microclimate->workingDir.c_str()) + finfo.fileName()))
         {
-            QFile::remove(settings.value("workPath").toString() +"/"+ finfo.fileName());
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::remove(QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
         else
         {
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
     }
     settings.setValue("dataPath",finfo.absolutePath());
@@ -187,10 +183,9 @@ void p8microclimate_heat_gui::set_run()
     // remove mcd file if gridsize is changed
     if(this->oldGridsize != this->p8microclimate->gridsize)
     {
-        QSettings settings;
-        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd")){
+        if(QFile::exists(QString(this->p8microclimate->workingDir.c_str()) + "/WSUDtech.mcd")){
             cout << "deleting wsud tech file" << endl;
-            QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
+            QFile::remove(QString(this->p8microclimate->workingDir.c_str()) +"/WSUDtech.mcd");
         }
     }
 
@@ -202,8 +197,7 @@ void p8microclimate_heat_gui::set_run()
 
 void p8microclimate_heat_gui::on_pb_wsud_released()
 {
-    QSettings settings;
-    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
+
     QString fname = QFileDialog::getOpenFileName(this,"WSUD Tech File",QString(this->p8microclimate->workingDir.c_str()),"*.csv");
     if(fname == "")
         return;
@@ -213,7 +207,6 @@ void p8microclimate_heat_gui::on_pb_wsud_released()
 void p8microclimate_heat_gui::on_pb_techFile_released()
 {
     QSettings settings;
-    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
     QString datapath = settings.value("dataPath").toString() + "/";
     QString fname = QFileDialog::getOpenFileName(this,"Landuse File",datapath,"*.txt");
     if(fname == "")
@@ -221,22 +214,22 @@ void p8microclimate_heat_gui::on_pb_techFile_released()
     QFileInfo finfo = QFileInfo(fname);
     ui->le_techFile->setText(finfo.fileName());
     this->p8microclimate->setParameterValue("Techfile",finfo.fileName().toStdString());
-    QFileInfo workfinfo = QFileInfo(QString(settings.value("workPath").toString() + "/" + finfo.fileName()));
+    QFileInfo workfinfo = QFileInfo(QString(this->p8microclimate->workingDir.c_str()) + "/" + finfo.fileName());
     if(finfo.absolutePath() != workfinfo.absolutePath())
     {
-        if( QFile::exists(settings.value("workPath").toString() + finfo.fileName()))
+        if( QFile::exists(QString(this->p8microclimate->workingDir.c_str()) + finfo.fileName()))
         {
-            QFile::remove(settings.value("workPath").toString() +"/"+ finfo.fileName());
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::remove(QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
         else
         {
-            QFile::copy(fname,settings.value("workPath").toString() +"/"+ finfo.fileName());
+            QFile::copy(fname,QString(this->p8microclimate->workingDir.c_str()) +"/"+ finfo.fileName());
         }
     }
     settings.setValue("dataPath",finfo.absolutePath());
-    if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
-        QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
+    if(QFile::exists(QString(this->p8microclimate->workingDir.c_str()) + "/WSUDtech.mcd"))
+        QFile::remove(QString(this->p8microclimate->workingDir.c_str()) +"/WSUDtech.mcd");
 }
 void p8microclimate_heat_gui::on_bBox_accepted()
 {
@@ -264,17 +257,14 @@ void p8microclimate_heat_gui::on_bBox_accepted()
     // remove mcd file if gridsize is changed
     if(this->oldGridsize != this->p8microclimate->gridsize)
     {
-        QSettings settings;
-        if(QFile::exists(settings.value("workPath").toString() + "/WSUDtech.mcd"));
-            QFile::remove(settings.value("workPath").toString() +"/WSUDtech.mcd");
+        if(QFile::exists(QString(this->p8microclimate->workingDir.c_str()) + "/WSUDtech.mcd"))
+            QFile::remove(QString(this->p8microclimate->workingDir.c_str()) +"/WSUDtech.mcd");
     }
 }
 
 void p8microclimate_heat_gui::on_pb_placeTech_released()
 {
     this->p8microclimate->setParameterValue("Gridsize",ui->le_gridsize->text().toStdString());
-    QSettings settings;
-    this->p8microclimate->workingDir = settings.value("workPath").toString().toStdString();
     int cols;
     int rows;
     double cellsize,newcols,newrows;

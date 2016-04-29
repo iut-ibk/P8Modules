@@ -100,8 +100,7 @@ class StreamHydrologyandWaterquality(Module):
 		self.linkToReuse = False
 		realstring = ""
 		self.ImpAreaToTreatment = 0.0
-		settings = QSettings()
-		workpath = settings.value("workPath").toString()
+		workpath = self.getHelpUrl() + "/"
 		workpath += "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
@@ -312,7 +311,7 @@ class StreamHydrologyandWaterquality(Module):
 		for i in range(len(list3)):
 			if i<2 or ((i)%2==0):
 				continue
-			if (float(list3[i]) > self.cin):
+			if (float(list3[i]) < self.cin):
 				continue
 			if i%2==1:
 				vec3.append(list3[i])
@@ -334,14 +333,6 @@ class StreamHydrologyandWaterquality(Module):
 		print "VolumeET: " +str(VolumeET)
 		print "VolumeInf: " +str(VolumeInf)
 
-		
-		for i in range(len(list3)):
-			if i<2 or ((i)%2==0):
-				continue
-			if (float(list3[i]) * EIF > self.cin):
-				continue
-			if i%2==1:
-				vec9.append(list3[i])
 
 #       ## we need to calculated the impervious area of the treated areas (sum of impervious areas going to some treatment)
 #       treatimparea = sum of impervious areas going to some treatment
@@ -513,7 +504,7 @@ class StreamHydrologyandWaterquality(Module):
 		return idx
 	def writeBatFileFromFile(self,file):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString()
+		workpath = self.getHelpUrl() + "/"
 		workpath += "/"#RunMusicSecondary.bat"
 		if (platform.system() != "Linux"):
 			file = file.replace("/","\\")
@@ -524,7 +515,7 @@ class StreamHydrologyandWaterquality(Module):
 		f.close()
 	def writeBatFileFromNr(self,nr):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString()
+		workpath = self.getHelpUrl() + "/"
 		workpath += "/"#RunMusicSecondary.bat"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
@@ -532,8 +523,7 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\ubeatsMUSIC-1960PCsecondary"+str(nr)+".msf\" \"" + workpath + "RunMusicSecondary.bat\" \"" + workpath + "musicConfigFileSecondary"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromFile(self,file,name,number):
-		settings = QSettings()
-		workpath = settings.value("workPath").toString()
+		workpath = self.getHelpUrl() + "/"
 		workpath += "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
@@ -560,8 +550,7 @@ class StreamHydrologyandWaterquality(Module):
 		f.write("Export_TS ("+str(name)+", InflowTSSConc; InflowTPConc; InflowTNConc, \"WQ"+str(number)+".TXT\",1d)\n")
 		f.close()
 	def writeMusicConfigFileSecondaryFromNr(self,nr):
-		settings = QSettings()
-		workpath = settings.value("workPath").toString()
+		workpath = self.getHelpUrl() + "/"
 		workpath += "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
