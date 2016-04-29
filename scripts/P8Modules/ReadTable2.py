@@ -35,6 +35,7 @@ class TreatmentPerformanceResultsModule(Module):
 		self.addData("City",datastream)
 
 	def run(self):
+		self.createReuse = False
 		realstring = ""
 		city = self.getData("City")
 		strvec = city.getUUIDsOfComponentsInView(self.simulation)
@@ -47,8 +48,7 @@ class TreatmentPerformanceResultsModule(Module):
 		self.writeBatFileFromNr(musicnr)
 		self.writeMusicConfigFileFromNr(musicnr)
 		'''
-		settings = QSettings()
-		workpath = settings.value("workPath").toString()
+		workpath = self.getHelpUrl()
 		workpath += "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
@@ -68,26 +68,32 @@ class TreatmentPerformanceResultsModule(Module):
 		else:
 			realstring = workpath + "ubeatsMUSIC-ID" + str(musicnr) + ".msf"
 			newname = workpath + "ubeatsMUSIC-ID" + str(musicnr) + "TP.msf" 
-		shutil.copyfile(realstring,newname)
 		self.writeBatFile(newname)
-		name = self.readMusicFile(newname)
+		name = self.readMusicFile(realstring,newname)
 		self.writeMusicConfigFile(newname,name)
-		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
-		if (platform.system() != "Linux"):
-			workpath = workpath.replace("/","\\")
 
 		print "Music running ..."
 		if (platform.system() != "Linux"):
 			call([str(workpath) + "RunMusicTP.bat", ""])
 		print "Music Done."
-	def readMusicFile(self,filename):
+		self.calc()
+	def readMusicFile(self,filename,newname):
+		settings = QSettings()
+		if (settings.value("Music").toString().contains("MUSIC 5")):
+			import ubeats_music_interface_5 as umusic
+		else:
+			import ubeats_music_interface as umusic
+
+		largestID = 0
 		recvcounter = 0
 		foundOutBas = 0
 		OutBasId = 0
 		receivingnodeid = 0		
 		receiveBasName = ""
+		getIDforReuse = False
+		ReuseIDs = []
 		fileIn = open(filename,"r")
+		fileOut = open(newname,"w")
 		for line in fileIn:
 			linearr = line.strip("\n").split(",")
 
@@ -101,15 +107,32 @@ class TreatmentPerformanceResultsModule(Module):
 			if(linearr[0] == "Node Type"):
 				if(linearr[1] == "ReceivingNode"):
 					recvcounter = 1
+				if(linearr[1] == "WetlandNode" or linearr[1] == "PondNode" or linearr[1] == "RainWaterTankNode"):
+					self.createReuse = True
+					getIDforReuse = True
 			if(linearr[0] == "Node ID"):
+				if(largestID < int(linearr[1])):
+					largestID = int(linearr[1])
 				if(foundOutBas):
 					OutBasId = linearr[1]
 					foundOutBas = 0
+				# get wetland pond an rainwatertank ids to link with reuse node
+				if(getIDforReuse):
+					ReuseIDs.append(int(linearr[1]))
+					getIDforReuse = False
 			# if in node name "OUT-Bas" save and set foundOutBas
 			if(linearr[0] == "Node Name"):
 				if(linearr[1].find("OUT_Bas") != -1):
 					receiveBasName = linearr[1]
 					foundOutBas = 1
+			fileOut.write(line)
+
+		# check for reuse
+		if(self.createReuse):
+			umusic.writeMUSICjunction2(fileOut, "Re-use",largestID+1,0,0)
+			for ids in ReuseIDs:
+				umusic.writeTankLinkReuse(fileOut,ids,largestID+1)
+ 		fileOut.close()
 
 		name = ""
 		outid = 0
@@ -154,7 +177,7 @@ class TreatmentPerformanceResultsModule(Module):
 
 	def writeBatFile(self,file):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		f = open(workpath + "RunMusicTP.bat",'w')
@@ -165,7 +188,7 @@ class TreatmentPerformanceResultsModule(Module):
 
 	def writeBatFileFromNr(self,nr):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		f = open(workpath + "RunMusicTP.bat",'w')
@@ -173,12 +196,14 @@ class TreatmentPerformanceResultsModule(Module):
 		f.close()
 	def writeMusicConfigFile(self,file,name):
 		settings = QSettings()
-		workpath = settings.value("workPath").toString() + "/"
+		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
 			workpath = workpath.replace("/","\\")
 		f = open(workpath + "musicConfigFileTP.mcf", 'w')
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
+		if(self.createReuse):
+			f.write("Export_TS (Re-use, Inflow, \"Reuse.TXT\",1d)\n")
 		f.write("Export_TTE ("+str(name)+",\"Perf_TTE.txt\")\n")
 		f.close()
 	def writeMusicConfigFileFromNr(self,nr):
@@ -195,3 +220,32 @@ class TreatmentPerformanceResultsModule(Module):
 		return "Treatment and Harvesting Performance"
 	def getFileName(self):
 		return "Stormwater"
+	def readFileToList(self,Filename):
+		f = open(Filename,'r')
+		t = shlex.shlex(f.read(),posix= True)
+		t.whitespace = ','
+		t.whitespace += '\n\r'
+		t.whitespace_split = True
+		liste = list(t)
+		f.close()
+		ret = []
+		for i in range(len(liste)):
+			if i <2 or (i+1)%2:
+				continue
+			ret.append(liste[i])
+		return ret
+	def SumAllValues(self,vec):
+		sum = 0 
+		for i in vec:
+			sum += float(i)
+		return sum
+	def calc(self):
+		workpath = self.getHelpUrl() +"/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		if(self.createReuse):
+			vec = self.readFileToList(workpath + "Re-use.TXT")
+			ReuseSum = self.SumAllValues(vec)
+			fileOut = open(workpath + "reusetable.txt","w")
+			fileOut.write("Reuse Sum: " + str(ReuseSum))
+			fileOut.close()
