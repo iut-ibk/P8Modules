@@ -203,7 +203,7 @@ class TreatmentPerformanceResultsModule(Module):
 		f.write("Version = 100\n")
 		f.write("Delimiter = #44\n")
 		if(self.createReuse):
-			f.write("Export_TS (Re-use, Inflow, \"Reuse.TXT\",1d)\n")
+			f.write("Export_TS (Re-use, Inflow, \"Re-use.TXT\",1d)\n")
 		f.write("Export_TTE ("+str(name)+",\"Perf_TTE.txt\")\n")
 		f.close()
 	def writeMusicConfigFileFromNr(self,nr):
