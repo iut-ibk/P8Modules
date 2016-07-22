@@ -69,13 +69,17 @@ class TreatmentPerformanceResultsModule(Module):
 			realstring = workpath + "ubeatsMUSIC-ID" + str(musicnr) + ".msf"
 			newname = workpath + "ubeatsMUSIC-ID" + str(musicnr) + "TP.msf" 
 		self.writeBatFile(newname)
+		self.writeBatFilePerf(realstring)
 		name = self.readMusicFile(realstring,newname)
-		self.writeMusicConfigFile(newname,name)
-
+		self.writeMusicConfigFile(newname)
+		self.writeMusicConfigFilePerf(newname,name)
 		print "Music running ..."
 		if (platform.system() != "Linux"):
 			call([str(workpath) + "RunMusicTP.bat", ""])
-		print "Music Done."
+		print "Music 1 Done."
+		if (platform.system() != "Linux"):
+			call([str(workpath) + "RunMusicTPPerf.bat", ""])
+		print "Music 2 Done."
 		self.calc()
 	def readMusicFile(self,filename,newname):
 		settings = QSettings()
@@ -185,6 +189,16 @@ class TreatmentPerformanceResultsModule(Module):
 			file = file.replace("/","\\")
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \"" + file + "\" \"" + workpath + "musicConfigFileTP.mcf\" -light -silent\n")
 		f.close()
+	def writeBatFilePerf(self,file):
+		settings = QSettings()
+		workpath = self.getHelpUrl() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		f = open(workpath + "RunMusicTPPerf.bat",'w')
+		if (platform.system() != "Linux"):
+			file = file.replace("/","\\")
+		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \"" + file + "\" \"" + workpath + "musicConfigFileTPPerf.mcf\" -light -silent\n")
+		f.close()
 
 	def writeBatFileFromNr(self,nr):
 		settings = QSettings()
@@ -194,7 +208,7 @@ class TreatmentPerformanceResultsModule(Module):
 		f = open(workpath + "RunMusicTP.bat",'w')
 		f.write("\"" + settings.value("Music").toString() + "\MUSIC.exe\" \".\MusicFile-1960PC"+str(nr)+".msf\" \"" + workpath + "musicConfigFile"+str(nr)+".mcf\" -light -silent\n")
 		f.close()
-	def writeMusicConfigFile(self,file,name):
+	def writeMusicConfigFile(self,file):
 		settings = QSettings()
 		workpath = self.getHelpUrl() + "/"
 		if (platform.system() != "Linux"):
@@ -204,6 +218,15 @@ class TreatmentPerformanceResultsModule(Module):
 		f.write("Delimiter = #44\n")
 		if(self.createReuse):
 			f.write("Export_TS (Re-use, Inflow, \"Re-use.TXT\",1d)\n")
+		f.close()
+	def writeMusicConfigFilePerf(self,file,name):
+		settings = QSettings()
+		workpath = self.getHelpUrl() + "/"
+		if (platform.system() != "Linux"):
+			workpath = workpath.replace("/","\\")
+		f = open(workpath + "musicConfigFileTPPerf.mcf", 'w')
+		f.write("Version = 100\n")
+		f.write("Delimiter = #44\n")
 		f.write("Export_TTE ("+str(name)+",\"Perf_TTE.txt\")\n")
 		f.close()
 	def writeMusicConfigFileFromNr(self,nr):
